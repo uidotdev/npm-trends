@@ -1,7 +1,7 @@
 {
-  "name": "react-app-template",
+  "name": "npm-trends",
   "version": "1.0.0",
-  "description": "A starter template for react",
+  "description": "Compare npm packages",
   "main": "app.js",
   "author": "John Potter",
   "license": "ISC",
