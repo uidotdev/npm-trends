@@ -10,13 +10,30 @@ var buffer = require('vinyl-buffer');
 var concat = require('gulp-concat');
 var rename = require('gulp-rename');
 var uglify = require('gulp-uglify');
+var sass = require('gulp-sass');
+var minifyCss = require('gulp-minify-css');
 
-gulp.task('nodemon', function(){
+gulp.task('nodemon', ['bundle-css', 'watch-css', 'watchify'], function(){
 	nodemon({
 		script: 'app.js',
+		ext: 'js html json',
 		nodeArgs: ['--harmony']
 	}).on('restart');
-})
+});
+
+gulp.task('bundle-css', function(){
+  return gulp.src('./assets/css/*.scss')
+    .pipe(sass().on('error', sass.logError))
+    .pipe(concat('bundle.css'))
+    .pipe(gulp.dest('public/css'))
+    .pipe(rename('bundle.min.css'))
+    .pipe(minifyCss())
+    .pipe(gulp.dest('public/css'));
+});
+
+gulp.task('watch-css', function () {
+  return gulp.watch('./assets/css/*.scss', ['bundle-css']);
+});
 
 // one-off browserify task which is handy when debugging
 // node --harmony `which gulp` browserify
@@ -24,7 +41,7 @@ gulp.task('browserify', function() {
   const b = getBrowserifyInstance();
   b.transform(babelify, {presets: ["es2015", "react"]});
   return bundleBrowserify(b);
-})
+});
 
 gulp.task('watchify', function(){
 	var b = getBrowserifyInstance();
@@ -35,7 +52,7 @@ gulp.task('watchify', function(){
 		console.log('updating bundle');
 		bundleBrowserify(w);
 	});
-	bundleBrowserify(w);
+	return bundleBrowserify(w);
 });
 
 var getBrowserifyInstance = function() {
@@ -68,4 +85,4 @@ var bundleBrowserify = function(b){
     .pipe(gulp.dest('public/js'));
 }
 
-gulp.task('default', ['nodemon', 'watchify']);
+gulp.task('default', ['nodemon']);
