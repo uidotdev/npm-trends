@@ -1,3 +1,71 @@
-.app-container{
-	color: #000000;
+/****** Layout ******/
+
+.container{
+	max-width: 940px;
 }
+
+@media (min-width: 481px) {
+  .container {
+    margin-top: 40px;
+  }
+}
+
+/****** General Styles ******/
+
+h1{
+	text-align: center;
+	font-family: 'helvetica-neue', arial, sans-serif;
+}
+
+/****** Form ******/
+
+#search_form{
+	margin-top: 60px;
+	#search_form_input{
+		width: 100%;
+		border: 1px solid #000000;
+		line-height: 2;
+		font-size: 20px;
+		padding: 0 20px;
+	}
+}
+
+/****** Search Tags ******/
+
+.package-search-tags{
+	margin-top: 20px;
+	.package-search-tag{
+		display: inline-block;
+		padding: 5px 10px;
+		margin-right: 5px;
+		border: 1px solid #000000;
+		cursor: pointer;
+		.search-tag-name{
+			font-size: 18px;
+		}
+		.glyphicon{
+			font-size: 14px;
+			color: #cccccc;
+			margin-left: 8px;
+		}
+		&:hover{
+			.glyphicon{
+				color: #000000;
+			}
+		}
+	}
+}
+
+
+/****** Charts ******/
+
+#download_chart{
+	width: 100%;
+	height: 400px;
+	margin-top: 40px;
+}
+
+
+
+
+
