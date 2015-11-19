@@ -1,0 +1,16 @@
+{
+  "name": "npm-trends",
+  "version": "1.0.0",
+  "main": "app.js",
+  "moduleType": [
+    "es6",
+    "node"
+  ],
+  "liscense": "ISC",
+  "dependencies": {
+    "DateJS": "~1.0.0-rc3",
+    "jquery": "~2.1.4",
+    "Chart.js": "~1.0.2",
+    "bootstrap-sass": "~3.3.5"
+  }
+}

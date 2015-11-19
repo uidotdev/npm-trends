@@ -2,6 +2,10 @@
 
 var React = require('react');
 var ReactDOM = require('react-dom');
+import { Router, Route, Link } from 'react-router';
+import createBrowserHistory from 'history/lib/createBrowserHistory';
+
+var colors = [[77,77,255],[255,0,9],[255,170,0],[244,52,255],[111,255,0]];
 
 var App = React.createClass({
 	getInitialState: function(){
@@ -14,27 +18,88 @@ var App = React.createClass({
 			packets: []
 		}
 	},
-	updateFromSeach: function(packet){
-		var packets = this.state.packets;
-		packets.push(packet);
-		this.setState({packets: packets});
+	componentDidMount: function(){
+		this.loadPackets(this.props);
 	},
-	removePacket: function(packet_id){
-		var old_packets = this.state.packets;
-		var new_packets = $.grep(old_packets, function(packet) {
-		  return ( packet.id !== packet_id );
+	componentWillReceiveProps: function(nextProps){
+		this.loadPackets(nextProps);
+	},
+	shouldComponentUpdate: function(nextProps, nextState){
+		return this.state.packets !== nextState.packets;
+	},
+	loadPackets: function(props){
+		var packets = props.params.packages;
+		if (packets){
+			var packets_arr = packets.split('-vs-');
+			var packets_data = [];
+			var packets_left = packets_arr.length;
+			function addData(data, passed_this){
+				var formatted_data = {id: data._id, 
+					                    name: data.name, 
+					                    description: data.description,
+					                    repository: data.repository};
+				packets_data.push(formatted_data);
+				packets_left -= 1;
+				if(packets_left === 0){
+					//preserve original order
+					var sorted_data = packets_arr.map(function(packet_name){
+						var data_hash;
+						packets_data.forEach(function(packet_data){
+							if(packet_data.name === packet_name){
+								data_hash = packet_data;
+							}
+						}); 
+						return data_hash;
+					});
+					passed_this.setState({packets: sorted_data});
+				}
+			}
+			packets_arr.map(function(packet){
+				var url = "http://npm-registry-cors-proxy.herokuapp.com/" + packet;
+				$.ajax({
+					url: url,
+					dataType: 'json',
+					success: function(data){
+						addData(data, this);
+					}.bind(this)
+				});
+			}, this);
+		}else{
+			this.setState({packets: []});
+		}
+	},
+	updateFromSeach: function(query){
+		var new_param;
+		if( this.props.params.packages ){
+			var packets_array = this.props.params.packages.split("-vs-");
+			if(packets_array.indexOf(query) < 0){
+				packets_array.push(query);
+			}
+			var new_param = packets_array.join("-vs-");
+		}else{
+			new_param = query;
+		}
+		var url = "/" + new_param;
+		this.props.history.pushState(null, url);
+	},
+	removePacket: function(packet_name){
+		var packets_array = this.props.params.packages.split("-vs-");
+		var remaining_packets = $.grep(packets_array, function(packet) {
+		  return ( packet !== packet_name );
 		});
-		this.setState({packets: new_packets});
+		var new_param = remaining_packets.join("-vs-");
+		var url = "/" + new_param;
+		this.props.history.pushState(null, url);
 	},
 	render: function(){
 		return (
 			<div>
 				<div className="row">
 					<div className="col-xs-12">
-						<h1>NPM Trends</h1>
+						<h1>npm trends</h1>
 					</div>
 					<div className="col-xs-12">
-						<SearchForm onSearch={this.updateFromSeach}/>
+						<SearchForm curr_packets={this.props.params.packages} onSearch={this.updateFromSeach}/>
 						<PacketTags onTagRemove={this.removePacket}
 											  packets={this.state.packets}/>
 					</div>
@@ -52,20 +117,9 @@ var App = React.createClass({
 var SearchForm = React.createClass({
 	handleSubmit: function(e){
 		e.preventDefault();
-		var url = "http://npm-registry-cors-proxy.herokuapp.com/" + this.refs.search_query.value.toLowerCase();
-		$.ajax({
-			url: url,
-			dataType: 'json',
-			success: function(data){
-				var packet = {id: data._id, name: data.name, description: data.description};
-				this.refs.search_query.value = '';
-				this.props.onSearch(packet);
-			}.bind(this),
-			error: function(data, status, err){
-				console.log(data);
-				console.error(url, status, err.toString());
-			}.bind(this)
-		});
+		var query = this.refs.search_query.value.toLowerCase();
+		this.props.onSearch(query);
+		this.refs.search_query.value = '';
 		return;
 	},
 	render: function(){
@@ -74,7 +128,7 @@ var SearchForm = React.createClass({
 				<input id="search_form_input" 
 				       ref="search_query" 
 				       type="text"
-				       placeholder="Add an NPM package..."/>
+				       placeholder="Enter an npm package..."/>
 			</form>
 		);
 	}
@@ -85,10 +139,11 @@ var PacketTags = React.createClass({
 		this.props.onTagRemove(packet_id);
 	},
 	render: function(){
-		var packets = this.props.packets.map(function(packet){
-			var boundClick = this.handleClick.bind(this, packet.id);
+		var packets = this.props.packets.map(function(packet, i){
+			var boundClick = this.handleClick.bind(this, packet.name);
+			var border = "2px solid rgb(" + colors[i].join(',') + ")";
 			return(
-				<li key={packet.id} className="package-search-tag" onClick={boundClick}>
+				<li key={packet.id} className="package-search-tag" style={{border}} onClick={boundClick}>
 					<span className="search-tag-name">
 						{packet.name}
 					</span>
@@ -109,6 +164,7 @@ var PacketsComparison = React.createClass({
 		return (
 			<div>
 				<TrendGraphBox packets={this.props.packets}/>
+				<GithubStats packets={this.props.packets}/>
 			</div>
 		);
 	}
@@ -117,35 +173,85 @@ var PacketsComparison = React.createClass({
 var TrendGraphBox = React.createClass({
 	getInitialState: function(){
 		return{
-			graphStats: this.props.graphStats
+			graphStats: this.props.graphStats,
+			timePeriod: this.props.timePeriod
 		};
 	},
 	getDefaultProps: function(){
 		return{
-			graphStats: []
+			graphStats: [],
+			timePeriod: 6
 		};
 	},
-	componentWillMount: function(){
-		this.getStats(this.props.packets);
+	componentDidMount: function(){
+		this.getStats(this.props.packets, this.state.timePeriod);
 	},
 	componentWillReceiveProps: function(nextProps){
-		this.getStats(nextProps.packets);
+		this.getStats(nextProps.packets, this.state.timePeriod);
 	},
-	getStats: function(packets){
-		var graphStats = packets.map(function(packet){
-			var url = "https://api.npmjs.org/downloads/range/2014-1-1:2015-11-16/" + packet.name;
+	shouldComponentUpdate: function(nextProps, nextState){
+		return this.state.graphStats !== nextState.graphStats;
+	},
+	getStats: function(packets, period){
+		if(packets.length > 0){
+			var packet_names = packets.map(function(packet){
+				return packet.name;
+			});
+			var endDate = Date.today().toString("yyyy-M-d");
+			var startDate = Date.today().addMonths(-period).toString("yyyy-M-d");
+			var url = "https://api.npmjs.org/downloads/range/" 
+														+ startDate + ":" 
+														+ endDate + "/" 
+			                     	+ packet_names.join(',');
 			var result = $.ajax({
 				url: url,
 				dataType: 'json',
-				async: false
-			}).responseText;
-			return(JSON.parse(result));
-		});
-		this.setState({graphStats: graphStats});
+				success: function(data){
+					addData(data, this);
+				}.bind(this)
+			});
+			function addData(data, passed_this){
+				var graphStats = packet_names.map(function(packet_name){
+					if (packet_names.length > 1){
+						return data[packet_name];
+					}else{
+						return data;
+					}
+				});
+				passed_this.setState({graphStats: graphStats, timePeriod: period});
+			};
+		}else{
+			this.setState({graphStats: [], timePeriod: period});
+		}
+	},
+	handlePeriodChange: function(e){
+		this.getStats(this.props.packets,  e.target.value);
+	},
+	heading: function(){
+		if(this.state.graphStats.length > 0){
+		 	var select_options = [["1 Month", 1], ["3 Months", 3], ["6 Months", 6], 
+		 												["1 Year", 12]];
+		 	var select_options = select_options.map(function(option){
+		 		return(
+		 			<option key={option[1]} value={option[1]}>{option[0]}</option>
+		 		)
+		 	});
+			return(
+				<h2 className="chart-heading">
+					Downloads in past 
+					<span className="select-container">
+						<select className="chart-heading-select" value={this.state.timePeriod} onChange={this.handlePeriodChange}>{select_options}</select>
+					</span>
+				</h2>
+			)
+		}
 	},
 	render: function(){
 		return (
-			<div><TrendGraph graphStats={this.state.graphStats}/></div>
+			<div>
+				{this.heading()}
+				<TrendGraph graphStats={this.state.graphStats}/>
+			</div>
 		);
 	}
 });
@@ -164,7 +270,8 @@ var TrendGraph = React.createClass({
 		if(this.props.graphStats.length > 0){
 			var chart_data = {labels: [], datasets: []};
 			this.props.graphStats.map(function(graphStat, i){
-				var groupedData = groupDates(graphStat.downloads, 'week');
+				var dataColor = colors[i].join(',');
+				var groupedData = groupDates(graphStat.downloads, 'week', graphStat.start, graphStat.end);
 				if(i == 0){
 					var labels = groupedData.map(function(download){
 						return download.period;
@@ -176,20 +283,20 @@ var TrendGraph = React.createClass({
 				});
 				var dataset = {
 					label: graphStat.package,
-					fillColor: "rgba(220,220,220,0.2)",
-	        strokeColor: "rgba(220,220,220,1)",
-	        pointColor: "rgba(220,220,220,1)",
+					fillColor: "rgba(" + dataColor + ",0.1)",
+	        strokeColor: "rgba(" + dataColor + ",1)",
+	        pointColor: "rgba(" + dataColor + ",1)",
 	        pointStrokeColor: "#fff",
 	        pointHighlightFill: "#fff",
-	        pointHighlightStroke: "rgba(220,220,220,1)",
+	        pointHighlightStroke: "rgba(" + dataColor + ",1)",
 	        data: data
 				}
 				chart_data.datasets.push(dataset);
 			});
-			console.log(chart_data);
-
 			var chart_options = {
-				pointDotRadius : 4
+				scaleFontColor: "#eeeeee",
+				responsive: true,
+				scaleLabel: "<%= ' ' + value%>"
 			}
 			var ctx = document.getElementById("download_chart").getContext("2d");
 			this.download_chart = new Chart(ctx).Line(chart_data, chart_options);
@@ -204,61 +311,135 @@ var TrendGraph = React.createClass({
 	}
 })
 
+var GithubStats = React.createClass({
+	getInitialState: function(){
+		return{
+			githubStats: this.props.githubStats
+		};
+	},
+	getDefaultProps: function(){
+		return{
+			githubStats: []
+		};
+	},
+	componentDidMount: function(){
+		this.getGithubStats(this.props.packets);
+	},
+	componentWillReceiveProps: function(nextProps){
+		this.getGithubStats(nextProps.packets);
+	},
+	getGithubStats: function(packets){
+		if (packets){
+			var githubData = [];
+			var packets_left = packets.length;
+			function addData(data, passed_this){
+				githubData.push(data);
+				packets_left -= 1;
+				if(packets_left === 0){
+					//preserve original order
+					passed_this.setState({githubStats: githubData});
+				}
+			}
+			packets.map(function(packet){
+				var repository_url = packet.repository.url.split('.com')[1].replace('.git', '');
+				var github_url = "https://api.github.com/repos" + repository_url;
+				$.ajax({
+					url: github_url,
+					dataType: 'json',
+					success: function(data){
+						addData(data, this);
+					}.bind(this)
+				});
+			}, this);
+		}else{
+			this.setState({packets: []});
+		}
+	},
+	table: function(){
+		var stats = [["", "name"], ["stars", "stargazers_count"], ["open issues", "open_issues_count"],
+								 ["created", "created_at"]];
+
+		var rows = stats.map(function(stat){
+			var ghStats = this.state.githubStats.map(function(ghStat){
+				var attrubute = stat[1];
+				return(
+					<td key={ghStat.id}>{ghStat[attrubute]}</td>
+				)
+			}, this);
+			return(
+				<tr key={stat[0]} >
+					<td>{stat[0]}</td>
+					{ghStats}
+				</tr>
+			)
+		}, this);
+
+		if(this.state.githubStats.length > 0){
+			return(
+				<table className="table">
+					<tbody>
+						{rows}
+					</tbody>
+				</table>
+			)
+		}
+	},
+	render: function(){
+		return(
+			<div>
+				<h2>Github Stats</h2>
+				{this.table()}
+			</div>
+		)
+	}
+})
+
 // Expect format:
 // dates: [{"day":"2012-10-22","downloads":279},{"day":"2012-10-23","downloads":2042}]
-// period: 'week' or 'month'
-var groupDates = function(dates, period){
+// period: 'week'
+// start: '2015-5-14'
+// end: '2015-11-17'
+var groupDates = function(dates, period, start, end){
 	var groupedDates = []
-	var current_period;
-	var previous_day;
-	var current_period_downloads;
+	var startDate = Date.parse(start);
+	var endDate = Date.parse(end);
 	var total_dates = dates.length;
+	var current_period = startDate.is().sunday() ? startDate : startDate.next().sunday();
+	var current_period_downloads = 0;
 	dates.forEach(function(date, i){
 		var dayObj = new Date(date.day.split('-'));
-		if(period === 'week'){
-			var dayNumber = [6,0,1,2,3,4,5]; // makes sunday last day of week
-			var dayOfWeek = dayNumber[dayObj.getDay()];
-			if( !current_period || (dayOfWeek <= previous_day) || (i + 1 === total_dates)){
-				function addWeekPeriod(){
-					var last_day_of_week = new Date( dayObj.setDate( dayObj.getDate() + (6 - dayOfWeek) ) );
-					var day = last_day_of_week.getDate();
-					var month_names = ['Jan', 'Feb', 'Mar', 'Apr', 
-					                    'May', 'Jun', 'Jul', 'Aug', 
-					                    'Sep', 'Oct', 'Nov', 'Dec']
-					var month = month_names[last_day_of_week.getMonth()];
-					current_period = month + ' ' + day.toString();
-					groupedDates.push({period: current_period, downloads: current_period_downloads});
-				}
-				if( current_period ){
-					if(i + 1 === total_dates){
-						current_period_downloads += date.downloads;
-					}
-					addWeekPeriod();
-				}
-				current_period = date.day;
-				previous_day = dayOfWeek;
-				current_period_downloads = 0;
-			}
-		}else{
-			var dayOfMonth = dayObj.getMonth();
-			if( !current_period || (dayOfMonth === current_period)){
-				if( current_period ){
-					groupedDates.push({period: current_period, downloads: current_period_downloads});
-				}
-				current_period = dayOfMonth;
-				current_period_downloads = 0;
-			}
+
+		function addWeekPeriod(){
+			var current_period_formatted = current_period.toString("MMM d");
+			groupedDates.push({period: current_period_formatted, downloads: current_period_downloads});
+			current_period = current_period.next().sunday();
+			current_period_downloads = 0;
 		}
 
+		// totals previous week and creates new week if data is in a different week
+		if (dayObj.isAfter(current_period)) {
+			addWeekPeriod();
+		}
+
+		/* calculates for last non-complete week
+		if(i + 1 === total_dates){
+			current_period_downloads += date.downloads;
+			addWeekPeriod();
+		} */
+		
 		current_period_downloads += date.downloads;
 	});
-
-	console.log(groupedDates);
 
 	return groupedDates;
 }
 
-ReactDOM.render( <App/>, document.querySelector('#app'));
+ReactDOM.render((
+  <Router history={createBrowserHistory()}>
+    <Route path="/" component={App}>
+    	<Route path="/:packages" component={App}/>
+    </Route>
+  </Router>
+), document.querySelector('#app'))
 
 
 

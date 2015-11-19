@@ -12,8 +12,9 @@ var rename = require('gulp-rename');
 var uglify = require('gulp-uglify');
 var sass = require('gulp-sass');
 var minifyCss = require('gulp-minify-css');
+var bower = require('gulp-bower');
 
-gulp.task('nodemon', ['bundle-css', 'watch-css', 'watchify'], function(){
+gulp.task('nodemon', ['bundle-css', 'bower', 'icons', 'watch-css', 'watchify'], function(){
 	nodemon({
 		script: 'app.js',
 		ext: 'js html json',
@@ -23,12 +24,27 @@ gulp.task('nodemon', ['bundle-css', 'watch-css', 'watchify'], function(){
 
 gulp.task('bundle-css', function(){
   return gulp.src('./assets/css/*.scss')
-    .pipe(sass().on('error', sass.logError))
+    .pipe(sass({
+    		style: 'compressed',
+    		includePaths: [
+    			'./bower_components/bootstrap-sass/assets/stylesheets'
+    		]
+    	}).on('error', sass.logError))
     .pipe(concat('bundle.css'))
     .pipe(gulp.dest('public/css'))
     .pipe(rename('bundle.min.css'))
     .pipe(minifyCss())
     .pipe(gulp.dest('public/css'));
+});
+
+gulp.task('bower', function(){
+	return bower()
+    .pipe(gulp.dest('./public'));
+});
+
+gulp.task('icons', function() { 
+  return gulp.src('./bower_components/bootstrap-sass/assets/fonts/bootstrap/**.*') 
+    .pipe(gulp.dest('./public/fonts/bootstrap')); 
 });
 
 gulp.task('watch-css', function () {

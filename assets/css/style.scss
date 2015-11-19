@@ -1,5 +1,12 @@
-/****** Layout ******/
+@import "bootstrap";
 
+/****** Layout ******/
+body{
+	background-color: #000000;
+	font-family: 'helvetica neue', arial, sans-serif;
+	font-weight: 300;
+	letter-spacing: 1px;
+}
 .container{
 	max-width: 940px;
 }
@@ -12,10 +19,28 @@
 
 /****** General Styles ******/
 
+h1, h2, h3, h4, h5, h6{
+	font-family: 'helvetica neue', arial, sans-serif;
+	color: #dddddd;
+	font-weight: 100;
+	letter-spacing: 2px;
+}
+
 h1{
 	text-align: center;
-	font-family: 'helvetica-neue', arial, sans-serif;
+	font-family: 'helvetica neue', arial, sans-serif;
+	color: #ffffff;
+	font-weight: 100;
+	letter-spacing: 10px;
+	font-size: 36px;
 }
+
+h2{
+	font-size: 24px;
+	margin-top: 30px;
+	margin-bottom: 20px;
+}
+
 
 /****** Form ******/
 
@@ -23,10 +48,15 @@ h1{
 	margin-top: 60px;
 	#search_form_input{
 		width: 100%;
-		border: 1px solid #000000;
+		border: 1px solid #ffffff;
+		background-color: transparent;
 		line-height: 2;
-		font-size: 20px;
 		padding: 0 20px;
+		border-radius: 3px;
+		font-family: 'helvetica neue', arial, sans-serif;
+		font-weight: 200;
+		color: #ffffff;
+		font-size: 20px;
 	}
 }
 
@@ -37,20 +67,21 @@ h1{
 	.package-search-tag{
 		display: inline-block;
 		padding: 5px 10px;
-		margin-right: 5px;
-		border: 1px solid #000000;
+		margin-right: 10px;
 		cursor: pointer;
+		border-radius: 3px;
+		color: #eeeeee;
 		.search-tag-name{
 			font-size: 18px;
 		}
 		.glyphicon{
 			font-size: 14px;
-			color: #cccccc;
+			color: rgba(255,255,255,.2);
 			margin-left: 8px;
 		}
 		&:hover{
 			.glyphicon{
-				color: #000000;
+				color: #ffffff;
 			}
 		}
 	}
@@ -59,10 +90,65 @@ h1{
 
 /****** Charts ******/
 
+.chart-heading-select{
+	font-family: 'helvetica neue', arial, sans-serif;
+	color: #ffffff;
+	font-weight: 100;
+	letter-spacing: 2px;
+	font-size: 24px;
+	background-color: transparent;
+	border: 1px solid #ffffff;
+	border-width: 0 0 1px 0;
+	margin-left: 10px;
+	border-radius: 0;
+	padding: 2px 26px 2px 6px;
+	line-height: 1.2;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	cursor: pointer;
+	option{
+		background-color: #ffffff;
+		color: #000000;
+	}
+	&:focus{
+		border-width: 0 0 1px 0;
+		border-color: #c32aff;
+		outline: none;
+	}
+}
+
+.select-container{
+	position: relative;
+	&::before{
+		content: "\e259";
+		font-family: 'Glyphicons Halflings';
+		font-size: 12px;
+		width: 0;
+		height: 0;
+		position: absolute;
+		right: 20px;
+		top: 50%;
+		margin-top: -4px;
+		color: #ffffff;		
+		-moz-osx-font-smoothing: grayscale;
+    font-style: normal;
+    font-weight: normal;
+    line-height: 1;
+	}
+}
+
 #download_chart{
 	width: 100%;
 	height: 400px;
+}
+
+
+/****** Table ******/
+
+.table{
 	margin-top: 40px;
+	color: #ffffff;
 }
 
 
