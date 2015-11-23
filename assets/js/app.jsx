@@ -55,9 +55,9 @@ var App = React.createClass({
 				}
 			}
 			packets_arr.map(function(packet){
-				var url = "http://npm-registry-cors-proxy.herokuapp.com/" + packet;
+				var url = "http://registry.npmjs.com/" + packet + "/latest";
 				$.ajax({
-					url: url,
+					url: "http://localhost:4444/?url=" + url,
 					dataType: 'json',
 					success: function(data){
 						addData(data, this);
@@ -204,7 +204,7 @@ var TrendGraphBox = React.createClass({
 														+ endDate + "/" 
 			                     	+ packet_names.join(',');
 			var result = $.ajax({
-				url: url,
+				url: "http://localhost:4444/?url=" + url,
 				dataType: 'json',
 				success: function(data){
 					addData(data, this);
@@ -344,7 +344,7 @@ var GithubStats = React.createClass({
 				var repository_url = packet.repository.url.split('.com')[1].replace('.git', '');
 				var github_url = "https://api.github.com/repos" + repository_url;
 				$.ajax({
-					url: github_url,
+					url: "http://localhost:4444/?url=" + github_url,
 					dataType: 'json',
 					success: function(data){
 						addData(data, this);
