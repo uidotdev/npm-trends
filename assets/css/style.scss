@@ -57,7 +57,43 @@ h2{
 		font-weight: 200;
 		color: #ffffff;
 		font-size: 20px;
+		&:focus{
+			border-color: rgb(255,170,0);
+		};
 	}
+}
+
+.algolia-autocomplete {
+  width: 100%;
+}
+.algolia-autocomplete .aa-hint {
+  color: #999;
+}
+.algolia-autocomplete .aa-dropdown-menu {
+  width: 100%;
+  background-color: #222222;
+  color: #ffffff;
+  border-top: none;
+  border-bottom: 1px solid rgb(255,170,0);
+  border-radius: 0 0 3px 3px;
+}
+.autocomplete-name{
+	font-size: 18px;
+}
+.autocomplete-description{
+	font-size: 14px;
+	padding-left: 10px;
+}
+.algolia-autocomplete .aa-dropdown-menu .aa-suggestion {
+  cursor: pointer;
+  padding: 8px 20px;
+}
+.algolia-autocomplete .aa-dropdown-menu .aa-suggestion.aa-cursor {
+  background-color: rgba(255,255,255,.05);
+}
+.algolia-autocomplete .aa-dropdown-menu .aa-suggestion em {
+  font-weight: bold;
+  font-style: normal;
 }
 
 /****** Search Tags ******/

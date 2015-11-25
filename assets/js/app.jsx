@@ -115,17 +115,56 @@ var App = React.createClass({
 });
 
 var SearchForm = React.createClass({
+	componentDidMount: function(){
+		var getAutocompleteResults = function(query, cb){
+			var suggest_query = {
+				'autocomplete_suggest': {
+					'text': query,
+					'completion': {
+						'field': 'suggest'
+					} 
+				}
+			}
+
+			$.ajax({
+				url: "http://search-npm-registry-4654ri5rsc4mybfyhytyfu225m.us-east-1.es.amazonaws.com/npm/_suggest",
+				dataType: 'json',
+				method: "POST",
+				data: JSON.stringify(suggest_query),
+				success: function(data){
+					cb(data.autocomplete_suggest[0].options);
+				}.bind(this)
+			});
+		}
+
+		$('.autocomplete').autocomplete({
+		  hint: false
+		},
+		{
+		  source: getAutocompleteResults,
+		  templates: {
+		    suggestion: function (data) {
+		      return "<div class='autocomplete-name'>" + data.text + "</div><div class='autocomplete-description'>" + data.payload.description + "</div>";
+		    }
+			}
+		}).on('autocomplete:selected', function(event, suggestion, dataset) {
+			this.value = suggestion.text;
+	  });
+	},
 	handleSubmit: function(e){
+		console.log('yes');
 		e.preventDefault();
+		$('.autocomplete').autocomplete('close');
 		var query = this.refs.search_query.value.toLowerCase();
-		this.props.onSearch(query);
 		this.refs.search_query.value = '';
+		this.props.onSearch(query);
 		return;
 	},
 	render: function(){
 		return (
-			<form onSubmit={this.handleSubmit} id="search_form">
+			<form onSubmit={this.handleSubmit} name="seachForm" id="search_form" autoComplete="off">
 				<input id="search_form_input" 
+							 className="autocomplete"
 				       ref="search_query" 
 				       type="text"
 				       placeholder="Enter an npm package..."/>
@@ -198,7 +237,9 @@ var TrendGraphBox = React.createClass({
 				return packet.name;
 			});
 			var endDate = Date.today().toString("yyyy-M-d");
-			var startDate = Date.today().addMonths(-period).toString("yyyy-M-d");
+			var timeAgo = Date.today().addMonths(-period);
+			// Get full start week data by making start date a monday
+			var startDate = timeAgo.is().monday() ? timeAgo.toString("yyyy-M-d") : timeAgo.next().monday().toString("yyyy-M-d");
 			var url = "https://api.npmjs.org/downloads/range/" 
 														+ startDate + ":" 
 														+ endDate + "/" 
@@ -341,15 +382,20 @@ var GithubStats = React.createClass({
 				}
 			}
 			packets.map(function(packet){
-				var repository_url = packet.repository.url.split('.com')[1].replace('.git', '');
-				var github_url = "https://api.github.com/repos" + repository_url;
-				$.ajax({
-					url: "http://localhost:4444/?url=" + github_url,
-					dataType: 'json',
-					success: function(data){
-						addData(data, this);
-					}.bind(this)
-				});
+				if (packet.repository){
+					var repository_url = packet.repository.url.split('.com')[1].replace('.git', '');
+					var github_url = "https://api.github.com/repos" + repository_url;
+					$.ajax({
+						url: "http://localhost:4444/?url=" + github_url,
+						dataType: 'json',
+						success: function(data){
+							addData(data, this);
+						}.bind(this)
+					});
+				}else{
+					var packet_data = {name: packet.name}
+					addData(packet_data, this);
+				}
 			}, this);
 		}else{
 			this.setState({packets: []});
@@ -362,8 +408,9 @@ var GithubStats = React.createClass({
 		var rows = stats.map(function(stat){
 			var ghStats = this.state.githubStats.map(function(ghStat){
 				var attrubute = stat[1];
+				var ghAttribute = ghStat[attrubute] ? ghStat[attrubute] : "";
 				return(
-					<td key={ghStat.id}>{ghStat[attrubute]}</td>
+					<td key={ghStat.id}>{ghAttribute}</td>
 				)
 			}, this);
 			return(
@@ -420,18 +467,13 @@ var groupDates = function(dates, period, start, end){
 		if (dayObj.isAfter(current_period)) {
 			addWeekPeriod();
 		}
-
-		/* calculates for last non-complete week
-		if(i + 1 === total_dates){
-			current_period_downloads += date.downloads;
-			addWeekPeriod();
-		} */
 		
 		current_period_downloads += date.downloads;
 	});
 
 	return groupedDates;
 }
+
 
 ReactDOM.render((
   <Router history={createBrowserHistory()}>
