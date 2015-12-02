@@ -1,12 +1,11 @@
 'use strict';
 
-var app = require('koa')();
-var logger = require('koa-logger');
-var serve = require('koa-static');
-var router = require('koa-router')();
-var views = require('koa-views');
-
-app.set('port', (process.env.PORT || 3333));
+var app = require('koa')(),
+		logger = require('koa-logger'),
+		serve = require('koa-static'),
+		router = require('koa-router')(),
+		views = require('koa-views'),
+		port = process.env.PORT || 3333; 
 
 app.use(serve('public', {defer: true}));
 app.use(logger());
@@ -18,6 +17,6 @@ router.get('/:everything', function *(){
 	yield this.render('index');
 });
 
-app.listen(app.get('port'), function(){
-	console.log('Node app is running on port', app.get('port'));
+app.listen(port, function(){
+	console.log('Node app is running on port', port);
 });
