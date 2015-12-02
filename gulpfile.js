@@ -13,6 +13,7 @@ var gulp = require('gulp'),
     sass = require('gulp-sass'),
     minifyCss = require('gulp-minify-css'),
     bower = require('gulp-bower'),
+    runSequence = require('run-sequence'),
     lrload = require('livereactload'),
     shell = require('gulp-shell');
 
@@ -24,7 +25,11 @@ gulp.task('nodemon', ['bundle-css', 'bower', 'icons', 'watch-css', 'watchify'], 
 	}).on('restart');
 });
 
-gulp.task('production:push', [ 'precompile:assets', 'git:push', 'heroku:push']);
+gulp.task('production:push', function(){
+  runSequence('precompile:assets', 'git:push', 'heroku:push', function(){
+    console.log('production push complete');
+  });
+});
 
 gulp.task('precompile:assets', ['bundle-css', 'bower', 'icons', 
                               'browserify:production']);
@@ -70,13 +75,13 @@ gulp.task('watch-css', function () {
 
 gulp.task('browserify', function() {
   const b = getBrowserifyInstance('dev');
-  b.transform(babelify, {presets: ["es2015", "react"]});
+  b.transform(babelify);
   return bundleBrowserify(b);
 });
 
 gulp.task('browserify:production', function() {
   const b = getBrowserifyInstance('production');
-  b.transform(babelify, {presets: ["es2015", "react"]});
+  b.transform(babelify);
   return bundleBrowserify(b);
 });
 
