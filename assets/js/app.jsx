@@ -4,6 +4,8 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 import { Router, Route, Link } from 'react-router';
 import createBrowserHistory from 'history/lib/createBrowserHistory';
+var env = process.env.NODE_ENV || 'dev';
+var proxy_url = (env === 'dev') ? 'localhost:4444/?url=' : 'proxy-cache.herokuapp.com/?url=';
 
 var colors = [[77,77,255],[255,0,9],[255,170,0],[244,52,255],[111,255,0]];
 
@@ -57,7 +59,7 @@ var App = React.createClass({
 			packets_arr.map(function(packet){
 				var url = "http://registry.npmjs.com/" + packet + "/latest";
 				$.ajax({
-					url: "http://localhost:4444/?url=" + url,
+					url: proxy_url + url,
 					dataType: 'json',
 					success: function(data){
 						addData(data, this);
@@ -249,7 +251,7 @@ var TrendGraphBox = React.createClass({
 														+ endDate + "/" 
 			                     	+ packet_names.join(',');
 			var result = $.ajax({
-				url: "http://localhost:4444/?url=" + url,
+				url: proxy_url + url,
 				dataType: 'json',
 				success: function(data){
 					addData(data, this);
@@ -390,7 +392,7 @@ var GithubStats = React.createClass({
 					var repository_url = packet.repository.url.split('.com')[1].replace('.git', '');
 					var github_url = "https://api.github.com/repos" + repository_url;
 					$.ajax({
-						url: "http://localhost:4444/?url=" + github_url,
+						url: proxy_url + github_url,
 						dataType: 'json',
 						success: function(data){
 							addData(data, this);
