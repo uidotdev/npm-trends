@@ -1,13 +1,13 @@
 "use strict";
 
-var React = require('react');
-var ReactDOM = require('react-dom');
+var React = require('react'),
+		ReactDOM = require('react-dom'),
+		env = process.env.NODE_ENV || 'dev',
+		proxy_url = (env === 'dev') ? 'http://localhost:4444/?url=' : 'http://proxy.npmtrends.com/?url=',
+		colors = [[77,77,255],[255,0,9],[255,170,0],[244,52,255],[111,255,0]];
+
 import { Router, Route, Link } from 'react-router';
 import createBrowserHistory from 'history/lib/createBrowserHistory';
-var env = process.env.NODE_ENV || 'dev';
-var proxy_url = (env === 'dev') ? 'http://localhost:4444/?url=' : 'http://proxy.npmtrends.com/?url=';
-
-var colors = [[77,77,255],[255,0,9],[255,170,0],[244,52,255],[111,255,0]];
 
 var App = React.createClass({
 	getInitialState: function(){
@@ -63,12 +63,27 @@ var App = React.createClass({
 					dataType: 'json',
 					success: function(data){
 						addData(data, this);
+					}.bind(this),
+					error: function(xhr, status, error){
+						this.handleInvalidQuery(packet);
 					}.bind(this)
 				});
 			}, this);
 		}else{
 			this.setState({packets: []});
 		}
+	},
+	handleInvalidQuery: function(query){
+		var packets_array = this.props.params.packages.split("-vs-");
+		var remaining_packets = [];
+		packets_array.forEach(function(packet){
+			if(packet !== query){
+				remaining_packets.push(packet);
+			}
+		});
+		var packets_url = (remaining_packets.length > 1) ? remaining_packets.join("-vs-") : remaining_packets.join('');
+		var url = "/" + packets_url;
+		this.props.history.pushState(null, url);
 	},
 	updateFromSeach: function(query){
 		var new_param;
@@ -143,10 +158,12 @@ var SearchForm = React.createClass({
 		}
 
 		$('.autocomplete').autocomplete({
-		  hint: false
+		  hint: false,
+		  debug: true
 		},
 		{
 		  source: getAutocompleteResults,
+		  displayKey: 'text',
 		  templates: {
 		    suggestion: function (data) {
 		      return "<div class='autocomplete-name'>" + data.text + "</div><div class='autocomplete-description'>" + data.payload.description + "</div>";
@@ -155,6 +172,7 @@ var SearchForm = React.createClass({
 		}).on('autocomplete:selected', function(event, suggestion, dataset) {
 			component.props.onSearch(suggestion.text);
 			this.form.reset();
+			$('.autocomplete').autocomplete('val', '');
 	  });
 	},
 	handleSubmit: function(e){
@@ -234,11 +252,8 @@ var TrendGraphBox = React.createClass({
 	componentWillReceiveProps: function(nextProps){
 		this.getStats(nextProps.packets, this.state.timePeriod);
 	},
-	shouldComponentUpdate: function(nextProps, nextState){
-		return this.state.graphStats !== nextState.graphStats;
-	},
 	getStats: function(packets, period){
-		if(packets.length > 0){
+		if( packets.length > 0 ){
 			var packet_names = packets.map(function(packet){
 				return packet.name;
 			});
@@ -246,26 +261,32 @@ var TrendGraphBox = React.createClass({
 			var timeAgo = Date.parse('yesterday').addMonths(-period);
 			// Get full start week data by making start date a monday
 			var startDate = timeAgo.is().monday() ? timeAgo.toString("yyyy-M-d") : timeAgo.next().monday().toString("yyyy-M-d");
-			var url = "https://api.npmjs.org/downloads/range/" 
+			packet_names.forEach(function(packet_name){
+				var url = "https://api.npmjs.org/downloads/range/" 
 														+ startDate + ":" 
 														+ endDate + "/" 
-			                     	+ packet_names.join(',');
-			var result = $.ajax({
-				url: proxy_url + url,
-				dataType: 'json',
-				success: function(data){
-					addData(data, this);
-				}.bind(this)
-			});
-			function addData(data, passed_this){
-				var graphStats = packet_names.map(function(packet_name){
-					if (packet_names.length > 1){
-						return data[packet_name];
-					}else{
-						return data;
-					}
+			                     	+ packet_name;
+				$.ajax({
+					url: proxy_url + url,
+					dataType: 'json',
+					success: function(data){
+						addData(data, this);
+					}.bind(this)
 				});
-				passed_this.setState({graphStats: graphStats, timePeriod: period});
+			}, this);
+			var total_requests = packets.length;
+			var requests_completed = 0;
+			var graphStatsData = {};
+			function addData(data, passed_this){
+				requests_completed += 1
+				graphStatsData[data.package] = data;
+				if (requests_completed === total_requests){
+					// persists order
+					var graphStats = packet_names.map(function(packet_name){
+						return graphStatsData[packet_name];
+					});
+					passed_this.setState({graphStats: graphStats, timePeriod: period});
+				}
 			};
 		}else{
 			this.setState({graphStats: [], timePeriod: period});
@@ -308,10 +329,10 @@ var TrendGraph = React.createClass({
 		this.loadChart();
 	},
 	componentDidUpdate: function(){
-		this.loadChart(true);
+		this.loadChart();
 	},
 	loadChart: function(){
-		if(this.download_chart){
+		if(typeof this.download_chart !== 'undefined'){
 			this.download_chart.destroy();
 		}
 		if(this.props.graphStats.length > 0){
@@ -349,10 +370,15 @@ var TrendGraph = React.createClass({
 			this.download_chart = new Chart(ctx).Line(chart_data, chart_options);
 		}
 	},
+	chart: function(){
+		if (this.props.graphStats.length > 0){
+			return <canvas id="download_chart"></canvas>;
+		}
+	},
 	render: function(){
 		return(
 			<div>
-				<canvas id="download_chart"></canvas>
+				{this.chart()}
 			</div>
 		)
 	}
@@ -452,13 +478,13 @@ var GithubStats = React.createClass({
 	}
 });
 
-// Expect format:
-// dates: [{"day":"2012-10-22","downloads":279},
-//         {"day":"2012-10-23","downloads":2042}]
-// period: 'week'
-// start: '2015-5-14'
-// end: '2015-11-17'
 var groupDates = function(dates, period, start, end){
+	// Expect format:
+	// dates: [{"day":"2012-10-22","downloads":279},
+	//         {"day":"2012-10-23","downloads":2042}]
+	// period: 'week'
+	// start: '2015-5-14'
+	// end: '2015-11-17'
 	var groupedDates = []
 	var startDate = Date.parse(start);
 	var endDate = Date.parse(end);
