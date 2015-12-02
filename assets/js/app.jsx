@@ -5,7 +5,7 @@ var ReactDOM = require('react-dom');
 import { Router, Route, Link } from 'react-router';
 import createBrowserHistory from 'history/lib/createBrowserHistory';
 var env = process.env.NODE_ENV || 'dev';
-var proxy_url = (env === 'dev') ? 'http://localhost:4444/?url=' : 'http://proxy-cache.herokuapp.com/?url=';
+var proxy_url = (env === 'dev') ? 'http://localhost:4444/?url=' : 'http://proxy.npmtrends.com/?url=';
 
 var colors = [[77,77,255],[255,0,9],[255,170,0],[244,52,255],[111,255,0]];
 
