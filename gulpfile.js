@@ -13,6 +13,7 @@ var uglify = require('gulp-uglify');
 var sass = require('gulp-sass');
 var minifyCss = require('gulp-minify-css');
 var bower = require('gulp-bower');
+var lrload = require('livereactload');
 
 gulp.task('nodemon', ['bundle-css', 'bower', 'icons', 'watch-css', 'watchify'], function(){
 	nodemon({
@@ -63,7 +64,7 @@ gulp.task('watchify', function(){
 	var b = getBrowserifyInstance();
 	var w = watchify(b);
 
-	w.transform(babelify, {presets: ["es2015", "react"]});
+	w.transform(babelify, {});
 	w.on('update', function(){
 		console.log('updating bundle');
 		bundleBrowserify(w);
@@ -75,10 +76,12 @@ var getBrowserifyInstance = function() {
 	var b = browserify('assets/js/app.jsx', {
 		debug: true,
 		extensions: ['.jsx'],
-
+    // live reload
+    plugin: [ lrload ],
 		// watchify arguments
 		cache: {},
-		packageCache: {}
+		packageCache: {},
+    fullPaths: false
 	});
 
 	return b;

@@ -1,0 +1,13 @@
+{
+  "plugins": [
+    "react-transform"
+  ],
+  "extra": {
+    "react-transform": {
+      "transforms": [{
+        "transform": "livereactload/babel-transform",
+        "imports": ["react"]
+      }]
+    }
+  }
+}

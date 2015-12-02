@@ -116,7 +116,10 @@ var App = React.createClass({
 
 var SearchForm = React.createClass({
 	componentDidMount: function(){
+		var component = this;
+
 		var getAutocompleteResults = function(query, cb){
+
 			var suggest_query = {
 				'autocomplete_suggest': {
 					'text': query,
@@ -148,15 +151,16 @@ var SearchForm = React.createClass({
 		    }
 			}
 		}).on('autocomplete:selected', function(event, suggestion, dataset) {
-			this.value = suggestion.text;
+			component.props.onSearch(suggestion.text);
+			this.form.reset();
 	  });
 	},
 	handleSubmit: function(e){
-		console.log('yes');
 		e.preventDefault();
 		$('.autocomplete').autocomplete('close');
 		var query = this.refs.search_query.value.toLowerCase();
-		this.refs.search_query.value = '';
+		this.refs.search_query.form.reset();
+		$('.autocomplete').autocomplete('val', '');
 		this.props.onSearch(query);
 		return;
 	},
@@ -236,8 +240,8 @@ var TrendGraphBox = React.createClass({
 			var packet_names = packets.map(function(packet){
 				return packet.name;
 			});
-			var endDate = Date.today().toString("yyyy-M-d");
-			var timeAgo = Date.today().addMonths(-period);
+			var endDate = Date.parse('yesterday').toString("yyyy-M-d");
+			var timeAgo = Date.parse('yesterday').addMonths(-period);
 			// Get full start week data by making start date a monday
 			var startDate = timeAgo.is().monday() ? timeAgo.toString("yyyy-M-d") : timeAgo.next().monday().toString("yyyy-M-d");
 			var url = "https://api.npmjs.org/downloads/range/" 
@@ -350,7 +354,7 @@ var TrendGraph = React.createClass({
 			</div>
 		)
 	}
-})
+});
 
 var GithubStats = React.createClass({
 	getInitialState: function(){
@@ -370,7 +374,7 @@ var GithubStats = React.createClass({
 		this.getGithubStats(nextProps.packets);
 	},
 	getGithubStats: function(packets){
-		if (packets){
+		if ( packets.length > 0 ){
 			var githubData = [];
 			var packets_left = packets.length;
 			function addData(data, passed_this){
@@ -398,7 +402,12 @@ var GithubStats = React.createClass({
 				}
 			}, this);
 		}else{
-			this.setState({packets: []});
+			this.setState({githubStats: []});
+		}
+	},
+	heading: function(){
+		if (this.props.githubStats.length > 0){
+			return <h2>Github Stats</h2>;
 		}
 	},
 	table: function(){
@@ -434,15 +443,16 @@ var GithubStats = React.createClass({
 	render: function(){
 		return(
 			<div>
-				<h2>Github Stats</h2>
+				{ this.heading()}
 				{this.table()}
 			</div>
 		)
 	}
-})
+});
 
 // Expect format:
-// dates: [{"day":"2012-10-22","downloads":279},{"day":"2012-10-23","downloads":2042}]
+// dates: [{"day":"2012-10-22","downloads":279},
+//         {"day":"2012-10-23","downloads":2042}]
 // period: 'week'
 // start: '2015-5-14'
 // end: '2015-11-17'
