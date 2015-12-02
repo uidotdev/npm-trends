@@ -23,6 +23,14 @@ gulp.task('nodemon', ['bundle-css', 'bower', 'icons', 'watch-css', 'watchify'], 
 	}).on('restart');
 });
 
+gulp.task('production:server', ['bundle-css', 'bower', 'icons', 'browserify'], function(){
+  exec('node app.js', function (err, stdout, stderr) {
+    console.log(stdout);
+    console.log(stderr);
+    cb(err);
+  });
+});
+
 gulp.task('bundle-css', function(){
   return gulp.src('./assets/css/*.scss')
     .pipe(sass({
@@ -52,8 +60,6 @@ gulp.task('watch-css', function () {
   return gulp.watch('./assets/css/*.scss', ['bundle-css']);
 });
 
-// one-off browserify task which is handy when debugging
-// node --harmony `which gulp` browserify
 gulp.task('browserify', function() {
   const b = getBrowserifyInstance();
   b.transform(babelify, {presets: ["es2015", "react"]});
