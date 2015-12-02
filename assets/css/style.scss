@@ -2,7 +2,7 @@
 
 /****** Layout ******/
 body{
-	background-color: #000000;
+	background-color: #ffffff;
 	font-family: 'helvetica neue', arial, sans-serif;
 	font-weight: 300;
 	letter-spacing: 1px;
@@ -21,16 +21,16 @@ body{
 
 h1, h2, h3, h4, h5, h6{
 	font-family: 'helvetica neue', arial, sans-serif;
-	color: #dddddd;
-	font-weight: 100;
+	color: #000000;
+	font-weight: 200;
 	letter-spacing: 2px;
 }
 
 h1{
 	text-align: center;
 	font-family: 'helvetica neue', arial, sans-serif;
-	color: #ffffff;
-	font-weight: 100;
+	color: #000000;
+	font-weight: 200;
 	letter-spacing: 10px;
 	font-size: 36px;
 }
@@ -41,6 +41,19 @@ h2{
 	margin-bottom: 20px;
 }
 
+a{
+	color: #0074d9;
+}
+
+
+/****** Header ******/
+
+#site_heading{
+	font-size: 40px;
+	margin-top: 20px;
+	margin-bottom: 0px;
+}
+
 
 /****** Form ******/
 
@@ -48,17 +61,19 @@ h2{
 	margin-top: 60px;
 	#search_form_input{
 		width: 100%;
-		border: 1px solid #ffffff;
+		border: 2px solid #e2e2e2;
 		background-color: transparent;
 		line-height: 2;
 		padding: 0 20px;
-		border-radius: 3px;
+		border-radius: 5px;
 		font-family: 'helvetica neue', arial, sans-serif;
 		font-weight: 200;
-		color: #ffffff;
+		color: #000000;
 		font-size: 20px;
+		-webkit-appearance:none;
 		&:focus{
 			border-color: rgb(255,170,0);
+			outline: none;
 		};
 	}
 }
@@ -71,11 +86,12 @@ h2{
 }
 .algolia-autocomplete .aa-dropdown-menu {
   width: 100%;
-  background-color: #222222;
-  color: #ffffff;
+  background-color: #ffffff;
+  color: #000000;
   border-top: none;
-  border-bottom: 1px solid rgb(255,170,0);
-  border-radius: 0 0 3px 3px;
+  border: 1px solid #c3c3c3;
+  border-width: 0 2px 10px;
+  border-radius: 0 0 5px 5px;
 }
 .autocomplete-name{
 	font-size: 18px;
@@ -89,7 +105,7 @@ h2{
   padding: 8px 20px;
 }
 .algolia-autocomplete .aa-dropdown-menu .aa-suggestion.aa-cursor {
-  background-color: rgba(255,255,255,.05);
+  background-color: rgba(0,0,0,.05);
 }
 .algolia-autocomplete .aa-dropdown-menu .aa-suggestion em {
   font-weight: bold;
@@ -102,22 +118,22 @@ h2{
 	margin-top: 20px;
 	.package-search-tag{
 		display: inline-block;
-		padding: 5px 10px;
-		margin-right: 10px;
+		padding: 5px 7px 5px 10px;
+		margin: 0 10px 10px 0;
 		cursor: pointer;
-		border-radius: 3px;
-		color: #eeeeee;
+		border-radius: 5px;
+		color: #000000;
 		.search-tag-name{
 			font-size: 18px;
 		}
 		.glyphicon{
 			font-size: 14px;
-			color: rgba(255,255,255,.2);
+			color: rgba(0,0,0,.15);
 			margin-left: 8px;
 		}
 		&:hover{
 			.glyphicon{
-				color: #ffffff;
+				color: #000000;
 			}
 		}
 	}
@@ -128,12 +144,12 @@ h2{
 
 .chart-heading-select{
 	font-family: 'helvetica neue', arial, sans-serif;
-	color: #ffffff;
-	font-weight: 100;
+	color: #000000;
+	font-weight: 200;
 	letter-spacing: 2px;
 	font-size: 24px;
 	background-color: transparent;
-	border: 1px solid #ffffff;
+	border: 1px solid #000000;
 	border-width: 0 0 1px 0;
 	margin-left: 10px;
 	border-radius: 0;
@@ -149,7 +165,7 @@ h2{
 	}
 	&:focus{
 		border-width: 0 0 1px 0;
-		border-color: #c32aff;
+		border-color: rgb(255,170,0);
 		outline: none;
 	}
 }
@@ -166,7 +182,7 @@ h2{
 		right: 20px;
 		top: 50%;
 		margin-top: -4px;
-		color: #ffffff;		
+		color: #000000;		
 		-moz-osx-font-smoothing: grayscale;
     font-style: normal;
     font-weight: normal;
@@ -184,7 +200,11 @@ h2{
 
 .table{
 	margin-top: 40px;
-	color: #ffffff;
+	color: #000000;
+	.name-header{
+		font-size: 18px;
+		font-weight: 400;
+	}
 }
 
 

@@ -4,7 +4,7 @@ var React = require('react'),
 		ReactDOM = require('react-dom'),
 		env = process.env.NODE_ENV || 'dev',
 		proxy_url = (env === 'dev') ? 'http://localhost:4444/?url=' : 'http://proxy.npmtrends.com/?url=',
-		colors = [[77,77,255],[255,0,9],[255,170,0],[244,52,255],[111,255,0]];
+		colors = [[0,116,217],[255,133,27],[46,204,64],[255,65,54],[255,220,0],[127,219,255],[177,13,201],[57,204,204],[0,31,63],[1,255,112]];
 
 import { Router, Route, Link } from 'react-router';
 import createBrowserHistory from 'history/lib/createBrowserHistory';
@@ -113,7 +113,7 @@ var App = React.createClass({
 			<div>
 				<div className="row">
 					<div className="col-xs-12">
-						<h1>npm trends</h1>
+						<h1 id="site_heading">npm trends</h1>
 					</div>
 					<div className="col-xs-12">
 						<SearchForm curr_packets={this.props.params.packages} onSearch={this.updateFromSeach}/>
@@ -158,8 +158,7 @@ var SearchForm = React.createClass({
 		}
 
 		$('.autocomplete').autocomplete({
-		  hint: false,
-		  debug: true
+		  hint: false
 		},
 		{
 		  source: getAutocompleteResults,
@@ -252,15 +251,19 @@ var TrendGraphBox = React.createClass({
 	componentWillReceiveProps: function(nextProps){
 		this.getStats(nextProps.packets, this.state.timePeriod);
 	},
+	shouldComponentUpdate: function(nextProps, nextState){
+		// prevents updating before new stats are fetched
+		return nextState.graphStats !== this.state.graphStats;
+	},
 	getStats: function(packets, period){
 		if( packets.length > 0 ){
 			var packet_names = packets.map(function(packet){
 				return packet.name;
 			});
-			var endDate = Date.parse('yesterday').toString("yyyy-M-d");
-			var timeAgo = Date.parse('yesterday').addMonths(-period);
+			var endDate = Date.today().toString("yyyy-M-dd");
+			var timeAgo = Date.today().addMonths(-period);
 			// Get full start week data by making start date a monday
-			var startDate = timeAgo.is().monday() ? timeAgo.toString("yyyy-M-d") : timeAgo.next().monday().toString("yyyy-M-d");
+			var startDate = timeAgo.is().monday() ? timeAgo.toString("yyyy-M-dd") : timeAgo.next().monday().toString("yyyy-M-dd");
 			packet_names.forEach(function(packet_name){
 				var url = "https://api.npmjs.org/downloads/range/" 
 														+ startDate + ":" 
@@ -362,8 +365,9 @@ var TrendGraph = React.createClass({
 				chart_data.datasets.push(dataset);
 			});
 			var chart_options = {
-				scaleFontColor: "#eeeeee",
+				scaleFontColor: "#000000",
 				responsive: true,
+				datasetFill: false,
 				scaleLabel: "<%= ' ' + value%>"
 			}
 			var ctx = document.getElementById("download_chart").getContext("2d");
@@ -414,7 +418,8 @@ var GithubStats = React.createClass({
 				}
 			}
 			packets.map(function(packet){
-				if (packet.repository){
+				// adds packages that have a github repository
+				if (packet.repository && (packet.repository.url.indexOf('github') >= 0)){
 					var repository_url = packet.repository.url.split('.com')[1].replace('.git', '');
 					var github_url = "https://api.github.com/repos" + repository_url;
 					$.ajax({
@@ -422,6 +427,10 @@ var GithubStats = React.createClass({
 						dataType: 'json',
 						success: function(data){
 							addData(data, this);
+						}.bind(this),
+						error: function(data){
+							var packet_data = {name: packet.name}
+							addData(packet_data, this);
 						}.bind(this)
 					});
 				}else{
@@ -444,8 +453,16 @@ var GithubStats = React.createClass({
 
 		var rows = stats.map(function(stat){
 			var ghStats = this.state.githubStats.map(function(ghStat){
-				var attrubute = stat[1];
-				var ghAttribute = ghStat[attrubute] ? ghStat[attrubute] : "";
+				var attribute = stat[1];
+				var ghAttribute;
+				if(attribute === 'created_at'){
+					ghAttribute = ghStat[attribute] ? Date.parse(ghStat[attribute]).toString("MMM d, yyyy") : "";
+				}else if(attribute === 'name'){
+					ghAttribute = ghStat[attribute] ? ( <a className="name-header" href={ghStat.html_url}> {ghStat[attribute]} </a> ) : "";
+				}
+				else{
+					ghAttribute = ghStat[attribute] ? ghStat[attribute] : "";
+				}
 				return(
 					<td key={ghStat.id}>{ghAttribute}</td>
 				)

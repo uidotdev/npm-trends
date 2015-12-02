@@ -5,6 +5,7 @@ var gulp = require('gulp'),
     browserify = require('browserify'),
     watchify = require('watchify'),
     babelify = require('babelify'),
+    browserSync = require('browser-sync').create(),
     source = require('vinyl-source-stream'),
     buffer = require('vinyl-buffer'),
     concat = require('gulp-concat'),
@@ -17,12 +18,20 @@ var gulp = require('gulp'),
     lrload = require('livereactload'),
     shell = require('gulp-shell');
 
-gulp.task('nodemon', ['bundle-css', 'bower', 'icons', 'watch-css', 'watchify'], function(){
+gulp.task('nodemon', ['bundle-css', 'bower', 'icons', 'watch-css', 'watchify', 'browser-sync'], function(){
 	nodemon({
 		script: 'app.js',
 		ext: 'js html json',
 		nodeArgs: ['--harmony']
 	}).on('restart');
+});
+
+gulp.task('browser-sync', function(){
+  browserSync.init({
+      proxy: 'localhost:3333',
+      port: '3001',
+      open: false
+  });
 });
 
 gulp.task('production:push', function(){
@@ -54,6 +63,7 @@ gulp.task('bundle-css', function(){
     	}).on('error', sass.logError))
     .pipe(concat('bundle.css'))
     .pipe(gulp.dest('public/css'))
+    .pipe(browserSync.stream())
     .pipe(rename('bundle.min.css'))
     .pipe(minifyCss())
     .pipe(gulp.dest('public/css'));
