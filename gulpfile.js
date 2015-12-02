@@ -1,19 +1,20 @@
 'use strict';
 
-var gulp = require('gulp');
-var nodemon = require('gulp-nodemon');
-var browserify = require('browserify');
-var watchify = require('watchify');
-var babelify = require('babelify');
-var source = require('vinyl-source-stream');
-var buffer = require('vinyl-buffer');
-var concat = require('gulp-concat');
-var rename = require('gulp-rename');
-var uglify = require('gulp-uglify');
-var sass = require('gulp-sass');
-var minifyCss = require('gulp-minify-css');
-var bower = require('gulp-bower');
-var lrload = require('livereactload');
+var gulp = require('gulp'),
+    nodemon = require('gulp-nodemon'),
+    browserify = require('browserify'),
+    watchify = require('watchify'),
+    babelify = require('babelify'),
+    source = require('vinyl-source-stream'),
+    buffer = require('vinyl-buffer'),
+    concat = require('gulp-concat'),
+    rename = require('gulp-rename'),
+    uglify = require('gulp-uglify'),
+    sass = require('gulp-sass'),
+    minifyCss = require('gulp-minify-css'),
+    bower = require('gulp-bower'),
+    lrload = require('livereactload'),
+    shell = require('gulp-shell');
 
 gulp.task('nodemon', ['bundle-css', 'bower', 'icons', 'watch-css', 'watchify'], function(){
 	nodemon({
@@ -23,13 +24,20 @@ gulp.task('nodemon', ['bundle-css', 'bower', 'icons', 'watch-css', 'watchify'], 
 	}).on('restart');
 });
 
-gulp.task('production:server', ['bundle-css', 'bower', 'icons', 'browserify'], function(){
-  exec('node app.js', function (err, stdout, stderr) {
-    console.log(stdout);
-    console.log(stderr);
-    cb(err);
-  });
-});
+gulp.task('production:push', [ 'precompile:assets', 'git:push', 'heroku:push']);
+
+gulp.task('precompile:assets', ['bundle-css', 'bower', 'icons', 
+                              'browserify:production']);
+
+gulp.task('git:push', shell.task([
+  "git add .",
+  "git commit -m 'precompile for production'",
+  "git push"
+]))
+
+gulp.task('heroku:push', shell.task([
+  "git push heroku master"
+]))
 
 gulp.task('bundle-css', function(){
   return gulp.src('./assets/css/*.scss')
@@ -61,7 +69,13 @@ gulp.task('watch-css', function () {
 });
 
 gulp.task('browserify', function() {
-  const b = getBrowserifyInstance();
+  const b = getBrowserifyInstance('dev');
+  b.transform(babelify, {presets: ["es2015", "react"]});
+  return bundleBrowserify(b);
+});
+
+gulp.task('browserify:production', function() {
+  const b = getBrowserifyInstance('production');
   b.transform(babelify, {presets: ["es2015", "react"]});
   return bundleBrowserify(b);
 });
@@ -78,12 +92,12 @@ gulp.task('watchify', function(){
 	return bundleBrowserify(w);
 });
 
-var getBrowserifyInstance = function() {
+var getBrowserifyInstance = function(env) {
 	var b = browserify('assets/js/app.jsx', {
 		debug: true,
 		extensions: ['.jsx'],
     // live reload
-    plugin: [ lrload ],
+    plugin: (env === 'production') ? [] : [lrload],
 		// watchify arguments
 		cache: {},
 		packageCache: {},
