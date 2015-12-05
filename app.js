@@ -9,11 +9,29 @@ var app = require('koa')(),
 
 app.use(serve('public', {defer: true}));
 app.use(logger());
-app.use(views('public'));
+app.use(views('public', {
+	default: 'jade'
+}));
+
+// pass env vars to app
+app.use(function *(next){
+  this.state.env = {
+  	node_env: process.env.NODE_ENV,
+  	elasticsearch_url: process.env.ELASTICSEARCH_URL,
+  	proxy_url: process.env.PROXY_URL
+  };
+  yield next;
+});
 
 app.use(router.routes());
 
+router.get('/', function *(){
+	this.state.dog = 'Doggies';
+	yield this.render('index');
+});
+
 router.get('/:everything', function *(){
+	this.state.dog = 'Doggies';
 	yield this.render('index');
 });
 

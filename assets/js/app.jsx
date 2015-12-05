@@ -2,8 +2,9 @@
 
 var React = require('react'),
 		ReactDOM = require('react-dom'),
-		env = process.env.NODE_ENV || 'dev',
-		proxy_url = (env === 'dev') ? 'http://localhost:4444/?url=' : 'http://proxy.npmtrends.com/?url=',
+		env = $("meta[name='node_env']").attr('content'),
+		proxy_url = (env === 'dev') ? 'http://localhost:4444/?url=' : 'http://' + $("meta[name='proxy_url']").attr('content') + '/?url=',
+		elasticsearch_url = $("meta[name='elasticsearch_url']").attr('content'),
 		colors = [[0,116,217],[255,133,27],[46,204,64],[255,65,54],[255,220,0],[127,219,255],[177,13,201],[57,204,204],[0,31,63],[1,255,112]];
 
 import { Router, Route, Link } from 'react-router';
@@ -147,7 +148,7 @@ var SearchForm = React.createClass({
 			}
 
 			$.ajax({
-				url: "http://search-npm-registry-4654ri5rsc4mybfyhytyfu225m.us-east-1.es.amazonaws.com/npm/_suggest",
+				url: "http://" + elasticsearch_url + "/npm/_suggest",
 				dataType: 'json',
 				method: "POST",
 				data: JSON.stringify(suggest_query),

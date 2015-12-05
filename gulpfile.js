@@ -22,7 +22,9 @@ gulp.task('nodemon', ['bundle-css', 'bower', 'icons', 'watch-css', 'watchify', '
 	nodemon({
 		script: 'app.js',
 		ext: 'js html json',
-		nodeArgs: ['--harmony']
+    execMap: {
+      js: "node -r dotenv/config --harmony"
+    }
 	}).on('restart');
 });
 

@@ -1,0 +1,16 @@
+doctype html
+html
+    head
+        title npm trends
+        link(href="/css/bundle.css" rel="stylesheet")
+        meta(name="node_env" content="#{env.node_env ? env.node_env : 'dev'}")
+        meta(name="elasticsearch_url" content="#{env.elasticsearch_url}")
+        meta(name="proxy_url" content="#{env.proxy_url}")
+    body
+        div(id="app" class="container" data-react-props="#{env}") 
+        script(src="/jquery/dist/jquery.min.js")
+        script(src="/Chart.js/Chart.js")
+        script(src="/DateJS/build/production/date.min.js")
+        script(src="/bootstrap-sass/assets/javascripts/bootstrap.min.js")
+        script(src="//cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.12.0/autocomplete.jquery.min.js")
+        script(src="/js/bundle.js")

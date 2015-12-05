@@ -1,9 +1,14 @@
 'use strict';
 
-var request = require("request");
-var elasticsearch = require('elasticsearch');
+var request = require("request"),
+    elasticsearch = require('elasticsearch'),
+    env = require('node-env-file');
+
+// Load env variables
+env('./.env');
+
 var client = new elasticsearch.Client({
-  host: "search-npm-registry-4654ri5rsc4mybfyhytyfu225m.us-east-1.es.amazonaws.com",
+  host: process.env.ELASTICSEARCH_URL,
   apiVersion: '1.5'
 });
 
