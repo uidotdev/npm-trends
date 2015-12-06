@@ -448,51 +448,79 @@ var GithubStats = React.createClass({
 			return <h2>Github Stats</h2>;
 		}
 	},
-	table: function(){
-		var stats = [["", "name"], ["stars", "stargazers_count"], ["open issues", "open_issues_count"],
-								 ["created", "created_at"]];
-
-		var rows = stats.map(function(stat){
-			var ghStats = this.state.githubStats.map(function(ghStat){
-				var attribute = stat[1];
-				var ghAttribute;
-				if(attribute === 'created_at'){
-					ghAttribute = ghStat[attribute] ? Date.parse(ghStat[attribute]).toString("MMM d, yyyy") : "";
-				}else if(attribute === 'name'){
-					ghAttribute = ghStat[attribute] ? ( <a className="name-header" href={ghStat.html_url}> {ghStat[attribute]} </a> ) : "";
-				}
-				else{
-					ghAttribute = ghStat[attribute] ? ghStat[attribute] : "";
-				}
-				return(
-					<td key={ghStat.id}>{ghAttribute}</td>
-				)
-			}, this);
-			return(
-				<tr key={stat[0]} >
-					<td>{stat[0]}</td>
-					{ghStats}
-				</tr>
-			)
-		}, this);
-
-		if(this.state.githubStats.length > 0){
-			return(
-				<table className="table">
-					<tbody>
-						{rows}
-					</tbody>
-				</table>
-			)
-		}
-	},
 	render: function(){
 		return(
 			<div>
 				{ this.heading()}
-				{this.table()}
+				<GithubStatsTable githubStats={this.state.githubStats} />
 			</div>
 		)
+	}
+});
+
+var GithubStatsTable = React.createClass({
+	getDefaultProps: function(){
+		return {
+			githubStats: []
+		};
+	},
+	render: function(){
+		// array of stats to display
+		// format: [name_to_display, github_api_attribute_name]
+		var stats = [["", "name"], ["stars", "stargazers_count"], ["open issues", "open_issues_count"],
+								 ["created", "created_at"]];
+
+		var headCols = stats.map(function(stat){ 
+			return( 
+				<th key={stat[0]} >
+					{stat[0]}
+				</th>
+			)
+		});
+
+		var bodyRows = this.props.githubStats.map(function(ghStat){
+			var rowCells = stats.map(function(stat){
+				var attributeName = stat[1];
+				var attributeValue;
+				switch(attributeName){
+					case 'created_at':
+						attributeValue = ghStat[attributeName] !== undefined ? 
+														Date.parse(ghStat[attributeName]).toString("MMM d, yyyy") : "";
+						break;
+					case 'name':
+						attributeValue = ghStat[attributeName] !== undefined ? 
+														(<a className="name-header" href={ghStat.html_url}> {ghStat[attributeName]} </a>) : "";
+						break;
+					default:
+						attributeValue = ghStat[attributeName] !== undefined ? ghStat[attributeName] : "";
+				}
+				return(
+					<td key={attributeName}>{attributeValue}</td>
+				)
+			}, this);
+			return(
+				<tr key={ghStat.name} >
+					{rowCells}
+				</tr>
+			)
+		}, this);
+
+		if(this.props.githubStats.length > 0){
+			return(
+				<table className="table">
+					<thead>
+						<tr>
+							{headCols}
+						</tr>
+					</thead>
+					<tbody>
+						{bodyRows}
+					</tbody>
+				</table>
+			)
+		}else{
+			return(<table></table>)
+		}
 	}
 });
 

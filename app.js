@@ -7,6 +7,8 @@ var app = require('koa')(),
 		views = require('koa-views'),
 		port = process.env.PORT || 3333; 
 
+require('dotenv').config({silent: true});
+
 app.use(serve('public', {defer: true}));
 app.use(logger());
 app.use(views('public', {
