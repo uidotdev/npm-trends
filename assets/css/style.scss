@@ -11,12 +11,6 @@ body{
 	max-width: 940px;
 }
 
-@media (min-width: 481px) {
-  .container {
-    margin-top: 40px;
-  }
-}
-
 /****** General Styles ******/
 
 h1, h2, h3, h4, h5, h6{
@@ -41,8 +35,31 @@ h2{
 	margin-bottom: 20px;
 }
 
+p{
+	font-size: 16px;
+}
+
 a{
 	color: #0074d9;
+}
+
+
+/****** Sticky Footer ******/
+
+* {
+	margin: 0;
+}
+html, body {
+	height: 100%;
+}
+.wrapper{
+	min-height: 100%;
+	height: auto !important; /* This line and the next line are not necessary unless you need IE6 support */
+	height: 100%;
+	margin: 0 auto -50px; /* the bottom margin is the negative value of the footer's height */
+}
+footer, .push {
+	height: 50px; /* .push must be the same height as .footer */
 }
 
 
@@ -50,8 +67,28 @@ a{
 
 #site_heading{
 	font-size: 40px;
-	margin-top: 20px;
+	margin-top: 40px;
 	margin-bottom: 0px;
+}
+
+#header_subheading{
+	font-size: 18px;
+	text-align: center;
+	margin: 10px 0 0;
+	color: #aaaaaa;
+}
+
+/****** Footer ******/
+
+footer{
+	.container{
+		border-top: 2px solid #eeeeee;
+		padding-top: 12px;
+	}
+}
+
+#footer_menu{
+	text-align: center;
 }
 
 
@@ -205,6 +242,29 @@ a{
 		font-size: 18px;
 		font-weight: 400;
 	}
+}
+
+
+/****** Suggested Packets ******/
+
+#suggested_packages{
+	h2{
+		font-size: 20px;
+		margin: 40px 0 10px;
+		color: #aaaaaa;
+	}
+	ul{
+		li{
+			font-size: 16px;
+		}
+	}
+}
+
+
+/****** Extra Info ******/
+
+#extra_info{
+	margin: 50px 0;
 }
 
 

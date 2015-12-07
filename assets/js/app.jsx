@@ -109,13 +109,17 @@ var App = React.createClass({
 		var url = "/" + new_param;
 		this.props.history.pushState(null, url);
 	},
+	packetStatsComponents: function(){
+		if(this.state.packets.length > 0){
+			return(
+				<PacketsComparison packets={this.state.packets}/>
+			)
+		}
+	},
 	render: function(){
 		return (
-			<div>
+			<div className="container">
 				<div className="row">
-					<div className="col-xs-12">
-						<h1 id="site_heading">npm trends</h1>
-					</div>
 					<div className="col-xs-12">
 						<SearchForm curr_packets={this.props.params.packages} onSearch={this.updateFromSeach}/>
 						<PacketTags onTagRemove={this.removePacket}
@@ -124,7 +128,17 @@ var App = React.createClass({
 				</div>
 				<div className="row">
 					<div className="col-xs-12">
-						<PacketsComparison packets={this.state.packets}/>
+						{this.packetStatsComponents()}
+					</div>
+				</div>
+				<div className="row">
+					<div className="col-xs-12">
+						<SuggestedPackets />
+					</div>
+				</div>
+				<div className="row">
+					<div className="col-xs-12">
+						<SiteInfo />
 					</div>
 				</div>
 			</div>
@@ -444,7 +458,7 @@ var GithubStats = React.createClass({
 		}
 	},
 	heading: function(){
-		if (this.props.githubStats.length > 0){
+		if (this.props.githubStats){
 			return <h2>Github Stats</h2>;
 		}
 	},
@@ -521,6 +535,46 @@ var GithubStatsTable = React.createClass({
 		}else{
 			return(<table></table>)
 		}
+	}
+});
+
+var SuggestedPackets = React.createClass({
+	suggestionsList: function(){
+		var suggestions = [
+			['redux', 'reflux', 'flummox', 'alt'],
+			['react', 'angular'],
+			['gulp', 'grunt']
+		]
+		var list = suggestions.map(function(suggestion, i){
+			var base_url = window.location.host;
+			var href = "http://" + base_url + "/" + suggestion.join('-vs-');
+			var name = suggestion.join(' vs ');
+			return(
+				<li key={i}><a href={href}>{name}</a></li>
+			)
+		});
+		return list
+	},
+	render: function(){
+		return(
+			<div id="suggested_packages">
+				<h2>Suggestions:</h2>
+				<ul className="list-unstyled">
+					{this.suggestionsList()}
+				</ul>
+			</div>
+		)
+	}
+});
+
+var SiteInfo = React.createClass({
+	render: function(){
+		return(
+			<div id="extra_info">
+				<p>If you find any bugs or have a feature request, please open an issue on <a href="http://github.com/johnmpotter/npm-trends">github</a>!</p>
+				<p>The npm package download data comes from the awesome <a href="https://github.com/npm/download-counts">download counts</a> api provided by <a href="http://npmjs.com">npm</a>.</p>
+			</div>
+		)
 	}
 });
 

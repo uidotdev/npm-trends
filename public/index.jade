@@ -7,7 +7,17 @@ html
         meta(name="elasticsearch_url" content="#{env.elasticsearch_url}")
         meta(name="proxy_url" content="#{env.proxy_url}")
     body
-        div(id="app" class="container") 
+        div(class="wrapper")
+            header
+                div(class="container")
+                    h1(id="site_heading") npm trends
+                    p(id="header_subheading") Compare npm package download counts over time
+            div(id="app") 
+            div(class="push")
+        footer
+            div(class="container") 
+                ul(id="footer_menu" class="list-unstyled")
+                    li(class="inline") Made by <a href="http://twitter.com/johnmpotter">John Potter</a>
         script(src="/jquery/dist/jquery.min.js")
         script(src="/Chart.js/Chart.js")
         script(src="/DateJS/build/production/date.min.js")
