@@ -6030,7 +6030,9 @@ footer .container {
   color: #aaaaaa; }
 
 #suggested_packages ul li {
-  font-size: 16px; }
+  font-size: 16px;
+  padding-left: 10px;
+  margin-bottom: 5px; }
 
 /****** Extra Info ******/
 #extra_info {

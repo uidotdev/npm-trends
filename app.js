@@ -5,6 +5,7 @@ var app = require('koa')(),
 		serve = require('koa-static'),
 		router = require('koa-router')(),
 		views = require('koa-views'),
+		favicon = require('koa-favicon'),
 		port = process.env.PORT || 3333; 
 
 require('dotenv').config({silent: true});
@@ -14,6 +15,7 @@ app.use(logger());
 app.use(views('public', {
 	default: 'jade'
 }));
+app.use(favicon(__dirname + '/public/favicon.ico'));
 
 // pass env vars to app
 app.use(function *(next){

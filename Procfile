@@ -1,1 +1,1 @@
-web NODE_ENV=production node -r dotenv/config app.js
+web NODE_ENV=production node app.js
