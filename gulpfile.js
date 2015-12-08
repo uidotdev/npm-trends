@@ -13,7 +13,8 @@ var gulp = require('gulp'),
     uglify = require('gulp-uglify'),
     sass = require('gulp-sass'),
     minifyCss = require('gulp-minify-css'),
-    bower = require('gulp-bower'),
+    gulpFilter = require('gulp-filter'),
+    mainBowerFiles = require('main-bower-files'),
     runSequence = require('run-sequence'),
     lrload = require('livereactload'),
     shell = require('gulp-shell');
@@ -72,8 +73,13 @@ gulp.task('bundle-css', function(){
 });
 
 gulp.task('bower', function(){
-	return bower()
-    .pipe(gulp.dest('./public'));
+	return gulp.src(mainBowerFiles())
+    .pipe(gulpFilter('*.js'))
+    .pipe (concat("vendor.js"))
+    .pipe(gulp.dest('./public/js'))
+    .pipe (rename("vendor.min.js"))
+    .pipe(uglify())
+    .pipe(gulp.dest('./public/js'));
 });
 
 gulp.task('icons', function() { 
