@@ -1,11 +1,10 @@
 'use strict';
 
 var request = require("request"),
-    elasticsearch = require('elasticsearch'),
-    env = require('node-env-file');
+    elasticsearch = require('elasticsearch');
 
 // Load env variables
-env('./.env');
+require('dotenv').config({silent: true});
 
 var client = new elasticsearch.Client({
   host: process.env.ELASTICSEARCH_URL,
