@@ -94,10 +94,7 @@ You should now have a functioning autocomplete backed by your elasticsearch DB.
 
 ## Production
 
-Make sure to set the `NODE_ENV` environment variable in production when starting the server:
-```
-NODE_ENV=production node app.js
-```
+Make sure to set the `NODE_ENV` environment variable to 'production'. 
 
 You can set your production proxy url in the `.env` file:
 ```
