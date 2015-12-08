@@ -1,3 +1,4 @@
 node_modules/
 Procfile
 .env
+.DS_Store
