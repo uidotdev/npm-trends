@@ -22,7 +22,8 @@ app.use(function *(next){
   this.state.env = {
   	node_env: process.env.NODE_ENV,
   	elasticsearch_url: process.env.ELASTICSEARCH_URL,
-  	proxy_url: process.env.PROXY_URL
+  	proxy_url: process.env.PROXY_URL,
+  	cdn_url: process.env.CDN_URL
   };
   yield next;
 });
@@ -30,12 +31,10 @@ app.use(function *(next){
 app.use(router.routes());
 
 router.get('/', function *(){
-	this.state.dog = 'Doggies';
 	yield this.render('index');
 });
 
 router.get('/:everything', function *(){
-	this.state.dog = 'Doggies';
 	yield this.render('index');
 });
 

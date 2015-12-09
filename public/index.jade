@@ -2,7 +2,10 @@ doctype html
 html
     head
         title npm trends
-        link(href="/css/bundle.css" rel="stylesheet")
+        if env.node_env == 'production'
+            link(href="#{env.cdn_url}/css/bundle.min.css" rel="stylesheet")
+        else
+            link(href="/css/bundle.css" rel="stylesheet")
         meta(name="node_env" content="#{env.node_env ? env.node_env : 'dev'}")
         meta(name="elasticsearch_url" content="#{env.elasticsearch_url}")
         meta(name="proxy_url" content="#{env.proxy_url}")
@@ -18,9 +21,16 @@ html
             div(class="container") 
                 ul(id="footer_menu" class="list-unstyled")
                     li(class="inline") Made by <a href="http://twitter.com/johnmpotter">John Potter</a>
-        script(src="/js/vendor.min.js")
+                    
+        if env.node_env == 'production'
+            script(src="#{env.cdn_url}/js/vendor.min.1406c04f.js")
+            script(src="#{env.cdn_url}/js/bundle.min.5a8c2238.js")
+        else
+            script(src="/js/vendor.js")
+            script(src="/js/bundle.js")
+
         script(src="//cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.12.0/autocomplete.jquery.min.js")
-        script(src="/js/bundle.min.js")
+
         if env.node_env == 'production'
             script.
                 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

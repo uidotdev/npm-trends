@@ -15,18 +15,22 @@ var gulp = require('gulp'),
     minifyCss = require('gulp-minify-css'),
     gulpFilter = require('gulp-filter'),
     mainBowerFiles = require('main-bower-files'),
+    RevAll = require('gulp-rev-all'),
+    revdel = require('gulp-rev-delete-original'),
     runSequence = require('run-sequence'),
     lrload = require('livereactload'),
     shell = require('gulp-shell');
 
 gulp.task('nodemon', ['bundle-css', 'bower', 'icons', 'watch-css', 'watchify', 'browser-sync'], function(){
-	nodemon({
-		script: 'app.js',
-		ext: 'js html json',
-    execMap: {
-      js: "node --harmony"
-    }
-	}).on('restart');
+	runSequence('revision', function(){
+    nodemon({
+      script: 'app.js',
+      ext: 'js html json',
+      execMap: {
+        js: "node --harmony"
+      }
+    }).on('restart');
+  });
 });
 
 gulp.task('browser-sync', function(){
@@ -38,7 +42,7 @@ gulp.task('browser-sync', function(){
 });
 
 gulp.task('production:push', function(){
-  runSequence('precompile:assets', 'git:push', 'heroku:push', function(){
+  runSequence('precompile:assets', 'revision', 'git:push', 'heroku:push', function(){
     console.log('production push complete');
   });
 });
@@ -113,6 +117,17 @@ gulp.task('watchify', function(){
 		bundleBrowserify(w);
 	});
 	return bundleBrowserify(w);
+});
+
+gulp.task('revision', function(){
+  var revAll = new RevAll({
+                      dontRenameFile: ['.jade']
+                    });
+
+  gulp.src(['public/css/*.min.css', 'public/js/*.min.js', 'public/*.jade'], {base: 'public/'})
+      .pipe(revAll.revision())
+      .pipe(gulp.dest('public'))
+      .pipe(revdel())
 });
 
 var getBrowserifyInstance = function(env) {
