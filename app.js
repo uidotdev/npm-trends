@@ -6,10 +6,12 @@ var app = require('koa')(),
 		router = require('koa-router')(),
 		views = require('koa-views'),
 		favicon = require('koa-favicon'),
+		cors = require('koa-cors'),
 		port = process.env.PORT || 3333; 
 
 require('dotenv').config({silent: true});
 
+app.use(cors());
 app.use(serve('public', {defer: true}));
 app.use(logger());
 app.use(views('public', {
