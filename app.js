@@ -12,7 +12,7 @@ var app = require('koa')(),
 require('dotenv').config({silent: true});
 
 app.use(cors());
-app.use(serve('public', {defer: true}));
+app.use(serve('public', {defer: true, maxage: 86400000}));
 app.use(logger());
 app.use(views('public', {
 	default: 'jade'
