@@ -51,14 +51,14 @@ gulp.task('precompile:assets', ['bundle-css', 'bower', 'icons',
                               'browserify:production']);
 
 gulp.task('git:push', shell.task([
-  "git add .",
+  "git add -A",
   "git commit -m 'precompile for production'",
   "git push"
-]))
+]));
 
 gulp.task('heroku:push', shell.task([
   "git push heroku master"
-]))
+]));
 
 gulp.task('bundle-css', function(){
   return gulp.src('./assets/css/*.scss')
