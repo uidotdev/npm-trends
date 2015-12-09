@@ -23,8 +23,8 @@ html
                     li(class="inline") Made by <a href="http://twitter.com/johnmpotter">John Potter</a>
                     
         if env.node_env == 'production'
-            script(src="#{env.cdn_url}/js/bundle.min.c939436e.js")
             script(src="#{env.cdn_url}/js/vendor.min.1406c04f.js")
+            script(src="#{env.cdn_url}/js/bundle.min.c939436e.js")
         else
             script(src="/js/vendor.js")
             script(src="/js/bundle.js")
