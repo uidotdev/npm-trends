@@ -34,12 +34,14 @@ app.use(function *(next){
 
 app.use(router.routes());
 
+var index_file = process.env.NODE_ENV == 'production' ? 'cdn/index' : 'index';
+
 router.get('/', function *(){
-	yield this.render('index');
+	yield this.render(index_file);
 });
 
 router.get('/:everything', function *(){
-	yield this.render('index');
+	yield this.render(index_file);
 });
 
 app.listen(port, function(){

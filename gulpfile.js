@@ -16,10 +16,10 @@ var gulp = require('gulp'),
     gulpFilter = require('gulp-filter'),
     mainBowerFiles = require('main-bower-files'),
     RevAll = require('gulp-rev-all'),
-    revdel = require('gulp-rev-delete-original'),
     runSequence = require('run-sequence'),
     lrload = require('livereactload'),
-    shell = require('gulp-shell');
+    shell = require('gulp-shell'),
+    del = require('del');
 
 gulp.task('nodemon', ['bundle-css', 'bower', 'icons', 'watch-css', 'watchify', 'browser-sync'], function(){
 	runSequence('revision', function(){
@@ -120,14 +120,20 @@ gulp.task('watchify', function(){
 });
 
 gulp.task('revision', function(){
+  runSequence('revision:assets');
+});
+
+gulp.task('revision:assets', function(){
+
   var revAll = new RevAll({
                       dontRenameFile: ['.jade']
                     });
 
-  gulp.src(['public/css/*.min.css', 'public/js/*.min.js', 'public/*.jade'], {base: 'public/'})
+  del('public/cdn/**');
+
+  gulp.src(['public/css/*.min.css', 'public/js/*.min.js', 'public/*.jade'], {base: 'public'})
       .pipe(revAll.revision())
-      .pipe(gulp.dest('public'))
-      .pipe(revdel())
+      .pipe(gulp.dest('public/cdn'));
 });
 
 var getBrowserifyInstance = function(env) {
