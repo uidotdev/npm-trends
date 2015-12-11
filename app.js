@@ -7,6 +7,8 @@ var app = require('koa')(),
 		views = require('koa-views'),
 		favicon = require('koa-favicon'),
 		cors = require('koa-cors'),
+		React = require('react'),
+		Router = require('react-router'),
 		port = process.env.PORT || 3333; 
 
 require('dotenv').config({silent: true});

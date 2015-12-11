@@ -55,6 +55,9 @@ var App = React.createClass({
 						return data_hash;
 					});
 					passed_this.setState({packets: sorted_data});
+					var packets_string = packets_arr.length > 1 ? packets_arr.join(' vs ') : packets_arr[0];
+					document.title = packets_string + " - npm trends";
+					$('meta[name=description]').attr('content', "Compare npm package download statistics over time: " + packets_string);
 				}
 			}
 			packets_arr.map(function(packet){
@@ -72,6 +75,8 @@ var App = React.createClass({
 			}, this);
 		}else{
 			this.setState({packets: []});
+			document.title = "npm trends";
+			document.description = "Compare npm package download statistics over time.";
 		}
 	},
 	handleInvalidQuery: function(query){
