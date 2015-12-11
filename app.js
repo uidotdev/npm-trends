@@ -7,14 +7,16 @@ var app = require('koa')(),
 		views = require('koa-views'),
 		favicon = require('koa-favicon'),
 		cors = require('koa-cors'),
-		React = require('react'),
-		Router = require('react-router'),
 		port = process.env.PORT || 3333; 
 
 require('dotenv').config({silent: true});
 
+var cache_age = process.env.NODE_ENV == 'production' ? 86400000 : 0;
+var index_file = process.env.NODE_ENV == 'production' ? 'cdn/index' : 'index';
+
+
 app.use(cors());
-app.use(serve('public', {defer: true, maxage: 86400000}));
+app.use(serve('public', {defer: true, maxage: cache_age}));
 app.use(logger());
 app.use(views('public', {
 	default: 'jade'
@@ -33,8 +35,6 @@ app.use(function *(next){
 });
 
 app.use(router.routes());
-
-var index_file = process.env.NODE_ENV == 'production' ? 'cdn/index' : 'index';
 
 router.get('/', function *(){
 	yield this.render(index_file);
