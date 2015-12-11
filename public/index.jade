@@ -15,13 +15,13 @@ html
                 div(class="container")
                     h1(id="site_heading") npm trends
                     p(id="header_subheading") Compare npm package download counts over time
-            div(id="app") 
+            div(id="app")
             div(class="push")
         footer
-            div(class="container") 
+            div(class="container")
                 ul(id="footer_menu" class="list-unstyled")
                     li(class="inline") Made by <a href="http://twitter.com/johnmpotter">John Potter</a>
-                    
+
         if env.node_env == 'production'
             script(src="#{env.cdn_url}/js/vendor.min.1406c04f.js")
         else
