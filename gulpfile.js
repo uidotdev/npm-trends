@@ -126,7 +126,8 @@ gulp.task('revision', function(){
 gulp.task('revision:assets', function(){
 
   var revAll = new RevAll({
-                      dontRenameFile: ['.jade']
+                      dontRenameFile: ['.jade'],
+                      prefix: '/cdn'
                     });
 
   del('public/cdn/**');
