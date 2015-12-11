@@ -132,7 +132,7 @@ gulp.task('revision:assets', function(){
 
   del('public/cdn/**');
 
-  gulp.src(['public/css/*.min.css', 'public/js/*.min.js', 'public/*.jade'], {base: 'public'})
+  gulp.src(['public/css/*.min.css', 'public/js/*.min.js', 'public/fonts/**', 'public/*.jade'], {base: 'public'})
       .pipe(revAll.revision())
       .pipe(gulp.dest('public/cdn'));
 });
