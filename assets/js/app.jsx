@@ -37,8 +37,8 @@ var App = React.createClass({
 			var packets_data = [];
 			var packets_left = packets_arr.length;
 			function addData(data, passed_this){
-				var formatted_data = {id: data._id, 
-					                    name: data.name, 
+				var formatted_data = {id: data._id,
+					                    name: data.name,
 					                    description: data.description,
 					                    repository: data.repository};
 				packets_data.push(formatted_data);
@@ -51,7 +51,7 @@ var App = React.createClass({
 							if(packet_data.name === packet_name){
 								data_hash = packet_data;
 							}
-						}); 
+						});
 						return data_hash;
 					});
 					passed_this.setState({packets: sorted_data});
@@ -162,7 +162,7 @@ var SearchForm = React.createClass({
 					'text': query,
 					'completion': {
 						'field': 'suggest'
-					} 
+					}
 				}
 			}
 
@@ -206,9 +206,9 @@ var SearchForm = React.createClass({
 	render: function(){
 		return (
 			<form onSubmit={this.handleSubmit} name="seachForm" id="search_form" autoComplete="off">
-				<input id="search_form_input" 
+				<input id="search_form_input"
 							 className="autocomplete"
-				       ref="search_query" 
+				       ref="search_query"
 				       type="text"
 				       placeholder="Enter an npm package..."/>
 			</form>
@@ -285,9 +285,9 @@ var TrendGraphBox = React.createClass({
 			// Get full start week data by making start date a monday
 			var startDate = timeAgo.is().monday() ? timeAgo.toString("yyyy-M-dd") : timeAgo.next().monday().toString("yyyy-M-dd");
 			packet_names.forEach(function(packet_name){
-				var url = "https://api.npmjs.org/downloads/range/" 
-														+ startDate + ":" 
-														+ endDate + "/" 
+				var url = "https://api.npmjs.org/downloads/range/"
+														+ startDate + ":"
+														+ endDate + "/"
 			                     	+ packet_name;
 				$.ajax({
 					url: proxy_url + url,
@@ -320,7 +320,7 @@ var TrendGraphBox = React.createClass({
 	},
 	heading: function(){
 		if(this.state.graphStats.length > 0){
-		 	var select_options = [["1 Month", 1], ["3 Months", 3], ["6 Months", 6], 
+		 	var select_options = [["1 Month", 1], ["3 Months", 3], ["6 Months", 6],
 		 												["1 Year", 12]];
 		 	var select_options = select_options.map(function(option){
 		 		return(
@@ -329,7 +329,7 @@ var TrendGraphBox = React.createClass({
 		 	});
 			return(
 				<h2 className="chart-heading">
-					Downloads in past 
+					Downloads in past
 					<span className="select-container">
 						<select className="chart-heading-select" value={this.state.timePeriod} onChange={this.handlePeriodChange}>{select_options}</select>
 					</span>
@@ -489,8 +489,8 @@ var GithubStatsTable = React.createClass({
 		var stats = [["", "name"], ["stars", "stargazers_count"], ["open issues", "open_issues_count"],
 								 ["created", "created_at"]];
 
-		var headCols = stats.map(function(stat){ 
-			return( 
+		var headCols = stats.map(function(stat){
+			return(
 				<th key={stat[0]} >
 					{stat[0]}
 				</th>
@@ -503,11 +503,11 @@ var GithubStatsTable = React.createClass({
 				var attributeValue;
 				switch(attributeName){
 					case 'created_at':
-						attributeValue = ghStat[attributeName] !== undefined ? 
+						attributeValue = ghStat[attributeName] !== undefined ?
 														Date.parse(ghStat[attributeName]).toString("MMM d, yyyy") : "";
 						break;
 					case 'name':
-						attributeValue = ghStat[attributeName] !== undefined ? 
+						attributeValue = ghStat[attributeName] !== undefined ?
 														(<a className="name-header" href={ghStat.html_url}> {ghStat[attributeName]} </a>) : "";
 						break;
 					default:
@@ -610,7 +610,7 @@ var groupDates = function(dates, period, start, end){
 		if (dayObj.isAfter(current_period)) {
 			addWeekPeriod();
 		}
-		
+
 		current_period_downloads += date.downloads;
 	});
 
