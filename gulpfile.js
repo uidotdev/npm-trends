@@ -139,7 +139,6 @@ gulp.task('revision:assets', function(){
 
 var getBrowserifyInstance = function(env) {
 	var b = browserify('assets/js/app.jsx', {
-		debug: true,
 		extensions: ['.jsx'],
     // live reload
     plugin: (env === 'production') ? [] : [lrload],
