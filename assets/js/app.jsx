@@ -593,25 +593,31 @@ var groupDates = function(dates, period, start, end){
 	var groupedDates = []
 	var startDate = Date.parse(start);
 	var endDate = Date.parse(end);
-	var total_dates = dates.length;
-	var current_period = startDate.is().sunday() ? startDate : startDate.next().sunday();
-	var current_period_downloads = 0;
+	var currentPeriod = startDate.is().sunday() ? startDate : startDate.next().sunday();
+	var currentPeriodDownloads = 0;
 	dates.forEach(function(date, i){
 		var dayObj = new Date(date.day.split('-'));
 
-		function addWeekPeriod(){
-			var current_period_formatted = current_period.toString("MMM d");
-			groupedDates.push({period: current_period_formatted, downloads: current_period_downloads});
-			current_period = current_period.next().sunday();
-			current_period_downloads = 0;
+		console.log(dayObj);
+
+		checkForCorrectPeriod();
+
+		function checkForCorrectPeriod(){
+			console.log(currentPeriod);	
+			if( dayObj.isAfter(currentPeriod) ){
+				// go to next period if this date does not fall in currentPeriod
+				var currentPeriodFormatted = currentPeriod.toString("MMM d");
+				groupedDates.push({period: currentPeriodFormatted, downloads: currentPeriodDownloads});
+				currentPeriod = currentPeriod.next().sunday();
+				currentPeriodDownloads = 0;
+				checkForCorrectPeriod();
+			}else{
+				console.log(date.downloads);				
+				currentPeriodDownloads += date.downloads;
+				return;
+			}
 		}
 
-		// totals previous week and creates new week if data is in a different week
-		if (dayObj.isAfter(current_period)) {
-			addWeekPeriod();
-		}
-		
-		current_period_downloads += date.downloads;
 	});
 
 	return groupedDates;
