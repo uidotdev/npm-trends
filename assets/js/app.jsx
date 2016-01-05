@@ -280,10 +280,10 @@ var TrendGraphBox = React.createClass({
 			var packet_names = packets.map(function(packet){
 				return packet.name;
 			});
-			var endDate = Date.today().toString("yyyy-M-dd");
+			var endDate = Date.today().toString("yyyy-MM-dd");
 			var timeAgo = Date.today().addMonths(-period);
 			// Get full start week data by making start date a monday
-			var startDate = timeAgo.is().monday() ? timeAgo.toString("yyyy-M-dd") : timeAgo.next().monday().toString("yyyy-M-dd");
+			var startDate = timeAgo.is().monday() ? timeAgo.toString("yyyy-MM-dd") : timeAgo.next().monday().toString("yyyy-M-dd");
 			packet_names.forEach(function(packet_name){
 				var url = "https://api.npmjs.org/downloads/range/" 
 														+ startDate + ":" 
