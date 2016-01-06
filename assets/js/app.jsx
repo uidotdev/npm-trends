@@ -598,12 +598,9 @@ var groupDates = function(dates, period, start, end){
 	dates.forEach(function(date, i){
 		var dayObj = new Date(date.day.split('-'));
 
-		console.log(dayObj);
-
 		checkForCorrectPeriod();
 
 		function checkForCorrectPeriod(){
-			console.log(currentPeriod);	
 			if( dayObj.isAfter(currentPeriod) ){
 				// go to next period if this date does not fall in currentPeriod
 				var currentPeriodFormatted = currentPeriod.toString("MMM d");
@@ -611,8 +608,7 @@ var groupDates = function(dates, period, start, end){
 				currentPeriod = currentPeriod.next().sunday();
 				currentPeriodDownloads = 0;
 				checkForCorrectPeriod();
-			}else{
-				console.log(date.downloads);				
+			}else{				
 				currentPeriodDownloads += date.downloads;
 				return;
 			}
