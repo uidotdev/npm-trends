@@ -20,6 +20,7 @@ var currentTotalAdded = 0;
 getPackageCount();
 
 function getPackageCount(){
+   console.log("Getting package count.");
   request({
     url: "http://skimdb.npmjs.com/registry",
     headers: {
@@ -27,7 +28,7 @@ function getPackageCount(){
     }
   }, function(error, response, body){
     if (error) {
-      console.log("Error getting package count, will retry.")
+      console.log("Error getting package count, will retry.");
       getPackageCount();
     }
     if (!error && response.statusCode == 200) {
