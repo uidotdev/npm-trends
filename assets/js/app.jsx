@@ -596,8 +596,8 @@ var groupDates = function(dates, period, start, end){
 	var currentPeriod = startDate.is().sunday() ? startDate : startDate.next().sunday();
 	var currentPeriodDownloads = 0;
 	dates.forEach(function(date, i){
-		var dayObj = new Date(date.day.split('-'));
-
+		var dayObj = new Date(date.day);
+	
 		checkForCorrectPeriod();
 
 		function checkForCorrectPeriod(){
