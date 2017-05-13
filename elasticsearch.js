@@ -14,7 +14,7 @@ var client = new elasticsearch.Client({
 var totalCount;
 var perRequest = 5000;
 var numberOfRequests;
-var currentRequest = 0;
+var currentRequest = 64;
 var currentTotalAdded = 0;
 
 getPackageCount();
@@ -22,7 +22,7 @@ getPackageCount();
 function getPackageCount(){
    console.log("Getting package count.");
   request({
-    url: "http://skimdb.npmjs.com/registry",
+    url: "https://skimdb.npmjs.com/registry/",
     headers: {
       'Accept': 'application/json, text/javascript, */*; q=0.01'
     }
@@ -45,7 +45,7 @@ function getAndStoreDataLoop(){
   getNpmData();
 
   function getNpmData(){
-    var request_url = "http://skimdb.npmjs.com/registry/_all_docs?" +
+    var request_url = "https://skimdb.npmjs.com/registry/_all_docs?" +
                       "include_docs=true&" +
                       "limit=" + perRequest + "&" +
                       "skip=" + (perRequest * currentRequest) ; 

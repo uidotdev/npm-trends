@@ -111,7 +111,7 @@ gulp.task('watchify', function(){
 	var b = getBrowserifyInstance();
 	var w = watchify(b);
 
-	w.transform(babelify, {});
+	w.transform(babelify);
 	w.on('update', function(){
 		console.log('updating bundle');
 		bundleBrowserify(w);
