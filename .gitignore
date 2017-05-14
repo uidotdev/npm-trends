@@ -1,3 +1,26 @@
-node_modules/
-.env
+# Ignore bundler config.
+/.bundle
+
+# Ignore all logfiles and tempfiles.
+/log/*.log
+/tmp
+
+# Ignore other unneeded files.
+doc/
+*.swp
+*~
+.project
 .DS_Store
+.idea
+.rvmrc
+.ruby-*
+.secret
+.powenv
+
+# React on Rails
+npm-debug.log*
+node_modules
+/client/node_modules
+
+# Generated js bundles
+/app/assets/webpack/*

@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <%= render 'layouts/head_scripts' %>
+  </head>
+  <body>
+    <div class="container noHeaderFooter" data-env="<%= Rails.env %>">
+      <%= yield %>
+    </div>
+
+    <%= render "layouts/google_analytics" %>
+
+  </body>
+</html>

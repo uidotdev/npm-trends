@@ -1,0 +1,25 @@
+@import 'mixins';
+
+/****** Suggested Packets ******/
+
+#suggested_packages{
+	h2{
+		font-size: 20px;
+		margin: 40px 0 10px;
+		color: #aaaaaa;
+	}
+	ul{
+		li{
+			font-size: 16px;
+			padding-left: 10px;
+			margin-bottom: 5px;
+		}
+	}
+}
+
+
+/****** Extra Info ******/
+
+#extra_info{
+	margin: 50px 0;
+}

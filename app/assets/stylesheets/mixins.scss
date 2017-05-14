@@ -1,0 +1,31 @@
+/****** mixins, variables, etc. ******/
+
+$dark: #292929;
+$light: #bbbbbb;
+
+$border: #e2e2e2;
+$borderLight: #efefef;
+
+@mixin lg-screen {
+	@media screen and (max-width: 1199px){
+		@content;
+	}
+}
+
+@mixin md-screen {
+	@media screen and (max-width: 991px){
+		@content;
+	}
+}
+
+@mixin sm-screen {
+	@media screen and (max-width: 767px){
+		@content;
+	}
+}
+
+@mixin xs-screen {
+	@media screen and (max-width: 479px){
+		@content;
+	}
+}

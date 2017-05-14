@@ -1,59 +1,19 @@
 {
   "name": "npm-trends",
+  "description": "NPM Trends web app",
   "version": "1.0.0",
-  "description": "Compare npm packages",
-  "main": "app.js",
-  "author": "John Potter",
-  "license": "ISC",
+  "engines": {
+    "node": "5.1.0",
+    "npm": "3.3.12"
+  },
   "scripts": {
-    "start": "node --harmony `which gulp`"
+    "build:production": "cd client && npm run build:production",
+    "postinstall": "cd client && npm install",
+    "rails-server": "echo 'visit http://localhost:3000/hello_world' && foreman start -f Procfile.dev",
+    "test": "rspec"
   },
-  "dependencies": {
-    "bower": "1.6.5",
-    "del": "^2.2.0",
-    "dotenv": "1.2.0",
-    "elasticsearch": "9.0.2",
-    "history": "1.13.1",
-    "jade": "1.11.0",
-    "koa": "1.1.2",
-    "koa-cors": "0.0.16",
-    "koa-favicon": "^1.2.0",
-    "koa-logger": "1.3.0",
-    "koa-router": "5.3.0",
-    "koa-static": "1.5.2",
-    "koa-views": "3.1.0",
-    "mustache": "2.2.0",
-    "react": "0.14.2",
-    "react-dom": "0.14.2",
-    "react-router": "1.0.0",
-    "request": "2.67.0"
-  },
-  "devDependencies": {
-    "babel-plugin-react-transform": "1.1.1",
-    "babel-preset-es2015": "6.1.18",
-    "babel-preset-react": "6.1.18",
-    "babelify": "6.4.0",
-    "browser-sync": "2.10.0",
-    "browserify": "12.0.1",
-    "del": "^2.2.0",
-    "gulp": "3.9.0",
-    "gulp-concat": "2.6.0",
-    "gulp-filter": "^3.0.1",
-    "gulp-inject": "^3.0.0",
-    "gulp-minify-css": "1.2.1",
-    "gulp-nodemon": "2.0.4",
-    "gulp-rename": "1.2.2",
-    "gulp-rev-all": "^0.8.22",
-    "gulp-rev-napkin": "https://github.com/johnmpotter/gulp-rev-napkin",
-    "gulp-sass": "2.1.0",
-    "gulp-shell": "0.5.1",
-    "gulp-uglify": "1.5.1",
-    "livereactload": "2.1.0",
-    "main-bower-files": "2.9.0",
-    "react-proxy": "1.1.1",
-    "run-sequence": "1.1.5",
-    "vinyl-buffer": "1.0.0",
-    "vinyl-source-stream": "1.1.0",
-    "watchify": "3.6.0"
-  }
+  "cacheDirectories": [
+    "node_modules",
+    "client/node_modules"
+  ]
 }
