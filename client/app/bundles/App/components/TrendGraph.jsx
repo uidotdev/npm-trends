@@ -40,12 +40,16 @@ export default class TrendGraph extends Component {
 				});
 				var dataset = {
 					label: graphStat.package,
-					fillColor: "rgba(" + dataColor + ",0.1)",
-	        strokeColor: "rgba(" + dataColor + ",1)",
-	        pointColor: "rgba(" + dataColor + ",1)",
-	        pointStrokeColor: "#fff",
-	        pointHighlightFill: "#fff",
-	        pointHighlightStroke: "rgba(" + dataColor + ",1)",
+					backgroundColor: "rgba(" + dataColor + ",0)",
+	        borderColor: "rgba(" + dataColor + ",1)",
+	        pointRadius: 5,
+	        pointHoverRadius: 5,
+	        pointBackgroundColor: "rgba(" + dataColor + ",1)",
+	        pointBorderColor: "#fff",
+	        pointBorderWidth: 1,
+	        pointHoverBackgroundColor: "#ffffff",
+	        pointHoverBorderColor: "rgba(" + dataColor + ",1)",
+	        fill: false,
 	        data: data
 				}
 				chart_data.datasets.push(dataset);
@@ -57,7 +61,11 @@ export default class TrendGraph extends Component {
 				scaleLabel: "<%= ' ' + value%>"
 			}
 			var ctx = document.getElementById("download_chart").getContext("2d");
-			this.download_chart = new Chart(ctx).Line(chart_data, chart_options);
+			this.download_chart = new Chart(ctx, {
+				type: 'line', 
+				data: chart_data, 
+				options: chart_options
+			});
 		}
 	}
 

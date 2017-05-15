@@ -16,8 +16,13 @@ export default class PackageStatsTable extends Component {
 
 		// array of stats to display
 		// format: [name_to_display, github_api_attribute_name]
-		var stats = [["", "name"], ["stars", "stargazers_count"], ["open issues", "open_issues_count"],
-								 ["created", "created_at"]];
+		var stats = [ ["", "name"], 
+		              ["stars 🌟", "stargazers_count"], 
+		              ["forks 🍽", "forks_count"], 
+		              ["issues ⚠️", "open_issues_count"],
+		              ["updated 🛠", "pushed_at"],
+								  ["created 🐣", "created_at"],
+								];
 
 		var headCols = stats.map(function(stat){ 
 			return( 
@@ -33,6 +38,10 @@ export default class PackageStatsTable extends Component {
 				var attributeValue;
 				switch(attributeName){
 					case 'created_at':
+						attributeValue = ghStat[attributeName] !== undefined ? 
+														Date.parse(ghStat[attributeName]).toString("MMM d, yyyy") : "";
+						break;
+					case 'pushed_at':
 						attributeValue = ghStat[attributeName] !== undefined ? 
 														Date.parse(ghStat[attributeName]).toString("MMM d, yyyy") : "";
 						break;

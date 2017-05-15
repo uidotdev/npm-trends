@@ -43,6 +43,7 @@ export default class PackageStats extends Component {
 						url: this.props.proxy_url + github_url,
 						dataType: 'json',
 						success: function(data){
+							console.log(data);
 							addData(data, this);
 						}.bind(this),
 						error: function(data){
