@@ -1,0 +1,18 @@
+
+development:
+  adapter: postgresql
+  database: npmtrends_development
+  host: localhost
+
+test: &test
+  adapter: postgresql
+  database: npmtrends_test
+  host: localhost
+
+production:
+  adapter: postgresql
+  database: npmtrends_production
+  host: localhost
+
+cucumber:
+  <<: *test

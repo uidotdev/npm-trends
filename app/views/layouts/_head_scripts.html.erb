@@ -1,0 +1,29 @@
+<title>npm trends</title>
+<meta name='description'
+      content='Compare npm package download statistics over time.' />
+
+<meta name='elasticsearch_url' content="<%= ENV['ELASTICSEARCH_URL'] %>" />
+<meta name='proxy_url' content="<%= ENV['PROXY_URL'] %>" />
+
+<% if tablet_device? || mobile_device? %>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<% else %>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+<% end %>
+
+<%= stylesheet_link_tag "application", media: "all" %>
+<%= javascript_include_tag "application" %>
+
+<script src="https://use.fortawesome.com/978e158e.js"></script>
+
+<%= javascript_include_tag "//cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.12.0/autocomplete.jquery.min.js" %>
+
+<%= csrf_meta_tags %>
+
+<%= favicon_link_tag 'favicon.ico' %>
+<%= favicon_link_tag 'apple-touch-icon-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png' %>
+<%= favicon_link_tag 'apple-touch-icon.png', :rel => 'apple-touch-icon', :type => 'image/png' %>
+
+<%= render 'layouts/shim' %>
+
+                      

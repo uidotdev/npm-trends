@@ -1,0 +1,40 @@
+@import 'mixins';
+
+/****** Table ******/
+
+table{
+	margin-top: 10px;
+	color: #000000;
+	width: 100%;
+}
+
+thead{
+	border-bottom: 2px solid $border;
+}
+
+th{
+	text-align: left;
+	padding: 10px 25px;
+	font-size: 16px;
+	font-weight: 400;
+}
+
+tr{
+	border-bottom: 1px solid $border;
+}
+
+td{
+	font-size: 16px;
+	padding: 10px 25px;
+	&:first-child{
+		padding: 10px 25px 10px 0;
+	}
+}
+
+.name-header{
+	font-size: 18px;
+	font-weight: 400;
+}
+
+
+

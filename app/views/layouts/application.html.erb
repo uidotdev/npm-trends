@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+  <head>    
+    <%= render 'layouts/head_scripts' %>
+  </head>
+  <body class="<%= 'isMobile' if mobile_device? %> <%= 'isTablet' if tablet_device? %> <%= 'light-body-background' if defined? @light_background_color %>" data-env="<%= Rails.env %>">
+
+    <%= yield %>
+
+    <%= render "layouts/bottom_scripts" %>
+
+  </body>
+</html>

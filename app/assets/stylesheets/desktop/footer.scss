@@ -1,0 +1,27 @@
+@import 'mixins';
+
+/****** Footer ******/
+
+.footer-content{
+	border-top: 2px solid $borderLight;
+	height: 60px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+#footer_menu{
+	text-align: center;
+}
+
+
+/****** Sticky Footer ******/
+
+.site-wrapper{
+	display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+.content-wrapper{
+	flex: 1;
+}
