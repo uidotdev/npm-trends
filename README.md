@@ -1,5 +1,5 @@
 # NPM Trends ([npmtrends.com](http://www.npmtrends.com))
-NPM package comparison app
+NPM package comparison app 
 
 ## Why?
 
