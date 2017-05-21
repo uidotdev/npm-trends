@@ -12,4 +12,3 @@
 //
 //
 //= require webpack-bundle
-//= require ./google_analytics.js

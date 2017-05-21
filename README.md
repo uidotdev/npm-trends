@@ -121,14 +121,14 @@ ELASTICSEARCH_URL=your_elasticsearch_url
 
 Set up the elasticsearch DB:
 ```
-node elasticsearchSetup.js
+npm run init-elasticsearch
 ```
 
 Load data from npm to the elasticsearch DB (this could take awhile):
 
 We are batch requesting 200,000+ packages from npm, then saving to elasticsearch all packages with over 100 downloads in the last month 
 ```
-node elasticsearch.js
+npm run seed-elasticsearch
 ```
 note: If it ever gets hung up, you can change the `currentRequest` var in the `elasticsearch.js` file to the number of your last completed request and then run `node elasticsearch.js` again. The process will then start from that most recently completed request.
 

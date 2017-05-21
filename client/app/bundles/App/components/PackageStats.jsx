@@ -24,16 +24,6 @@ export default class PackageStats extends Component {
 
 	getGithubStats(packets) {
 		if ( packets.length > 0 ){
-			var githubData = [];
-			var packets_left = packets.length;
-			function addData(data, passed_this){
-				githubData.push(data);
-				packets_left -= 1;
-				if(packets_left === 0){
-					//preserve original order
-					passed_this.setState({githubStats: githubData});
-				}
-			}
 			packets.map(function(packet){
 				// adds packets that have a github repository
 				if (packet.repository && (packet.repository.url.indexOf('github') >= 0)){
@@ -43,7 +33,6 @@ export default class PackageStats extends Component {
 						url: this.props.proxy_url + github_url,
 						dataType: 'json',
 						success: function(data){
-							console.log(data);
 							addData(data, this);
 						}.bind(this),
 						error: function(data){
@@ -56,6 +45,22 @@ export default class PackageStats extends Component {
 					addData(packet_data, this);
 				}
 			}, this);
+
+			// Initially store in object to avoid duplicates (2 packages with same repository)
+			var githubDataById = {};
+			var packets_left = packets.length;
+
+			function addData(data, passed_this){
+				githubDataById[data.name] = data;
+				packets_left -= 1;
+				if(packets_left === 0){
+					let githubDataArray = [];
+					for (var key in githubDataById){
+						githubDataArray.push(githubDataById[key]);
+					}
+					passed_this.setState({githubStats: githubDataArray});
+				}
+			}
 		}else{
 			this.setState({githubStats: []});
 		}

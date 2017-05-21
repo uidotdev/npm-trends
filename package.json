@@ -10,7 +10,9 @@
     "build:production": "cd client && npm run build:production",
     "postinstall": "cd client && npm install",
     "rails-server": "echo 'visit http://localhost:3000/hello_world' && foreman start -f Procfile.dev",
-    "test": "rspec"
+    "test": "rspec",
+    "init-elasticsearch": "node client/tasks/elasticsearchSetup.js",
+    "seed-elasticsearch": "node client/tasks/elasticsearch.js"
   },
   "cacheDirectories": [
     "node_modules",

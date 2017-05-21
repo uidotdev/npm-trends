@@ -1,5 +1,11 @@
 @import 'mixins';
 
+/****** Container ******/
+
+.compare-container--loading{
+	opacity: .5;
+}
+
 /****** Charts ******/
 
 .graph-container{

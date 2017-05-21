@@ -36,7 +36,7 @@ class PackageComparison extends Component {
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
-		return this.state.packets !== nextState.packets;
+		return (this.state.packets !== nextState.packets);
 	}
 
 	colors = () => {
@@ -45,49 +45,62 @@ class PackageComparison extends Component {
 
 	loadPackets = (props) => {
 		var packets = props.params.packets;
-		if (packets){
-			var packets_arr = packets.split('-vs-');
-			var packets_data = [];
-			var packets_left = packets_arr.length;
-			function addData(data, passed_this){
-				var formatted_data = {id: data._id, 
-					                    name: data.name, 
-					                    description: data.description,
-					                    repository: data.repository};
-				packets_data.push(formatted_data);
-				packets_left -= 1;
-				if(packets_left === 0){
-					//preserve original order
-					var sorted_data = packets_arr.map(function(packet_name){
-						var data_hash;
-						packets_data.forEach(function(packet_data){
-							if(packet_data.name === packet_name){
-								data_hash = packet_data;
-							}
-						}); 
-						return data_hash;
-					});
-					passed_this.setState({packets: sorted_data});
-					var packets_string = packets_arr.length > 1 ? packets_arr.join(' vs ') : packets_arr[0];
-					document.title = packets_string + " - npm trends";
-					$('meta[name=description]').attr('content', "Compare npm package download statistics over time: " + packets_string);
-				}
-			}
-			packets_arr.map(function(packet){
-				var url = "http://registry.npmjs.com/" + packet + "/latest";
-				$.ajax({
-					url: this.props.railsContext.proxyUrl + url,
-					dataType: 'json',
-					success: function(data){
-						addData(data, this);
-					}.bind(this),
-					error: function(xhr, status, error){
-						this.handleInvalidQuery(packet);
-					}.bind(this)
+
+		if (!packets){
+			this.setPageMeta([]);
+			this.setState({ packets: [] });
+			return;
+		}
+
+		var packets_arr = packets.split('-vs-');
+		var packets_data = [];
+		var packets_left = packets_arr.length;
+
+		packets_arr.map(function(packet){
+			var url = "http://api.npms.io/v2/package/" + encodeURIComponent(encodeURIComponent(packet));
+			$.ajax({
+				url: this.props.railsContext.proxyUrl + url,
+				dataType: 'json',
+				success: function(data){
+					addData(data, this);
+				}.bind(this),
+				error: function(xhr, status, error){
+					this.handleInvalidQuery(packet);
+				}.bind(this)
+			});
+		}, this);
+
+		function addData(data, passedThis) {
+			var formatted_data = {id: data.collected.metadata.name, 
+				                    name: data.collected.metadata.name, 
+				                    description: data.collected.metadata.description,
+				                    repository: data.collected.metadata.repository,
+				                    npmsData: data};
+			packets_data.push(formatted_data);
+			packets_left -= 1;
+			if(packets_left === 0){
+				//preserve original order
+				var sorted_data = packets_arr.map(function(packet_name){
+					var data_hash;
+					packets_data.forEach(function(packet_data){
+						if(packet_data.name === decodeURIComponent(packet_name)){
+							data_hash = packet_data;
+						}
+					}); 
+					return data_hash;
 				});
-			}, this);
+				passedThis.setPageMeta(packets_arr);
+				passedThis.setState({packets: sorted_data});
+			}
+		}
+	}
+
+	setPageMeta = (packets_arr) => {
+		if(packets_arr.length){
+			var packets_string = packets_arr.length > 1 ? decodeURIComponent(packets_arr.join(' vs ')) : decodeURIComponent(packets_arr[0]);
+			document.title = packets_string + " - npm trends";
+			$('meta[name=description]').attr('content', "Compare npm package download statistics over time: " + packets_string);
 		}else{
-			this.setState({packets: []});
 			document.title = "npm trends";
 			document.description = "Compare npm package download statistics over time.";
 		}
@@ -149,7 +162,7 @@ class PackageComparison extends Component {
 				<SuggestedPackages />
 				<div id="extra_info">
 					<p>If you find any bugs or have a feature request, please open an issue on <a href="http://github.com/johnmpotter/npm-trends">github</a>!</p>
-					<p>The npm package download data comes from the awesome <a href="https://github.com/npm/download-counts">download counts</a> api provided by <a href="http://npmjs.com">npm</a>.</p>
+					<p>The npm package download data comes from npm's <a href="https://github.com/npm/download-counts">download counts</a> api and package details come from <a href="https://api-docs.npms.io/">npms.io</a>.</p>
 				</div>
 			</div>
 		);

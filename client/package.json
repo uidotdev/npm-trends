@@ -28,6 +28,7 @@
     "clipboard": "1.6.1",
     "css-loader": "^0.25.0",
     "datejs": "1.0.0-rc3",
+    "dotenv": "1.2.0",
     "elasticsearch": "9.0.2",
     "es5-shim": "^4.5.7",
     "expose-loader": "^0.7.1",
@@ -48,6 +49,7 @@
     "redux-immutable": "3.1.0",
     "redux-promise": "^0.5.3",
     "redux-thunk": "2.2.0",
+    "request": "2.67.0",
     "style-loader": "^0.13.1",
     "webpack": "^1.12.14"
   },
