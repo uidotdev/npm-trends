@@ -18,6 +18,7 @@ gem 'puma', '3.6.2'
 gem 'httparty', '~> 0.13.3'
 gem 'redis-rails', '~> 5.0.1'
 gem 'platform-api', '~> 0.3.0'
+gem 'rollbar', '2.14.1'
 
 
 group :development, :test do

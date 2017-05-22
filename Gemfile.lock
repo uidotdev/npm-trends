@@ -383,6 +383,8 @@ GEM
       redis-store (~> 1.2.0)
     redis-store (1.2.0)
       redis (>= 2.2)
+    rollbar (2.14.1)
+      multi_json
     rspec (3.5.0)
       rspec-core (~> 3.5.0)
       rspec-expectations (~> 3.5.0)
@@ -500,6 +502,7 @@ DEPENDENCIES
   rails (~> 5.0.0.1)
   react_on_rails (= 7.0.4)
   redis-rails (~> 5.0.1)
+  rollbar (= 2.14.1)
   rspec-rails (~> 3.5.2)
   ruby-prof (~> 0.15.1)
   sass-rails (~> 5.0.3)
