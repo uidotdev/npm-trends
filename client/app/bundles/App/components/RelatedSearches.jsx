@@ -14,23 +14,24 @@ export default class RelatedSearches extends Component {
 
 	componentDidMount = () => {
 		if(this.props.packetsArray.length){
-			this.fetchRelatedSearches();
+			this.fetchRelatedSearches(this.props.packetsArray);
 		}
 	}
 
 	componentWillReceiveProps = (nextProps) => {
 		if(this.props.packetsArray !== nextProps.packetsArray) {
-			this.fetchRelatedSearches();
+			console.log('called');
+			this.fetchRelatedSearches(nextProps.packetsArray);
 		}
 	}
 
-	fetchRelatedSearches = () => {		
+	fetchRelatedSearches = (packetsArray) => {		
 		$.ajax({
 			url: '/s/related',
 			dataType: 'json',
 			type: 'GET',
 			data: {
-				search_query: this.props.packetsArray
+				search_query: packetsArray
 			},
 			success: function(data){
 				const searches = data.map(function(searchQuery){
