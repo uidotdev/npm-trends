@@ -20,7 +20,6 @@ export default class RelatedSearches extends Component {
 
 	componentWillReceiveProps = (nextProps) => {
 		if(this.props.packetsArray !== nextProps.packetsArray) {
-			console.log('called');
 			this.fetchRelatedSearches(nextProps.packetsArray);
 		}
 	}
