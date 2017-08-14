@@ -6,7 +6,7 @@ import PackageComparison from '../containers/PackageComparison';
 import Header from '../containers/Header';
 import Footer from '../containers/Footer';
 
-class AppContainerDogs extends Component {
+class AppContainer extends Component {
 
 	static propTypes = {
 		match: PropTypes.object.isRequired,
@@ -27,6 +27,5 @@ class AppContainerDogs extends Component {
 	}
 }
 
-const AppContainer = withRouter(AppContainerDogs);
-export default AppContainer;
+export default AppContainer = withRouter(AppContainer);
 

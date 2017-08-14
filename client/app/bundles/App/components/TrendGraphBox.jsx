@@ -97,7 +97,7 @@ export default class TrendGraphBox extends Component {
 		 	});
 			return(
 				<h2 className="chart-heading">
-					Downloads in past 
+					Downloads <span className="text--light">in past</span>
 					<span className="select-container">
 						<select className="chart-heading-select" value={this.state.timePeriod} onChange={this.handlePeriodChange}>{select_options}</select>
 					</span>

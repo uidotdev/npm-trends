@@ -26,7 +26,7 @@ body{
 h1, h2, h3, h4, h5, h6{
 	font-family: 'helvetica neue', arial, sans-serif;
 	color: $dark;
-	font-weight: 200;
+	font-weight: 400;
 	letter-spacing: 2px;
 }
 
@@ -52,6 +52,9 @@ p{
 a{
 	color: #0074d9;
 	text-decoration: none;
+	&:hover{
+		text-decoration: underline;
+	}
 }
 
 *, *:before, *:after {
@@ -69,6 +72,17 @@ a{
 .inline{
 	display: inline-block;
 	vertical-align: top;
+}
+
+
+/****** Custom classes ******/
+
+.text--bold{
+	font-weight: 400;
+}
+
+.text--light{
+	font-weight: 200;
 }
 
 

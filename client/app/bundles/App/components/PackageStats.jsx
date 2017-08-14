@@ -68,7 +68,7 @@ export default class PackageStats extends Component {
 
 	render(){
 		return(
-			<div>
+			<div className="package-stats">
 				{ this.state.githubStats && 
 					<h2>Github Stats</h2>
 				}

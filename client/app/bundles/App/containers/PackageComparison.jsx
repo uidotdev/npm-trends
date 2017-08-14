@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
+import ReactOnRails from 'react-on-rails';
 
 import { connect } from 'react-redux';
 
@@ -7,7 +8,8 @@ import SearchForm from '../components/SearchForm';
 import PackageTags from '../components/PackageTags';
 import TrendGraphBox from '../components/TrendGraphBox';
 import PackageStats from '../components/PackageStats';
-import SuggestedPackages from '../components/SuggestedPackages';
+import PopularSearches from '../components/PopularSearches';
+import RelatedSearches from '../components/RelatedSearches';
 
 const mapStateToProps = (state) => {
   return { 
@@ -91,6 +93,7 @@ class PackageComparison extends Component {
 				});
 				passedThis.setPageMeta(packets_arr);
 				passedThis.setState({packets: sorted_data});
+				passedThis.logSearch();
 			}
 		}
 	}
@@ -98,11 +101,11 @@ class PackageComparison extends Component {
 	setPageMeta = (packets_arr) => {
 		if(packets_arr.length){
 			var packets_string = packets_arr.length > 1 ? decodeURIComponent(packets_arr.join(' vs ')) : decodeURIComponent(packets_arr[0]);
-			document.title = packets_string + " - npm trends";
+			document.title = packets_string + " | npm trends";
 			$('meta[name=description]').attr('content', "Compare npm package download statistics over time: " + packets_string);
 		}else{
-			document.title = "npm trends";
-			document.description = "Compare npm package download statistics over time.";
+			document.title = "npm trends: Compare NPM package downloads";
+			document.description = "Which NPM package should you use? Compare NPM package download stats over time. Spot trends, pick the winner.";
 		}
 	}
 
@@ -119,7 +122,7 @@ class PackageComparison extends Component {
 		this.props.history.push(url);
 	}
 
-	updateFromSeach = (query) => {
+	updateFromSearch = (query) => {
 		let new_param;
 		if( this.props.params.packets ){
 			let packets_array = this.props.params.packets.split("-vs-");
@@ -144,11 +147,30 @@ class PackageComparison extends Component {
 		this.props.history.push(url);
 	}
 
+	logSearch = () => {
+		const packets_array = this.props.params.packets.split("-vs-");
+
+		$.ajax({
+			url: '/s/log',
+			dataType: 'json',
+			type: 'POST',
+			data: {
+				search_query: packets_array,
+				search_type: 'package_added',
+				authenticity_token: ReactOnRails.authenticityToken(),
+			},
+			success: function(data){}.bind(this),
+			error: function(xhr, status, error){
+				console.log(xhr);
+			}.bind(this)
+		});
+	}
+
 	render() {
 		return (
 			<div className="container">
 				<SearchForm 
-					onSearch={this.updateFromSeach}/>
+					onSearch={this.updateFromSearch}/>
 				<PackageTags 
 					onTagRemove={this.removePacket}
 					packets={this.state.packets}
@@ -159,7 +181,10 @@ class PackageComparison extends Component {
 						<PackageStats packets={this.state.packets} proxy_url={this.props.railsContext.proxyUrl}/>
 					</div>
 				}
-				<SuggestedPackages />
+				<div className="suggestions--container">
+					<RelatedSearches packetsArray={this.props.params.packets ? this.props.params.packets.split("-vs-") : []} />
+					<PopularSearches />
+				</div>
 				<div id="extra_info">
 					<p>If you find any bugs or have a feature request, please open an issue on <a href="http://github.com/johnmpotter/npm-trends">github</a>!</p>
 					<p>The npm package download data comes from npm's <a href="https://github.com/npm/download-counts">download counts</a> api and package details come from <a href="https://api-docs.npms.io/">npms.io</a>.</p>

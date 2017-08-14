@@ -14,7 +14,7 @@ var client = new elasticsearch.Client({
 var totalCount;
 var perRequest = 50;
 var numberOfRequests;
-var currentRequest = 4594;
+var currentRequest = 0;
 var currentTotalAdded = 0;
 
 getPackageCount();
