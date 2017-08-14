@@ -24,7 +24,13 @@ export default class RelatedSearches extends Component {
 		}
 	}
 
-	fetchRelatedSearches = (packetsArray) => {		
+	fetchRelatedSearches = (packetsArray) => {	
+		console.log(packetsArray);	
+		if (!packetsArray.length) {
+			this.setState({searches: []});
+			return;
+		}
+
 		$.ajax({
 			url: '/s/related',
 			dataType: 'json',
@@ -36,7 +42,7 @@ export default class RelatedSearches extends Component {
 				const searches = data.map(function(searchQuery){
 					return searchQuery.slug.split('_').join('-vs-');
 				});
-				this.setState({searches: searches})
+				this.setState({searches: searches});
 			}.bind(this),
 			error: function(xhr, status, error){
 				console.log(xhr);
