@@ -25,7 +25,6 @@ export default class RelatedSearches extends Component {
 	}
 
 	fetchRelatedSearches = (packetsArray) => {	
-		console.log(packetsArray);	
 		if (!packetsArray.length) {
 			this.setState({searches: []});
 			return;
