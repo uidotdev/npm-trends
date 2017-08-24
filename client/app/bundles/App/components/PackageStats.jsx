@@ -70,7 +70,7 @@ export default class PackageStats extends Component {
 		return(
 			<div className="package-stats">
 				{ this.state.githubStats && 
-					<h2>Github Stats</h2>
+					<h2>GitHub Stats</h2>
 				}
 				<PackageStatsTable githubStats={this.state.githubStats} />
 			</div>
