@@ -64,16 +64,18 @@ export default class PackageStatsTable extends Component {
 		}, this);
 
 		return(
-			<table className="table">
-				<thead>
-					<tr>
-						{headCols}
-					</tr>
-				</thead>
-				<tbody>
-					{bodyRows}
-				</tbody>
-			</table>
+			<div className="table-container">
+				<table className="table">
+					<thead>
+						<tr>
+							{headCols}
+						</tr>
+					</thead>
+					<tbody>
+						{bodyRows}
+					</tbody>
+				</table>
+			</div>
 		)
 	}
 };

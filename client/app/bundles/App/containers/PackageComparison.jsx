@@ -166,9 +166,21 @@ class PackageComparison extends Component {
 		});
 	}
 
+	pageHeading = () => {
+		if (!this.props.params.packets) return <span className="text--bold">Compare package download counts over time</span>;
+		return this.props.params.packets.split('-vs-').map(function(name, i){
+			return(
+				<span key={i}>
+					<span className="text--bold">{name}</span>{ this.props.params.packets.split('-vs-').length - 1 !== i && ' vs ' }
+				</span>
+			);
+		}, this);
+	}
+
 	render() {
 		return (
 			<div className="container">
+				<h1>{this.pageHeading()}</h1>
 				<SearchForm 
 					onSearch={this.updateFromSearch}/>
 				<PackageTags 

@@ -10,9 +10,15 @@ body{
 }
 
 .container{
-	max-width: 1000px;
+	max-width: 1200px;
 	margin: 0 auto;
-	padding: 0 30px;
+	padding: 0 60px;
+}
+
+@include md-screen{
+	.container{
+		padding: 0 30px;
+	}
 }
 
 @include sm-screen{
@@ -31,12 +37,12 @@ h1, h2, h3, h4, h5, h6{
 }
 
 h1{
-	text-align: center;
 	font-family: 'helvetica neue', arial, sans-serif;
 	color: #000000;
 	font-weight: 200;
-	letter-spacing: 10px;
-	font-size: 36px;
+	letter-spacing: 2px;
+	font-size: 32px;
+	margin: 10px 0 15px;
 }
 
 h2{
@@ -59,6 +65,15 @@ a{
 
 *, *:before, *:after {
   box-sizing: border-box;
+}
+
+@include sm-screen{
+	h1{
+		font-size: 26px
+	}
+	h2{
+		font-size: 18px;
+	}
 }
 
 

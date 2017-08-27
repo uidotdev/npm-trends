@@ -36,5 +36,11 @@ td{
 	font-weight: 400;
 }
 
+@include sm-screen{
+	.table-container{
+		overflow-y: scroll;
+	}
+}
+
 
 

@@ -50,7 +50,7 @@ export default class TrendGraph extends Component {
 	        pointHoverBackgroundColor: "#ffffff",
 	        pointHoverBorderColor: "rgba(" + dataColor + ",1)",
 	        fill: false,
-	        data: data
+	        data: data,
 				}
 				chart_data.datasets.push(dataset);
 			}, this);
@@ -58,7 +58,8 @@ export default class TrendGraph extends Component {
 				scaleFontColor: "#000000",
 				responsive: true,
 				datasetFill: false,
-				scaleLabel: "<%= ' ' + value%>"
+				scaleLabel: "<%= ' ' + value%>",
+				maintainAspectRatio: false,
 			}
 			var ctx = document.getElementById("download_chart").getContext("2d");
 			this.download_chart = new Chart(ctx, {

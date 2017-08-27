@@ -21,6 +21,17 @@
 	}
 }
 
+@include sm-screen{
+	.suggestions--container{
+		flex-direction: column;
+		justify-content: flex-start;
+	}
+	.suggetions--box{
+		flex: 0 0 100%;
+		width: 100%;
+	}
+}
+
 /****** Extra Info ******/
 
 #extra_info{

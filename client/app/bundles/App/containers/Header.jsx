@@ -7,8 +7,7 @@ export default class Header extends Component {
 		return(
 			<header>
 				<div className="container">
-					<h1 id="site_heading">npm trends</h1>
-					<p id="header_subheading">Compare npm package download counts over time</p>
+					<a href="/" id="site_heading"><img className="site-logo" src="/assets/npm_trends_logo.png"/><span className="site-logo--name">npm trends</span></a>
 				</div>
 			</header>
 		);
