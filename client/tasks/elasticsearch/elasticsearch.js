@@ -4,7 +4,7 @@ const esClient = require('./esClient');
 var totalCount;
 var perRequest = 128; // npm download count bulk limit
 var numberOfRequests;
-var currentRequest = 819;
+var currentRequest = 0;
 var currentTotalAdded = 0;
 
 getPackageCount();
