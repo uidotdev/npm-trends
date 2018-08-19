@@ -12,7 +12,7 @@ import PopularSearches from '../components/PopularSearches';
 import RelatedSearches from '../components/RelatedSearches';
 
 const mapStateToProps = (state) => {
-  return { 
+  return {
   	railsContext: state.railsContext,
   };
 }
@@ -59,7 +59,7 @@ class PackageComparison extends Component {
 		var packets_left = packets_arr.length;
 
 		packets_arr.map(function(packet){
-			var url = "http://api.npms.io/v2/package/" + encodeURIComponent(encodeURIComponent(packet));
+			var url = "https://api.npms.io/v2/package/" + encodeURIComponent(encodeURIComponent(packet));
 			$.ajax({
 				url: this.props.railsContext.proxyUrl + url,
 				dataType: 'json',
@@ -73,8 +73,8 @@ class PackageComparison extends Component {
 		}, this);
 
 		function addData(data, passedThis) {
-			var formatted_data = {id: data.collected.metadata.name, 
-				                    name: data.collected.metadata.name, 
+			var formatted_data = {id: data.collected.metadata.name,
+				                    name: data.collected.metadata.name,
 				                    description: data.collected.metadata.description,
 				                    repository: data.collected.metadata.repository,
 				                    npmsData: data};
@@ -88,7 +88,7 @@ class PackageComparison extends Component {
 						if(packet_data.name === decodeURIComponent(packet_name)){
 							data_hash = packet_data;
 						}
-					}); 
+					});
 					return data_hash;
 				});
 				passedThis.setPageMeta(packets_arr);
@@ -181,13 +181,13 @@ class PackageComparison extends Component {
 		return (
 			<div className="container">
 				<h1>{this.pageHeading()}</h1>
-				<SearchForm 
+				<SearchForm
 					onSearch={this.updateFromSearch}/>
-				<PackageTags 
+				<PackageTags
 					onTagRemove={this.removePacket}
 					packets={this.state.packets}
 					colors={this.colors()} />
-				{this.state.packets.length > 0 && 
+				{this.state.packets.length > 0 &&
 					<div>
 						<TrendGraphBox proxy_url={this.props.railsContext.proxyUrl} packets={this.state.packets} colors={this.colors()}/>
 						<PackageStats packets={this.state.packets} proxy_url={this.props.railsContext.proxyUrl}/>

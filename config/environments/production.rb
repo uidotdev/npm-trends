@@ -41,7 +41,7 @@ NpmTrends::Application.configure do
   # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for nginx
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
-  config.force_ssl = false
+  config.force_ssl = true
 
   # Set to :debug to see everything in the log.
   config.log_level = :info
@@ -77,7 +77,7 @@ NpmTrends::Application.configure do
   # config.autoflush_log = false
 
   # Disable serving static files from the `/public` folder by default since
-  # Apache or NGINX already handles this. 
+  # Apache or NGINX already handles this.
   config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present?
 
   if ENV["RAILS_LOG_TO_STDOUT"].present?
@@ -93,17 +93,13 @@ NpmTrends::Application.configure do
   config.middleware.use Rack::Deflater
 
   # Cache
-  config.cache_store = :redis_store, ENV["REDISCLOUD_URL"]
-  
+  config.cache_store = :redis_cache_store, ENV["REDISCLOUD_URL"]
+
   # Active job host
   config.x.active_job.default_url_options = { host: "www.npmtrends.com",
                                              protocol:'https' }
 
   config.action_controller.default_url_options = { host: 'www.npmtrends.com',
-                                                   protocol:'https'  }                                            
+                                                   protocol:'https'  }
 
 end
-
-
-
-

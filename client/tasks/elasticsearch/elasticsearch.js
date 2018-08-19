@@ -1,18 +1,8 @@
-'use strict';
-
-const request = require("request");
-const elasticsearch = require('elasticsearch');
-
-// Load env variables
-require('dotenv').config({silent: true});
-
-var client = new elasticsearch.Client({
-  host: process.env.ELASTICSEARCH_URL,
-  apiVersion: '1.5'
-});
+const request = require('request');
+const esClient = require('./esClient');
 
 var totalCount;
-var perRequest = 50;
+var perRequest = 128; // npm download count bulk limit
 var numberOfRequests;
 var currentRequest = 0;
 var currentTotalAdded = 0;
@@ -40,7 +30,7 @@ function getPackageCount(){
   });
 }
 
-function getAndStoreDataLoop(){ 
+function getAndStoreDataLoop(){
   console.log("Loop " + currentRequest + " of " + numberOfRequests);
 
   getNpmData();
@@ -48,7 +38,7 @@ function getAndStoreDataLoop(){
     var request_url = "https://replicate.npmjs.com/registry/_all_docs?" +
                       "include_docs=true&" +
                       "limit=" + perRequest + "&" +
-                      "skip=" + (perRequest * currentRequest) ; 
+                      "skip=" + (perRequest * currentRequest) ;
     requestPackageInfo();
     function requestPackageInfo(){
       request({
@@ -73,7 +63,7 @@ function getAndStoreDataLoop(){
   // Get download count in past month for ranking
   function getNpmDownloads(packets){
 
-    // Once we get the download count for each package, 
+    // Once we get the download count for each package,
     // we'll store the original packet data + download count in this array
     let packetsWithDownloads = [];
 
@@ -120,7 +110,7 @@ function getAndStoreDataLoop(){
         var arrStart = i * perDownloadRequest;
         var arrEnd = arrStart + perDownloadRequest;
         var packetList = notScopedNpmDataPacketList.slice(arrStart, arrEnd).join(',');
-        var request_url = "http://api.npmjs.org/downloads/point/last-month/" + packetList;
+        var request_url = "https://api.npmjs.org/downloads/point/last-month/" + packetList;
         let retry_count = 0;
         request({
           url: request_url,
@@ -131,9 +121,9 @@ function getAndStoreDataLoop(){
           const body_data = body ? JSON.parse(body) : false;
           if (error) {
             retry_count += 1;
-            if(retry_count < 5){ 
+            if(retry_count < 5){
               console.log("Error getting npm package downloads, will retry: attempt " + retry_count);
-              requestPackageDownloads(); 
+              requestPackageDownloads();
             }else{
               console.log("Error getting npm package downloads, will not retry")
               nonScopedLoopComplete();
@@ -175,7 +165,7 @@ function getAndStoreDataLoop(){
     scopedNpmDataPacketList.forEach(function(scopedPackageName){
       requestPackageDownloadsForScoped();
       function requestPackageDownloadsForScoped(){
-        var request_url = "http://api.npmjs.org/downloads/point/last-month/" + scopedPackageName;
+        var request_url = "https://api.npmjs.org/downloads/point/last-month/" + scopedPackageName;
         let retry_count = 0;
         request({
           url: request_url,
@@ -186,9 +176,9 @@ function getAndStoreDataLoop(){
           const body_data = body ? JSON.parse(body) : false;
           if (error) {
             retry_count += 1;
-            if(retry_count < 5){ 
+            if(retry_count < 5){
               console.log("Error getting npm scoped package downloads, will retry: attempt " + retry_count);
-              requestPackageDownloadsForScoped(); 
+              requestPackageDownloadsForScoped();
             }else{
               console.log("Error getting npm scoped package downloads, will not retry");
               scopedLoopComplete();
@@ -258,7 +248,7 @@ function getAndStoreDataLoop(){
     if(formatted_data.length){
       updateElasicsearch();
       function updateElasicsearch(){
-        client.bulk({
+        esClient.bulk({
           body: formatted_data
         }, function(error, response){
           if (error) {
@@ -287,5 +277,3 @@ function getAndStoreDataLoop(){
     }
   }
 }
-
-

@@ -49,23 +49,15 @@ NpmTrends::Application.configure do
     config.logger = ActiveSupport::TaggedLogging.new(logger)
   end
 
-  # Development only performance recommendations 
-  config.after_initialize do
-    Bullet.enable = true
-    # Bullet.add_footer = true
-    Bullet.bullet_logger = true
-    Bullet.rails_logger = true
-  end
-
   ## Configure cache for development
-  config.cache_store = :redis_store
+  config.cache_store = :redis_cache_store
 
   # Active job host
   config.x.active_job.default_url_options = { host: "npmtrends.dev:3000",
                                              protocol:'https' }
 
   config.action_controller.default_url_options = { host: 'npmtrends.dev:3000',
-                                                   protocol:'https'  }   
-                                      
+                                                   protocol:'https'  }
+
 
 end

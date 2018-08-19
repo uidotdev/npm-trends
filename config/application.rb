@@ -13,17 +13,15 @@ Bundler.require(:default, Rails.env)
 
 module NpmTrends
   class Application < Rails::Application
-    
+
     config.assets.paths << Rails.root.join('app', 'assets', 'images')
     config.assets.paths << Rails.root.join('app', 'assets', 'files')
     config.assets.paths << Rails.root.join('app', 'assets', 'fonts')
     config.assets.paths << Rails.root.join('client', 'node_modules')
-    
+
     config.assets.precompile += %w(*.png *.jpg *.jpeg *.gif)
     config.assets.precompile += %w(.svg .eot .woff .ttf .otf)
     config.exceptions_app = self.routes
-
-    config.active_record.raise_in_transactional_callbacks = true
 
     config.assets.quiet = true
 

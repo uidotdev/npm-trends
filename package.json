@@ -2,17 +2,13 @@
   "name": "npm-trends",
   "description": "NPM Trends web app",
   "version": "1.0.0",
-  "engines": {
-    "node": "5.1.0",
-    "npm": "3.3.12"
-  },
   "scripts": {
     "build:production": "cd client && npm run build:production",
     "postinstall": "cd client && npm install",
     "rails-server": "echo 'visit http://localhost:3000/hello_world' && foreman start -f Procfile.dev",
     "test": "rspec",
-    "init-elasticsearch": "node client/tasks/elasticsearchSetup.js",
-    "seed-elasticsearch": "node client/tasks/elasticsearch.js"
+    "init-elasticsearch": "node client/tasks/elasticsearch/elasticsearchSetup.js",
+    "seed-elasticsearch": "node client/tasks/elasticsearch/elasticsearch.js"
   },
   "cacheDirectories": [
     "node_modules",
