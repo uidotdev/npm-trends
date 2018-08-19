@@ -1,17 +1,13 @@
-'use strict';
+const esClient = require('./esClient');
 
-const elasticsearch = require('elasticsearch');
-
-// Load env variables
-require('dotenv').config({silent: true});
-
-var client = new elasticsearch.Client({
-  host: process.env.ELASTICSEARCH_URL,
-  apiVersion: '1.5'
+esClient.indices.delete({
+	index: [
+		'xiaomar.php'
+	]
 });
 
 // Format npm index
-client.indices.create({
+esClient.indices.create({
 	index: 'npm'
 }, function(){
 	addMapping();
@@ -19,7 +15,7 @@ client.indices.create({
 
 // npm/autocomplete mapping
 function addMapping(){
-	client.indices.putMapping({
+	esClient.indices.putMapping({
 		index: 'npm',
 		type: 'autocomplete',
 		body: {
@@ -36,13 +32,13 @@ function addMapping(){
 					type: 'integer',
 					index: 'no'
 				},
-				suggest: { 
+				suggest: {
 					"type" : "completion",
 	        "index_analyzer" : "simple",
 	        "search_analyzer" : "simple",
 	        "payloads" : true
 	      }
-			} 
+			}
 		}
 	});
 }

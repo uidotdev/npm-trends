@@ -11,6 +11,7 @@
     "client/node_modules"
   ],
   "dependencies": {
+    "aws-sdk": "2.296.0",
     "axios": "0.15.3",
     "babel": "^6.5.2",
     "babel-cli": "^6.6.5",
@@ -28,9 +29,10 @@
     "css-loader": "^0.25.0",
     "datejs": "1.0.0-rc3",
     "dotenv": "1.2.0",
-    "elasticsearch": "9.0.2",
+    "elasticsearch": "15.1.1",
     "es5-shim": "^4.5.7",
     "expose-loader": "^0.7.1",
+    "http-aws-es": "6.0.0",
     "immutable": "^3.7.6",
     "imports-loader": "^0.6.5",
     "jquery": "3.2.1",
