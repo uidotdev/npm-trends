@@ -93,7 +93,7 @@ NpmTrends::Application.configure do
   config.middleware.use Rack::Deflater
 
   # Cache
-  config.cache_store = :redis_cache_store, ENV["REDISCLOUD_URL"]
+  config.cache_store = :redis_cache_store, {url: ENV["REDISCLOUD_URL"]}
 
   # Active job host
   config.x.active_job.default_url_options = { host: "www.npmtrends.com",
