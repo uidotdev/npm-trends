@@ -8,10 +8,10 @@ module RenderingExtension
      mobileDevice: view_context.mobile_device?,
      touchDevice: view_context.mobile_device? || view_context.tablet_device?,
      env: Rails.env,
-     proxyUrl: Rails.env.development? ? 'http://localhost:4444/?url=' : 'http://' + ENV["PROXY_URL"] + '/?url='
+     proxyUrl: Rails.env.development? ? 'http://localhost:4444/?url=' : 'https://' + ENV["PROXY_URL"] + '/?url='
     }
   end
-  
+
 end
 
 # Shown below are the defaults for configuration
@@ -92,4 +92,3 @@ ReactOnRails.configure do |config|
   config.symlink_non_digested_assets_regex = /\.(png|jpg|jpeg|gif|tiff|woff|ttf|eot|svg|map)/
 
 end
-
