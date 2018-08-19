@@ -4,7 +4,7 @@ const esClient = require('./esClient');
 var totalCount;
 var perRequest = 128; // npm download count bulk limit
 var numberOfRequests;
-var currentRequest = 0;
+var currentRequest = 819;
 var currentTotalAdded = 0;
 
 getPackageCount();
@@ -118,7 +118,6 @@ function getAndStoreDataLoop(){
             'Accept': 'application/json, text/javascript, */*; q=0.01'
           }
         }, function(error, response, body){
-          const body_data = body ? JSON.parse(body) : false;
           if (error) {
             retry_count += 1;
             if(retry_count < 5){
@@ -128,10 +127,14 @@ function getAndStoreDataLoop(){
               console.log("Error getting npm package downloads, will not retry")
               nonScopedLoopComplete();
             }
-          }else if(body_data && !body_data.error){
-            addNonScopedPacketsWithDownloads(body_data);
-          }else{
-            nonScopedLoopComplete();
+          } else {
+            const body_data = body ? JSON.parse(body) : false;
+
+            if(body_data && !body_data.error){
+              addNonScopedPacketsWithDownloads(body_data);
+            }else{
+              nonScopedLoopComplete();
+            }
           }
         });
       }
