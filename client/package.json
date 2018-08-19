@@ -1,16 +1,15 @@
 {
   "name": "npm-trends",
   "version": "1.0.0",
-  "engines": {
-    "node": "5.1.0",
-    "npm": "3.3.12"
-  },
   "scripts": {
     "build:test": "webpack --config webpack.config.js",
     "build:production": "NODE_ENV=production webpack --config webpack.config.js",
     "build:development": "webpack -w --config webpack.config.js"
   },
-  "cacheDirectories": ["node_modules", "client/node_modules"],
+  "cacheDirectories": [
+    "node_modules",
+    "client/node_modules"
+  ],
   "dependencies": {
     "axios": "0.15.3",
     "babel": "^6.5.2",
@@ -53,6 +52,5 @@
     "style-loader": "^0.13.1",
     "webpack": "^1.12.14"
   },
-  "devDependencies": {
-  }
+  "devDependencies": {}
 }

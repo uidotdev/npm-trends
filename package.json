@@ -2,10 +2,6 @@
   "name": "npm-trends",
   "description": "NPM Trends web app",
   "version": "1.0.0",
-  "engines": {
-    "node": "5.1.0",
-    "npm": "3.3.12"
-  },
   "scripts": {
     "build:production": "cd client && npm run build:production",
     "postinstall": "cd client && npm install",
