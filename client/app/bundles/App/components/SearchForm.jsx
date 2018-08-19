@@ -24,10 +24,10 @@ export default class SearchForm extends Component {
 			}
 
 			$.ajax({
-				url: "https://" + elasticsearch_url + "/npm/_suggest",
+				url: `https://${elasticsearch_url}/npm/_suggest?source=${JSON.stringify(suggest_query)}`,
 				dataType: 'json',
-				method: "POST",
-				data: JSON.stringify(suggest_query),
+				method: "GET",
+				sourceContentType: 'json',
 				success: function(data){
 					cb(data.autocomplete_suggest[0].options);
 				}.bind(this)
