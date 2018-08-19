@@ -19,12 +19,12 @@ export default class SearchForm extends Component {
 					'text': query,
 					'completion': {
 						'field': 'suggest'
-					} 
+					}
 				}
 			}
 
 			$.ajax({
-				url: "http://" + elasticsearch_url + "/npm/_suggest",
+				url: "https://" + elasticsearch_url + "/npm/_suggest",
 				dataType: 'json',
 				method: "POST",
 				data: JSON.stringify(suggest_query),
@@ -65,9 +65,9 @@ export default class SearchForm extends Component {
 	render(){
 		return (
 			<form onSubmit={this.handleSubmit} name="seachForm" id="search_form" autoComplete="off">
-				<input id="search_form_input" 
+				<input id="search_form_input"
 							 className="autocomplete"
-				       ref="search_query" 
+				       ref="search_query"
 				       type="text"
 				       placeholder="Enter an npm package..."/>
 			</form>
@@ -75,5 +75,3 @@ export default class SearchForm extends Component {
 	}
 
 };
-
-
