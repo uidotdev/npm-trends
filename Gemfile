@@ -3,6 +3,8 @@ ruby '2.3.1'
 
 gem 'autoprefixer-rails', '~> 6.5.1'
 gem 'bcrypt', '~>3.1.0'
+gem 'elasticsearch', '1.1.3'
+gem 'faraday_middleware-aws-sigv4', '0.2.4'
 gem 'fog', '~> 1.38.0'
 gem 'httparty', '~> 0.13.3'
 gem 'oj', '~> 2.9.6'

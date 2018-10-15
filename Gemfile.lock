@@ -56,6 +56,7 @@ GEM
     arel (9.0.0)
     autoprefixer-rails (6.5.4)
       execjs
+    aws-sigv4 (1.0.3)
     bcrypt (3.1.12)
     benchmark-ips (2.7.2)
     binding_of_caller (0.8.0)
@@ -93,6 +94,14 @@ GEM
     dotenv-rails (2.5.0)
       dotenv (= 2.5.0)
       railties (>= 3.2, < 6.0)
+    elasticsearch (1.1.3)
+      elasticsearch-api (= 1.1.3)
+      elasticsearch-transport (= 1.1.3)
+    elasticsearch-api (1.1.3)
+      multi_json
+    elasticsearch-transport (1.1.3)
+      faraday
+      multi_json
     em-websocket (0.5.1)
       eventmachine (>= 0.12.9)
       http_parser.rb (~> 0.6.0)
@@ -106,6 +115,11 @@ GEM
     factory_girl_rails (4.5.0)
       factory_girl (~> 4.5.0)
       railties (>= 3.0.0)
+    faraday (0.15.3)
+      multipart-post (>= 1.2, < 3)
+    faraday_middleware-aws-sigv4 (0.2.4)
+      aws-sigv4 (~> 1.0)
+      faraday (>= 0.9)
     ffi (1.9.25)
     fission (0.5.0)
       CFPropertyList (~> 2.2)
@@ -305,6 +319,7 @@ GEM
     moneta (0.8.1)
     multi_json (1.13.1)
     multi_xml (0.6.0)
+    multipart-post (2.0.0)
     nenv (0.3.0)
     nio4r (2.3.1)
     nokogiri (1.8.4)
@@ -465,7 +480,9 @@ DEPENDENCIES
   childprocess (~> 0.5.6)
   derailed_benchmarks
   dotenv-rails (= 2.5.0)
+  elasticsearch (= 1.1.3)
   factory_girl_rails (~> 4.5.0)
+  faraday_middleware-aws-sigv4 (= 0.2.4)
   fog (~> 1.38.0)
   font_assets
   growl (= 1.0.3)
