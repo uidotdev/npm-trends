@@ -29,8 +29,16 @@ export default class PopularSearches extends Component {
 		});
 	}
 
-	handleClick = () => {
-		window.scrollTo(0, 0);
+	handleClick = (e) => {
+		// don't scroll if opened in new tab
+		if (
+      !e.ctrlKey &&
+      !e.shiftKey &&
+      !e.metaKey && // apple
+      !(e.button && e.button == 1) // middle click, >IE9 + everyone else
+    ){
+      window.scrollTo(0, 0);
+    }
 	}
 
 	searchesList = () => {
