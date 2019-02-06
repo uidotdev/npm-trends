@@ -16,16 +16,16 @@ export default class PackageStatsTable extends Component {
 
 		// array of stats to display
 		// format: [name_to_display, github_api_attribute_name]
-		var stats = [ ["", "name"], 
-		              ["stars 🌟", "stargazers_count"], 
-		              ["forks 🍽", "forks_count"], 
+		var stats = [ ["", "name"],
+		              ["stars 🌟", "stargazers_count"],
+		              ["forks 🍽", "forks_count"],
 		              ["issues ⚠️", "open_issues_count"],
 		              ["updated 🛠", "pushed_at"],
 								  ["created 🐣", "created_at"],
 								];
 
-		var headCols = stats.map(function(stat){ 
-			return( 
+		var headCols = stats.map(function(stat){
+			return(
 				<th key={stat[0]} >
 					{stat[0]}
 				</th>
@@ -38,16 +38,16 @@ export default class PackageStatsTable extends Component {
 				var attributeValue;
 				switch(attributeName){
 					case 'created_at':
-						attributeValue = ghStat[attributeName] !== undefined ? 
+						attributeValue = ghStat[attributeName] !== undefined ?
 														Date.parse(ghStat[attributeName]).toString("MMM d, yyyy") : "";
 						break;
 					case 'pushed_at':
-						attributeValue = ghStat[attributeName] !== undefined ? 
+						attributeValue = ghStat[attributeName] !== undefined ?
 														Date.parse(ghStat[attributeName]).toString("MMM d, yyyy") : "";
 						break;
 					case 'name':
-						attributeValue = ghStat[attributeName] !== undefined ? 
-														(<a className="name-header" href={ghStat.html_url}> {ghStat[attributeName]} </a>) : "";
+						attributeValue = ghStat[attributeName] !== undefined ?
+														(<a className="name-header" target="_blank" href={ghStat.html_url}> {ghStat[attributeName]} </a>) : "";
 						break;
 					default:
 						attributeValue = ghStat[attributeName] !== undefined ? ghStat[attributeName] : "";
@@ -79,5 +79,3 @@ export default class PackageStatsTable extends Component {
 		)
 	}
 };
-
-

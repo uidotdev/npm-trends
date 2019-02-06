@@ -198,8 +198,8 @@ class PackageComparison extends Component {
 					<PopularSearches />
 				</div>
 				<div id="extra_info">
-					<p>If you find any bugs or have a feature request, please open an issue on <a href="http://github.com/johnmpotter/npm-trends">github</a>!</p>
-					<p>The npm package download data comes from npm's <a href="https://github.com/npm/download-counts">download counts</a> api and package details come from <a href="https://api-docs.npms.io/">npms.io</a>.</p>
+					<p>If you find any bugs or have a feature request, please open an issue on <a target="_blank" href="http://github.com/johnmpotter/npm-trends">github</a>!</p>
+					<p>The npm package download data comes from npm's <a target="_blank" href="https://github.com/npm/download-counts">download counts</a> api and package details come from <a target="_blank" href="https://api-docs.npms.io/">npms.io</a>.</p>
 				</div>
 			</div>
 		);

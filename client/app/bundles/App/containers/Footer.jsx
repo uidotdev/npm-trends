@@ -9,7 +9,7 @@ export default class Footer extends Component {
 				<div className="container">
 					<div className="footer-content">
 						<ul id="footer_menu" className="list-unstyled">
-							<li className="inline">Made by <a href="http://twitter.com/johnmpotter">John Potter</a></li>
+							<li className="inline">Made by <a target="_blank" href="http://twitter.com/johnmpotter">John Potter</a></li>
 						</ul>
 					</div>
 				</div>
