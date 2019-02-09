@@ -31,6 +31,7 @@ class PackageComparison extends Component {
 
 	componentDidMount() {
 		this.loadPackets(this.props);
+    window.proxyUrl = this.props.railsContext.proxyUrl;
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -190,7 +191,7 @@ class PackageComparison extends Component {
 				{this.state.packets.length > 0 &&
 					<div>
 						<TrendGraphBox proxy_url={this.props.railsContext.proxyUrl} packets={this.state.packets} colors={this.colors()}/>
-						<PackageStats packets={this.state.packets} proxy_url={this.props.railsContext.proxyUrl}/>
+						<PackageStats packets={this.state.packets} />
 					</div>
 				}
 				<div className="suggestions--container">

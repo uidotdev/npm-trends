@@ -10,7 +10,7 @@ const config = {
     'es5-shim/es5-shim',
     'es5-shim/es5-sham',
     'babel-polyfill',
-    './app/bundles/App/startup/App',
+    './App/startup/App',
   ],
 
   output: {
@@ -53,9 +53,9 @@ const config = {
         include: /\.json$/,
         loaders: ['json-loader']
       },
-      { 
-        test: require.resolve("jquery"), 
-        loader: "expose?$!expose?jQuery" 
+      {
+        test: require.resolve("jquery"),
+        loader: "expose?$!expose?jQuery"
       }
     ],
   },
