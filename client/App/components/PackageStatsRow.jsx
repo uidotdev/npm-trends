@@ -53,10 +53,11 @@ export default class PackageStatsRow extends Component {
         const sizeUrl = `https://bundlephobia.com/result?p=${packet.name}`;
         attributeValue = (
           <a href={sizeUrl} target="_blank">
-            { packageStats[apiSource][attributeName] !== undefined ?
-              `${Math.floor(( packageStats[apiSource][attributeName] / 1024 ) * 100) / 100} KB`
-              : 'N/A'
-            }
+            <img
+              src={`https://flat.badgen.net/bundlephobia/min/${packet.name}`}
+              alt={`Minified package size for ${packet.name} in KB`}
+              className="badge--in-table"
+            />
           </a>
         );
         break;
