@@ -4,6 +4,7 @@ import ReactOnRails from 'react-on-rails';
 
 import { connect } from 'react-redux';
 
+import PackageComparisonHeading from '../components/PackageComparisonHeading';
 import SearchForm from '../components/SearchForm';
 import PackageTags from '../components/PackageTags';
 import TrendGraphBox from '../components/TrendGraphBox';
@@ -167,21 +168,15 @@ class PackageComparison extends Component {
 		});
 	}
 
-	pageHeading = () => {
-		if (!this.props.params.packets) return <span className="text--bold">Compare package download counts over time</span>;
-		return this.props.params.packets.split('-vs-').map(function(name, i){
-			return(
-				<span key={i}>
-					<span className="text--bold">{name}</span>{ this.props.params.packets.split('-vs-').length - 1 !== i && ' vs ' }
-				</span>
-			);
-		}, this);
-	}
+  packetNames = () => {
+    const { packets } = this.props.params;
+    return packets ? packets.split('-vs-') : [];
+  }
 
 	render() {
 		return (
 			<div className="container">
-				<h1>{this.pageHeading()}</h1>
+				<PackageComparisonHeading packetNames={this.packetNames()} packets={this.state.packets} />
 				<SearchForm
 					onSearch={this.updateFromSearch}/>
 				<PackageTags

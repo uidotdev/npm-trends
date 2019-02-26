@@ -21,6 +21,15 @@
 	}
 }
 
+.autocomplete-name {
+	font-weight: 300;
+}
+
+.autocomplete-description {
+	color: $shade-50;
+	padding-left: 0;
+}
+
 @include sm-screen{
 	.suggestions--container{
 		flex-direction: column;
