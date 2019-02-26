@@ -34,9 +34,9 @@ export default class PackageComparisonHeading extends Component {
         <p className="comparison-heading--description">{firstPacket.description}</p>
         <div className="comparison-heading--links">
           <div className="comparison-heading--divider" />
-          <a href={links.npm} className="link-icon-npm"><i className="icon icon-npm" /></a>
-          {links.repository && <a href={links.repository} className="link-icon-github"><i className="icon icon-github" /></a>}
-          {links.homepage && <a href={links.homepage} className="link-icon-website"><i className="icon icon-link" /></a>}
+          <a href={links.npm} className="link-icon-npm" target="_blank"><i className="icon icon-npm" /></a>
+          {links.repository && <a href={links.repository} className="link-icon-github" target="_blank"><i className="icon icon-github" /></a>}
+          {links.homepage && <a href={links.homepage} className="link-icon-website" target="_blank"><i className="icon icon-link" /></a>}
         </div>
       </div>
     );
