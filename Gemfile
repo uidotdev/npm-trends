@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-ruby '2.3.1'
+ruby '2.6.1'
 
 gem 'autoprefixer-rails', '~> 6.5.1'
 gem 'bcrypt', '~>3.1.0'
@@ -7,7 +7,6 @@ gem 'elasticsearch', '1.1.3'
 gem 'faraday_middleware-aws-sigv4', '0.2.4'
 gem 'fog', '~> 1.38.0'
 gem 'httparty', '~> 0.13.3'
-gem 'oj', '~> 2.9.6'
 gem 'pg', '~>0.19.0'
 gem 'platform-api', '~> 2.1.0'
 gem 'puma', '3.6.2'
@@ -40,14 +39,6 @@ end
 group :test do
   gem 'selenium-webdriver', '~> 2.47.1'
   gem 'capybara', '~>2.5.0'
-  gem 'capybara-webkit', '1.11.1'
-  gem 'childprocess', '~> 0.5.6'
-  gem 'factory_girl_rails', '~> 4.5.0'
-  gem 'shoulda-matchers', '~> 3.0'
-  gem 'capybara-select2', github: 'johnmpotter/capybara-select2'
-  gem 'growl', '1.0.3'
-  gem 'capybara-screenshot', '~> 1.0'
-  gem 'launchy', '~> 2.4'
 end
 
 group :doc do
