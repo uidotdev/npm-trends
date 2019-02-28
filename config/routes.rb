@@ -12,6 +12,7 @@ resources :searches, path: '/s', only: [] do
 		post :log
 		get :related
 		get :popular
+		get :related_packages
 	end
 end
 

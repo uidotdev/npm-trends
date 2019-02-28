@@ -59,4 +59,18 @@ class SearchesController < ApplicationController
 		end
 	end
 
+	def related_packages
+		if params[:search_query].length
+			@related_packages = SearchQuery.related_packages_from_search_array(params[:search_query]).first(5)
+
+			respond_to do |format|
+				format.json { render json: @related_packages, status: 200 }
+			end
+		else
+			respond_to do |format|
+				format.json { render json: [], status: 200 }
+			end
+		end
+	end
+
 end

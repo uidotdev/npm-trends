@@ -60,6 +60,12 @@ class PackageComparison extends Component {
 		var packets_data = [];
 		var packets_left = packets_arr.length;
 
+    const maxPacketsForSearch = 10;
+
+    if (packets_arr.length > maxPacketsForSearch) {
+      return this.redirectToSearch(packets_arr.slice(0, maxPacketsForSearch));
+    }
+
 		packets_arr.map(function(packet){
 			var url = "https://api.npms.io/v2/package/" + encodeURIComponent(encodeURIComponent(packet));
 			$.ajax({
@@ -111,6 +117,12 @@ class PackageComparison extends Component {
 		}
 	}
 
+  redirectToSearch = (packetNamesArray) => {
+    const packets_url = packetNamesArray.join("-vs-");
+		const url = "/" + packets_url;
+		this.props.history.push(url);
+  }
+
 	handleInvalidQuery = (query) => {
 		var packets_array = this.props.params.packets.split("-vs-");
 		var remaining_packets = [];
@@ -136,16 +148,6 @@ class PackageComparison extends Component {
 			new_param = query;
 		}
 		const url = "/" + new_param;
-		this.props.history.push(url);
-	}
-
-	removePacket = (packet_name) => {
-		var packets_array = this.props.params.packets.split("-vs-");
-		var remaining_packets = $.grep(packets_array, function(packet) {
-		  return ( packet !== packet_name );
-		});
-		var new_param = remaining_packets.join("-vs-");
-		var url = "/" + new_param;
 		this.props.history.push(url);
 	}
 
@@ -180,7 +182,6 @@ class PackageComparison extends Component {
 				<SearchForm
 					onSearch={this.updateFromSearch}/>
 				<PackageTags
-					onTagRemove={this.removePacket}
 					packets={this.state.packets}
 					colors={this.colors()} />
 				{this.state.packets.length > 0 &&

@@ -46,6 +46,20 @@ class SearchQuery < ApplicationRecord
     self.joins(:packages).where(packages: { name: search_array }).distinct.where.not(slug: self.search_array_to_slug(search_array)).order(search_count: :desc)
   end
 
+	def self.related_packages_from_search_array(search_array)
+		related_searches = self.related_searches_from_search_array(search_array)
+		packages = []
+    related_searches.each do |search|
+			search.packages.each do |package|
+				if !search_array.include?(package.name)
+					packages.push(package.name)
+				end
+			end
+		end
+
+		packages.uniq
+  end
+
   private
 
   def format_permutations

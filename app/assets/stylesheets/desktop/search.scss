@@ -11,7 +11,6 @@
 		line-height: 2;
 		padding: 0 20px;
 		border-radius: 5px;
-		font-family: 'helvetica neue', arial, sans-serif;
 		font-weight: 200;
 		color: #000000;
 		font-size: 20px;
@@ -62,13 +61,19 @@
 
 .package-search-tags{
 	margin-top: 10px;
-	.package-search-tag{
+	li {
 		display: inline-block;
+		vertical-align: top;
+	}
+	.package-search-tag{
 		padding: 5px 7px 5px 10px;
 		margin: 0 10px 10px 0;
 		cursor: pointer;
 		border-radius: 5px;
-		color: $dark;
+		a {
+			color: $dark;
+			text-decoration: none;
+		}
 		.search-tag-name{
 			font-size: 18px;
 		}
@@ -82,5 +87,28 @@
 				color: $dark;
 			}
 		}
+	}
+}
+
+.related-package {
+	height: 35px;
+	margin-right: 20px;
+	margin-bottom: 10px;
+	font-size: 14px;
+	& > div {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		height: 100%;
+	}
+	a {
+		color: $shade-50;
+		&:hover {
+			color: $dark;
+			text-decoration: none;
+		}
+	}
+	i {
+		margin-right: 3px;
 	}
 }
