@@ -5,9 +5,8 @@ class SearchesController < ApplicationController
 
 		if request.bot?
 			respond_to do |format|
-				format.json { render json: {data: "Not logged because is bot"}, status: 200 }
+				format.json { render json: {data: "Not logged because is bot"}, status: 200 and return }
 			end
-			return
 		end
 
 		search_query_array = params[:search_query].uniq
