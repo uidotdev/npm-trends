@@ -47,7 +47,7 @@ class SearchQuery < ApplicationRecord
   end
 
 	def self.related_packages_from_search_array(search_array)
-		related_searches = self.related_searches_from_search_array(search_array)
+		related_searches = self.related_searches_from_search_array(search_array).limit(10)
 		packages = []
     related_searches.each do |search|
 			search.packages.each do |package|
