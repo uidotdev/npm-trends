@@ -36,6 +36,9 @@ export default class PackageTags extends Component {
 	}
 
 	fetchRelatedPackets = () => {
+		const { packets } = this.props;
+		if (!packets.length) return;
+
 		$.ajax({
 			url: '/s/related_packages',
 			dataType: 'json',

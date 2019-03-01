@@ -60,7 +60,7 @@ class SearchesController < ApplicationController
 	end
 
 	def related_packages
-		if params[:search_query].length
+		if params[:search_query] && params[:search_query].length
 			@related_packages = SearchQuery.related_packages_from_search_array(params[:search_query]).first(5)
 
 			respond_to do |format|
