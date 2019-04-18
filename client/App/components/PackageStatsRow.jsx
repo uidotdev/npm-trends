@@ -54,8 +54,8 @@ export default class PackageStatsRow extends Component {
         attributeValue = (
           <a href={sizeUrl} target="_blank">
             <img
-              src={`https://flat.badgen.net/bundlephobia/min/${packet.name}`}
-              alt={`Minified package size for ${packet.name} in KB`}
+              src={`https://flat.badgen.net/bundlephobia/minzip/${packet.name}`}
+              alt={`Minified + gzip package size for ${packet.name} in KB`}
               className="badge--in-table"
             />
           </a>

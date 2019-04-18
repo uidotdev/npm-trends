@@ -60,6 +60,10 @@ class SearchQuery < ApplicationRecord
 		packages.uniq
   end
 
+	def self.canonical_url(url_id)
+		'/' + url_id.split('-vs-').sort_by!{ |e| e.downcase }.join('-vs-')
+	end
+
   private
 
   def format_permutations
