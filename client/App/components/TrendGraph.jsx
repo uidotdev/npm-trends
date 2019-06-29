@@ -58,8 +58,32 @@ export default class TrendGraph extends Component {
 				scaleFontColor: "#000000",
 				responsive: true,
 				datasetFill: false,
-				scaleLabel: "<%= ' ' + value%>",
 				maintainAspectRatio: false,
+				scales: {
+					yAxes: [
+						{
+							ticks: {
+								beginAtZero: true,
+								userCallback: (value, index, values) => {
+									return Number(value).toLocaleString();
+								}
+							}
+						}
+					],
+					xAxes: [
+						{
+							ticks: {}
+						}
+					]
+				},
+				tooltips: {
+					callbacks: {
+						label: (tooltipItem, data) => {
+							const value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+							return Number(value).toLocaleString();
+						}
+					}
+				},
 			}
 			var ctx = document.getElementById("download_chart").getContext("2d");
 			this.download_chart = new Chart(ctx, {
@@ -81,8 +105,4 @@ export default class TrendGraph extends Component {
 	}
 
 };
-
-
-
-
 
