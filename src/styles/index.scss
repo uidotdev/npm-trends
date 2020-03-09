@@ -1,11 +1,11 @@
 @import 'styles/_mixins.scss';
 
-@import 'styles/components/chart.scss';
-@import 'styles/components/comparison_heading.scss';
-@import 'styles/components/footer.scss';
-@import 'styles/components/header.scss';
-@import 'styles/components/package_stats.scss';
-@import 'styles/components/search.scss';
-@import 'styles/components/style.scss';
-@import 'styles/components/suggestions.scss';
-@import 'styles/components/table.scss';
+@import 'styles/components/_chart.scss';
+@import 'styles/components/_comparison_heading.scss';
+@import 'styles/components/_footer.scss';
+@import 'styles/components/_header.scss';
+@import 'styles/components/_package_stats.scss';
+@import 'styles/components/_search.scss';
+@import 'styles/components/_general.scss';
+@import 'styles/components/_suggestions.scss';
+@import 'styles/components/_table.scss';

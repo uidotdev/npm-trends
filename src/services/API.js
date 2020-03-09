@@ -1,6 +1,6 @@
 import Fetch from './Fetch';
 
-const apiUrl = path => `${process.env.BACKEND_URL}${path}`;
+const apiUrl = path => `${process.env.REACT_APP_BACKEND_URL}${path}`;
 
 class API {
   static logSearch(packetNamesArray, searchType) {

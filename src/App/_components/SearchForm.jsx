@@ -20,18 +20,18 @@ class SearchForm extends Component {
     const getAutocompleteResults = (query, cb) => {
       const suggestQuery = {
         autocomplete_suggest: {
-          text: query,
+          text: query.term,
           completion: {
             field: 'suggest',
           },
         },
       };
 
-      Fetch.getJSON(`${process.env.ELASTICSEARCH_URL}/npm/_suggest?source=${JSON.stringify(suggestQuery)}`).then(
-        data => {
-          cb(data.autocomplete_suggest[0].options);
-        },
-      );
+      Fetch.getJSON(
+        `${process.env.REACT_APP_ELASTICSEARCH_URL}/npm/_suggest?source=${JSON.stringify(suggestQuery)}`,
+      ).then(data => {
+        cb(data.autocomplete_suggest[0].options);
+      });
     };
 
     $('.autocomplete')

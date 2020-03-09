@@ -1,0 +1,29 @@
+@import 'styles/_mixins';
+
+/****** Header ******/
+
+header {
+  padding: 20px 0;
+}
+
+.site-logo {
+  color: $dark;
+  display: flex;
+  &:hover {
+    color: $dark;
+  }
+}
+
+.site-logo--img {
+  width: 35px;
+  height: 35px;
+  margin-right: 15px;
+}
+
+.site-logo--name {
+  display: flex;
+  align-items: center;
+  font-size: 30px;
+  font-weight: 200;
+  margin-top: -5px;
+}
