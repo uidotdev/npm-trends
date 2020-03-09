@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Fetch from 'services/Fetch';
-import $ from 'jquery';
-import 'jquery-ui/ui/widgets/autocomplete';
+
+import $ from 'utils/jqueryImport';
+import 'autocomplete.js/dist/autocomplete.jquery.js'; // eslint-disable-line
 
 const propTypes = {
   onSearch: PropTypes.func.isRequired,
@@ -20,7 +21,7 @@ class SearchForm extends Component {
     const getAutocompleteResults = (query, cb) => {
       const suggestQuery = {
         autocomplete_suggest: {
-          text: query.term,
+          text: query,
           completion: {
             field: 'suggest',
           },

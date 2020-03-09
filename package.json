@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "dependencies": {
     "async-retry": "1.2.1",
+    "autocomplete.js": "^0.37.1",
     "chart.js": "2.5.0",
     "classnames": "2.2.5",
     "clipboard": "1.6.1",
@@ -12,7 +13,6 @@
     "history": "^4.10.1",
     "immutable": "^3.7.6",
     "jquery": "^3.4.1",
-    "jquery-ui": "1.12.1",
     "node-sass-chokidar": "^1.2.2",
     "normalize.css": "^8.0.0",
     "normalizr": "3.2.1",
