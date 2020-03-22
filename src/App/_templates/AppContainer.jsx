@@ -1,8 +1,10 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 
+import Meta from 'App/_components/Meta';
 import PackageComparison from 'App/_components/PackageComparison';
+import { searchPathToDisplayString, getCanonical } from 'utils/format';
 import Header from './Header';
 import Footer from './Footer';
 
@@ -11,20 +13,28 @@ const propTypes = {
   history: PropTypes.object.isRequired,
 };
 
-class AppContainer extends Component {
-  render() {
-    const { history, match } = this.props;
-    return (
-      <div className="site-wrapper">
-        <Header />
-        <div className="content-wrapper">
-          <PackageComparison history={history} params={match.params} />
-        </div>
-        <Footer />
+const AppContainer = ({ history, match }) => {
+  const searchPath = match.params.packets;
+
+  const title = searchPath ? `${searchPathToDisplayString(searchPath)} | npm trends` : undefined;
+
+  const description = searchPath
+    ? `Compare npm package download statistics over time: ${searchPathToDisplayString(searchPath)}`
+    : undefined;
+
+  const canonical = searchPath ? getCanonical(searchPath) : null;
+
+  return (
+    <div className="site-wrapper">
+      <Meta title={title} description={description} canonical={canonical} />
+      <Header />
+      <div className="content-wrapper">
+        <PackageComparison history={history} params={match.params} />
       </div>
-    );
-  }
-}
+      <Footer />
+    </div>
+  );
+};
 
 AppContainer.propTypes = propTypes;
 

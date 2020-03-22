@@ -15,14 +15,10 @@ export default class PopularSearches extends Component {
   };
 
   fetchPopularSearches = () => {
-    Fetch.getJSON('/s/popular')
-      .then(data => {
-        const searches = data.map(searchQuery => searchQuery.slug.split('_').join('-vs-'));
-        this.setState({ searches });
-      })
-      .catch(error => {
-        console.log(error);
-      });
+    Fetch.getJSON('/s/popular').then(data => {
+      const searches = data.map(searchQuery => searchQuery.slug.split('_').join('-vs-'));
+      this.setState({ searches });
+    });
   };
 
   handleClick = e => {

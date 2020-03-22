@@ -58,7 +58,7 @@ class TrendGraphBox extends Component {
 
       packetNames.forEach(packetName => {
         const url = `https://api.npmjs.org/downloads/range/${startDate}:${endDate}/${packetName}`;
-        Fetch.getJSON(`https://${process.env.REACT_APP_PROXY_URL}?url=${url}`).then(data => {
+        Fetch.getJSON(`${process.env.REACT_APP_PROXY_URL}?url=${url}`).then(data => {
           addData(data, this);
         });
       }, this);

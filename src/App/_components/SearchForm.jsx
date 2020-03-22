@@ -52,7 +52,7 @@ class SearchForm extends Component {
       )
       .on('autocomplete:selected', (event, suggestion) => {
         component.props.onSearch(suggestion.text);
-        this.form.reset();
+        this.searchFormRef.current.form.reset();
         $('.autocomplete').autocomplete('val', '');
       });
   }
@@ -62,8 +62,8 @@ class SearchForm extends Component {
 
     e.preventDefault();
     $('.autocomplete').autocomplete('close');
-    const query = this.searchFormRef.search_query.value.toLowerCase();
-    this.searchFormRef.search_query.form.reset();
+    const query = this.searchFormRef.current.value.toLowerCase();
+    this.searchFormRef.current.form.reset();
     $('.autocomplete').autocomplete('val', '');
     onSearch(query);
   };
@@ -72,9 +72,9 @@ class SearchForm extends Component {
     return (
       <form onSubmit={this.handleSubmit} name="seachForm" id="search_form" autoComplete="off">
         <input
+          ref={this.searchFormRef}
           id="search_form_input"
           className="autocomplete"
-          ref={this.searchFormRef}
           type="text"
           placeholder="Enter an npm package..."
         />

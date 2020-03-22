@@ -18,22 +18,23 @@ function handleErrors(response) {
 function getHeaders() {
   const headers = {
     'Content-Type': 'application/json',
+    Accept: 'application/json',
   };
 
   return headers;
 }
 
 class Fetch {
-  static getJSON(url, internal = false) {
+  static getJSON(url) {
     return fetch(url, {
-      headers: internal ? getHeaders() : {},
+      headers: getHeaders(),
     }).then(handleErrors);
   }
 
-  static postJSON(url, data = {}, internal = false) {
+  static postJSON(url, data = {}) {
     return fetch(url, {
       method: 'POST',
-      headers: internal ? getHeaders() : {},
+      headers: getHeaders(),
       body: JSON.stringify(data),
     }).then(handleErrors);
   }
