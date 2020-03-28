@@ -5,7 +5,7 @@ import Fetch from 'services/Fetch';
 import queryString from 'query-string';
 
 const propTypes = {
-  packetsArray: PropTypes.arrayOf(PropTypes.object),
+  packetsArray: PropTypes.arrayOf(PropTypes.string),
 };
 
 class RelatedSearches extends Component {
@@ -39,17 +39,13 @@ class RelatedSearches extends Component {
     }
 
     const searchQueryParams = queryString.stringify({
-      search_query: packetsArray,
+      'search_query[]': packetsArray,
     });
 
-    Fetch.getJSON(`/s/related?${searchQueryParams}`)
-      .then(data => {
-        const searches = data.map(searchQuery => searchQuery.slug.split('_').join('-vs-'));
-        this.setState({ searches });
-      })
-      .catch(error => {
-        console.log(error);
-      });
+    Fetch.getJSON(`/s/related?${searchQueryParams}`).then(data => {
+      const searches = data.map(searchQuery => searchQuery.slug.split('_').join('-vs-'));
+      this.setState({ searches });
+    });
   };
 
   handleClick = e => {
@@ -67,7 +63,7 @@ class RelatedSearches extends Component {
   searchesList = () => {
     const { searches } = this.state;
 
-    searches.map(search => {
+    return searches.map(search => {
       const href = `/${search}`;
       const searchPacketsArray = search.split('-vs-');
       const packetNames = searchPacketsArray.map((name, i) => (

@@ -2,47 +2,48 @@
 
 /****** Suggested Searches ******/
 
-.suggestions--container{
-	display: flex;
-	justify-content: space-between;
+.suggestions--container {
+  display: flex;
+  justify-content: space-between;
 }
 
-.suggetions--box{
-	flex: 0 0 48%;
-	width: 48%;
+.suggetions--box {
+  flex: 0 0 48%;
+  width: 48%;
 }
 
-.suggestions-list{
-	li{
-		margin-bottom: 10px;
-		white-space: nowrap;
-	  overflow: hidden;
-	  text-overflow: ellipsis;
-	}
+.suggestions-list {
+  li {
+    line-height: 1.2;
+    margin-bottom: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
 
 .autocomplete-name {
-	font-weight: 300;
+  font-weight: 300;
 }
 
 .autocomplete-description {
-	color: $shade-50;
-	padding-left: 0;
+  color: $shade-50;
+  padding-left: 0;
 }
 
-@include sm-screen{
-	.suggestions--container{
-		flex-direction: column;
-		justify-content: flex-start;
-	}
-	.suggetions--box{
-		flex: 0 0 100%;
-		width: 100%;
-	}
+@include sm-screen {
+  .suggestions--container {
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+  .suggetions--box {
+    flex: 0 0 100%;
+    width: 100%;
+  }
 }
 
 /****** Extra Info ******/
 
-#extra_info{
-	margin: 50px 0;
+#extra_info {
+  margin: 50px 0;
 }

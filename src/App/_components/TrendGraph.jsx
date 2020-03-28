@@ -7,7 +7,7 @@ import { groupDates } from 'utils/groupDates';
 
 const propTypes = {
   graphStats: PropTypes.arrayOf(PropTypes.object).isRequired,
-  colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+  colors: PropTypes.arrayOf(PropTypes.array).isRequired,
 };
 
 class TrendGraph extends Component {

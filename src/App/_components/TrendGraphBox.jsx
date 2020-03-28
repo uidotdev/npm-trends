@@ -7,7 +7,7 @@ import TrendGraph from './TrendGraph';
 const propTypes = {
   timePeriod: PropTypes.number,
   packets: PropTypes.arrayOf(PropTypes.object).isRequired,
-  colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+  colors: PropTypes.arrayOf(PropTypes.array).isRequired,
 };
 
 const defaultProps = {

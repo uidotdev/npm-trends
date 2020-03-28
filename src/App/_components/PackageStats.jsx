@@ -24,7 +24,7 @@ class PackageStats extends Component {
 
   tableRows = () => {
     const { packets } = this.props;
-    packets.map(packet => <PackageStatsRow key={packet.name} packet={packet} columns={columns} />);
+    return packets.map(packet => <PackageStatsRow key={packet.name} packet={packet} columns={columns} />);
   };
 
   render() {

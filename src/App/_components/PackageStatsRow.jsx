@@ -5,7 +5,7 @@ import Package from 'services/Package';
 
 const propTypes = {
   packet: PropTypes.object,
-  columns: PropTypes.arrayOf(PropTypes.object),
+  columns: PropTypes.arrayOf(PropTypes.array),
 };
 
 class PackageStatsRow extends Component {

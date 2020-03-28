@@ -44,7 +44,7 @@ class PackageTags extends Component {
     if (!packets.length) return;
 
     const searchQueryParams = queryString.stringify({
-      search_query: this.packetNamesArray(),
+      'search_query[]': this.packetNamesArray(),
     });
 
     Fetch.getJSON(`/s/related_packages?${searchQueryParams}`).then(data => {

@@ -2,31 +2,26 @@ import Fetch from './Fetch';
 
 class Package {
   static fetchStats(packet) {
-    return Promise.all([
-      this.fetchGithubStats(packet),
-    ])
-      .then(([github]) => {
-        return { github };
-      });
+    return Promise.all([this.fetchGithubStats(packet)]).then(([github]) => ({ github }));
   }
 
   static fetchGithubStats(packet) {
-    return new Promise((resolve) => {
-      if (packet.repository && (packet.repository.url.indexOf('github') >= 0)){
-        var repository_url = packet.repository.url.split('.com')[1].replace('.git', '');
-        var github_url = "https://api.github.com/repos" + repository_url;
+    return new Promise(resolve => {
+      if (packet.repository && packet.repository.url.indexOf('github') >= 0) {
+        const repositoryUrl = packet.repository.url.split('.com')[1].replace('.git', '');
+        const githubUrl = `https://api.github.com/repos${repositoryUrl}`;
 
-        Fetch.getJSON(window.proxyUrl + github_url)
-          .then((response) => {
+        Fetch.getJSON(`${process.env.REACT_APP_PROXY_URL}/?url=${githubUrl}`)
+          .then(response => {
             resolve(response);
           })
-          .catch((error) => {
-            var packet_data = {name: packet.name};
-            resolve(packet_data);
+          .catch(() => {
+            const packetData = { name: packet.name };
+            resolve(packetData);
           });
-      }else{
-        var packet_data = {name: packet.name};
-        resolve(packet_data);
+      } else {
+        const packetData = { name: packet.name };
+        resolve(packetData);
       }
     });
   }

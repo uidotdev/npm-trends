@@ -36,7 +36,7 @@ export default class PopularSearches extends Component {
   searchesList = () => {
     const { searches } = this.state;
 
-    searches.map(search => {
+    return searches.map(search => {
       const href = `/${search}`;
       const searchPacketsArray = search.split('-vs-');
       const packetNames = searchPacketsArray.map((name, i) => (
