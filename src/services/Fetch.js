@@ -15,6 +15,12 @@ function handleErrors(response) {
   });
 }
 
+function fullUrl(url) {
+  if (/^(f|ht)tps?:\/\//i.test(url)) return url;
+
+  return process.env.REACT_APP_BACKEND_URL + url;
+}
+
 function getHeaders() {
   const headers = {
     'Content-Type': 'application/json',
@@ -26,13 +32,13 @@ function getHeaders() {
 
 class Fetch {
   static getJSON(url) {
-    return fetch(url, {
+    return fetch(fullUrl(url), {
       headers: getHeaders(),
     }).then(handleErrors);
   }
 
   static postJSON(url, data = {}) {
-    return fetch(url, {
+    return fetch(fullUrl(url), {
       method: 'POST',
       headers: getHeaders(),
       body: JSON.stringify(data),
