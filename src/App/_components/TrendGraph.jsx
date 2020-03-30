@@ -65,7 +65,7 @@ class TrendGraph extends Component {
             {
               ticks: {
                 beginAtZero: true,
-                userCallback: value => Number(value).toLocaleString(),
+                callback: value => Number(value).toLocaleString(),
               },
             },
           ],
