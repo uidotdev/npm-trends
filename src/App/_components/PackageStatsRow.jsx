@@ -13,6 +13,7 @@ class PackageStatsRow extends Component {
     super(props);
     this.state = {
       packageStats: null,
+      hideSize: false,
     };
   }
 
@@ -27,9 +28,13 @@ class PackageStatsRow extends Component {
     });
   }
 
+  hideSize = () => {
+    this.setState({ hideSize: true });
+  };
+
   tableCell = column => {
     const { packet } = this.props;
-    const { packageStats } = this.state;
+    const { packageStats, hideSize } = this.state;
 
     const apiSource = column[1];
     const attributeName = column[2];
@@ -63,15 +68,16 @@ class PackageStatsRow extends Component {
           break;
         }
         const sizeUrl = `https://bundlephobia.com/result?p=${packet.name}`;
-        attributeValue = (
+        attributeValue = !hideSize ? (
           <a href={sizeUrl} target="_blank" rel="noopener noreferrer">
             <img
+              onError={this.hideSize}
               src={`https://flat.badgen.net/bundlephobia/minzip/${packet.name}`}
               alt={`Minified + gzip package size for ${packet.name} in KB`}
               className="badge--in-table"
             />
           </a>
-        );
+        ) : null;
         break;
       }
       default:

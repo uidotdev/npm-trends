@@ -79,7 +79,7 @@ class PackageTags extends Component {
     const { packets } = this.props;
     const { relatedPackets } = this.state;
 
-    if (!relatedPackets) return null;
+    if (!packets.length || !relatedPackets.length) return null;
 
     if (packets.length >= 10) return null;
 
