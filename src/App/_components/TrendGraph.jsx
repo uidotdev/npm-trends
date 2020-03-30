@@ -57,6 +57,32 @@ class TrendGraph extends Component {
         datasetFill: false,
         scaleLabel: "<%= ' ' + value%>",
         maintainAspectRatio: false,
+        legend: {
+          onClick: e => e.stopPropagation(),
+        },
+        scales: {
+          yAxes: [
+            {
+              ticks: {
+                beginAtZero: true,
+                userCallback: value => Number(value).toLocaleString(),
+              },
+            },
+          ],
+          xAxes: [
+            {
+              ticks: {},
+            },
+          ],
+        },
+        tooltips: {
+          callbacks: {
+            label: (tooltipItem, data) => {
+              const value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+              return Number(value).toLocaleString();
+            },
+          },
+        },
       };
       const ctx = document.getElementById('download_chart').getContext('2d');
       this.download_chart = new Chart(ctx, {
