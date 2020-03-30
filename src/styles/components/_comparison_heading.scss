@@ -1,7 +1,8 @@
 @import 'styles/_mixins';
 
 .comparison-heading--heading {
-  margin-bottom:  0;
+  margin-bottom: 0;
+  line-height: 1.3;
 }
 
 .comparison-heading--subheading {
@@ -33,14 +34,14 @@
     &.link-icon-npm {
       font-size: 28px;
       &:hover {
-        color: #FB3E44;
+        color: #fb3e44;
       }
     }
     &.link-icon-github:hover {
-      color: #24292D;
+      color: #24292d;
     }
     &.link-icon-website:hover {
-      color: #20B57A;
+      color: #20b57a;
     }
   }
 }

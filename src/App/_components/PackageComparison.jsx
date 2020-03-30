@@ -74,25 +74,26 @@ class PackageComparison extends Component {
       return;
     }
 
-    packetsArr.forEach(packet => {
+    packetsArr.forEach((packet, i) => {
       const url = `https://api.npms.io/v2/package/${encodeURIComponent(encodeURIComponent(packet))}`;
 
       Fetch.getJSON(urlWithProxy(url))
         .then(data => {
-          addData(data, this);
+          addData(data, i, this);
         })
         .catch(() => {
           this.handleInvalidQuery(packet);
         });
     }, this);
 
-    function addData(data, passedThis) {
+    function addData(data, i, passedThis) {
       const formattedData = {
         id: data.collected.metadata.name,
         name: data.collected.metadata.name,
         description: data.collected.metadata.description,
         repository: data.collected.metadata.repository,
         npmsData: data,
+        color: passedThis.colors()[i],
       };
       packetsData.push(formattedData);
       packetsLeft -= 1;

@@ -36,24 +36,15 @@ class PackageStatsRow extends Component {
     const { packet } = this.props;
     const { packageStats, hideSize } = this.state;
 
-    const apiSource = column[1];
-    const attributeName = column[2];
-    let attributeValue;
+    const [, apiSource, attributeName] = column;
+
+    const hasPacketStats = !!(packageStats && packageStats[apiSource] && packageStats[apiSource][attributeName]);
+
     switch (attributeName) {
-      case 'created_at':
-        attributeValue =
-          packageStats && packageStats[apiSource][attributeName] !== undefined
-            ? Date.parse(packageStats[apiSource][attributeName]).toString('MMM d, yyyy')
-            : '';
-        break;
-      case 'pushed_at':
-        attributeValue =
-          packageStats && packageStats[apiSource][attributeName] !== undefined
-            ? Date.parse(packageStats[apiSource][attributeName]).toString('MMM d, yyyy')
-            : '';
-        break;
+      case 'color':
+        return <div className="stats-row--color" style={{ backgroundColor: `rgb(${packet.color.join(',')})` }} />;
       case 'name':
-        attributeValue = packageStats ? (
+        return packageStats && packageStats[apiSource] ? (
           <a className="name-header" target="_blank" rel="noopener noreferrer" href={packageStats[apiSource].html_url}>
             {' '}
             {packet.name}{' '}
@@ -61,14 +52,20 @@ class PackageStatsRow extends Component {
         ) : (
           <div className="name-header">{packet.name}</div>
         );
-        break;
+      case 'stargazers_count':
+      case 'open_issues_count':
+      case 'forks_count':
+        if (!hasPacketStats) return null;
+        return Number(packageStats[apiSource][attributeName]).toLocaleString();
+      case 'created_at':
+      case 'pushed_at':
+        if (!hasPacketStats) return null;
+        return Date.parse(packageStats[apiSource][attributeName]).toString('MMM d, yyyy');
       case 'size': {
-        if (!packageStats) {
-          attributeValue = '';
-          break;
-        }
+        if (hideSize) return null;
+
         const sizeUrl = `https://bundlephobia.com/result?p=${packet.name}`;
-        attributeValue = !hideSize ? (
+        return (
           <a href={sizeUrl} target="_blank" rel="noopener noreferrer">
             <img
               onError={this.hideSize}
@@ -77,23 +74,18 @@ class PackageStatsRow extends Component {
               className="badge--in-table"
             />
           </a>
-        ) : null;
-        break;
+        );
       }
       default:
-        attributeValue =
-          packageStats && packageStats[apiSource][attributeName] !== undefined
-            ? packageStats[apiSource][attributeName]
-            : '';
+        if (!hasPacketStats) return null;
+        return packageStats[apiSource][attributeName];
     }
-
-    return <td key={attributeName}>{attributeValue}</td>;
   };
 
   rowCells = () => {
     const { columns } = this.props;
 
-    return columns.map(column => this.tableCell(column));
+    return columns.map(column => <td key={column[2]}>{this.tableCell(column)}</td>);
   };
 
   render() {

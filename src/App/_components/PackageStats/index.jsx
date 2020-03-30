@@ -6,6 +6,7 @@ import PackageStatsRow from './PackageStatsRow';
 // array of stats to display
 // format: [name_to_display, api_source, api_attribute_name]
 const columns = [
+  ['', '', 'color'],
   ['', 'github', 'name'],
   ['stars 🌟', 'github', 'stargazers_count'],
   ['forks 🍽', 'github', 'forks_count'],

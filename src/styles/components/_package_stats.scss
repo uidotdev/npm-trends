@@ -2,11 +2,17 @@
 
 /****** Package Stats ******/
 
-.package-stats{
-	margin-bottom: 40px;
+.package-stats {
+  margin-bottom: 40px;
 }
 
 .badge--in-table {
-	display: block;
-	border-radius: 3px;
+  display: block;
+  border-radius: 3px;
+}
+
+.stats-row--color {
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
 }
