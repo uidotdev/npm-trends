@@ -35,10 +35,10 @@ const Meta = ({ title, description, canonical }) => {
       <meta property="og:type" content="website" />
       <meta property="og:url" content={url} />
 
-      <meta property="twitter:card" content="summary_large_image" />
-      <meta property="twitter:title" content={title} />
-      <meta property="twitter:description" content={description} />
-      <meta property="twitter:image" content={shareImage} />
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:title" content={title} />
+      <meta name="twitter:description" content={description} />
+      <meta name="twitter:image" content={shareImage} />
     </MetaTags>
   );
 };
