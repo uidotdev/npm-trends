@@ -10,7 +10,7 @@ I didn't want to have to worry that 6 months down the road, the framework that I
 
 This approach paid off early on when NPM Trends led me to choose Redux over the multitude of other Flux frameworks out at the time. When I looked at the download trends in November of 2015, I saw Redux beginning to pull away from the pack. If you look at the stats now, there is no comparison.
 
-![Redux Trend Graph](/app/assets/images/ReduxTrendGraph.png?raw=true)
+![Redux Trend Graph](/src/images/ReduxTrendGraph.png?raw=true)
 
 You shouldn't use an NPM package solely based on the number of downloads the package has, but it should definitely be another data point in your decision making process. Hopefully NPM Trends will help you make better decisions, so you can spend less time jumping from package to package and more time building meaningful applications.
 
