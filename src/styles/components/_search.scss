@@ -1,0 +1,114 @@
+@import 'styles/_mixins';
+
+/****** Search ******/
+
+#search_form {
+  margin-top: 20px;
+  #search_form_input {
+    width: 100%;
+    border: 2px solid #e2e2e2;
+    background-color: transparent;
+    line-height: 2;
+    padding: 0 20px;
+    border-radius: 5px;
+    font-weight: 200;
+    color: #000000;
+    font-size: 20px;
+    -webkit-appearance: none;
+    transition: 0.25s all;
+    &:focus {
+      border-color: rgb(255, 170, 0);
+      outline: none;
+    }
+  }
+}
+
+.algolia-autocomplete {
+  width: 100%;
+}
+.algolia-autocomplete .aa-hint {
+  color: #999;
+}
+.algolia-autocomplete .aa-dropdown-menu {
+  width: 100%;
+  background-color: #ffffff;
+  color: #000000;
+  border-top: none;
+  border: 1px solid #c3c3c3;
+  border-width: 0 2px 10px;
+  border-radius: 0 0 5px 5px;
+}
+.autocomplete-name {
+  font-size: 18px;
+}
+.autocomplete-description {
+  font-size: 14px;
+  padding-left: 10px;
+}
+.algolia-autocomplete .aa-dropdown-menu .aa-suggestion {
+  cursor: pointer;
+  padding: 8px 20px;
+}
+.algolia-autocomplete .aa-dropdown-menu .aa-suggestion.aa-cursor {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+.algolia-autocomplete .aa-dropdown-menu .aa-suggestion em {
+  font-weight: bold;
+  font-style: normal;
+}
+
+/****** Search Tags ******/
+
+.package-search-tags {
+  margin-top: 10px;
+  li {
+    display: inline-block;
+    vertical-align: top;
+  }
+  .package-search-tag {
+    padding: 7px 7px 7px 10px;
+    margin: 0 10px 10px 0;
+    cursor: pointer;
+    border-radius: 5px;
+    a {
+      color: $dark;
+      text-decoration: none;
+    }
+    .search-tag-name {
+      font-size: 18px;
+    }
+    .icon {
+      font-size: 16px;
+      color: $light;
+      margin-left: 8px;
+    }
+    &:hover {
+      .icon {
+        color: $dark;
+      }
+    }
+  }
+}
+
+.related-package {
+  height: 36px;
+  margin-right: 20px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  & > div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+  }
+  a {
+    color: $shade-50;
+    &:hover {
+      color: $dark;
+      text-decoration: none;
+    }
+  }
+  i {
+    margin-right: 3px;
+  }
+}

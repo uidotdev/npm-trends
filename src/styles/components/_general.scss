@@ -1,0 +1,107 @@
+@import 'styles/_mixins';
+
+/****** Layout ******/
+body {
+  background-color: #ffffff;
+  font-family: 'system-ui', 'helvetica neue', arial, sans-serif;
+  font-weight: 300;
+  letter-spacing: 1px;
+  color: $dark;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 60px;
+}
+
+@include md-screen {
+  .container {
+    padding: 0 30px;
+  }
+}
+
+@include sm-screen {
+  .container {
+    padding: 0 15px;
+  }
+}
+
+/****** General Styles ******/
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'helvetica neue', arial, sans-serif;
+  color: $dark;
+  font-weight: 400;
+  letter-spacing: 2px;
+}
+
+h1 {
+  font-family: 'helvetica neue', arial, sans-serif;
+  color: #000000;
+  font-weight: 200;
+  letter-spacing: 2px;
+  font-size: 32px;
+  margin: 10px 0 15px;
+}
+
+h2 {
+  font-size: 24px;
+  margin-top: 30px;
+  margin-bottom: 20px;
+}
+
+p {
+  font-size: 16px;
+  margin: 1em 0;
+}
+
+a {
+  color: #0074d9;
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
+@include sm-screen {
+  h1 {
+    font-size: 26px;
+  }
+  h2 {
+    font-size: 18px;
+  }
+}
+
+/****** Lists ******/
+
+.list-unstyled {
+  list-style-type: none;
+  padding: 0;
+}
+
+.inline {
+  display: inline-block;
+  vertical-align: top;
+}
+
+/****** Custom classes ******/
+
+.text--bold {
+  font-weight: 400;
+}
+
+.text--light {
+  font-weight: 200;
+}
