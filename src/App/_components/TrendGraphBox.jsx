@@ -50,7 +50,10 @@ class TrendGraphBox extends Component {
   getStats = async (packets, startDate) => {
     if (packets.length > 0) {
       const packetNames = packets.map(packet => packet.name);
+
+      // Only show last full week
       const endDate = moment()
+        .subtract(1, 'week')
         .endOf('week')
         .format('YYYY-MM-DD');
 
