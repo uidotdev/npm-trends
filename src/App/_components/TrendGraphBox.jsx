@@ -96,6 +96,7 @@ class TrendGraphBox extends Component {
         ['6 Months', 6],
         ['1 Year', 12],
         ['2 Years', 24],
+        ['5 Years', 60],
       ];
       const selectOptions = selectOptionsData.map(option => (
         <option key={option[1]} value={option[1]}>
