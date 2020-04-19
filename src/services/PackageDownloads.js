@@ -7,7 +7,7 @@ class PackageDownloads {
     const startMoment = moment(startDate);
     const endMoment = moment(endDate);
 
-    const apiDaysLimit = 180;
+    const apiDaysLimit = 540;
     const days = moment.duration(endMoment.diff(startMoment)).asDays();
 
     const requiredApiCalls = Math.ceil(days / apiDaysLimit);
