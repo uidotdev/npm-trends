@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import Chart from 'chart.js';
 
-import { groupDates } from 'utils/groupDates';
+import { groupDownloadsByPeriod } from 'utils/groupDates';
 
 const propTypes = {
   graphStats: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -29,20 +29,24 @@ class TrendGraph extends Component {
       const chartData = { labels: [], datasets: [] };
       graphStats.forEach((graphStat, i) => {
         const dataColor = colors[i].join(',');
-        const groupedData = groupDates(graphStat.downloads, 'week', graphStat.start, graphStat.end);
+
+        const groupedData = groupDownloadsByPeriod(graphStat.downloads, 'week');
         if (i === 0) {
-          const labels = groupedData.map(download => download.period);
+          const labels = groupedData.map(periodData => periodData.period);
           chartData.labels = labels;
         }
-        const data = groupedData.map(download => download.downloads);
+        const data = groupedData.map(periodData => periodData.downloads);
+
+        const hidePoints = data.length < 100;
+
         const dataset = {
           label: graphStat.package,
           backgroundColor: `rgba(${dataColor},0)`,
           borderColor: `rgba(${dataColor},1)`,
           pointRadius: 5,
           pointHoverRadius: 5,
-          pointBackgroundColor: `rgba(${dataColor},1)`,
-          pointBorderColor: '#fff',
+          pointBackgroundColor: hidePoints ? `rgba(${dataColor},1)` : 'transparent',
+          pointBorderColor: hidePoints ? '#fff' : 'transparent',
           pointBorderWidth: 1,
           pointHoverBackgroundColor: '#ffffff',
           pointHoverBorderColor: `rgba(${dataColor},1)`,
@@ -51,6 +55,7 @@ class TrendGraph extends Component {
         };
         chartData.datasets.push(dataset);
       }, this);
+
       const chartOptions = {
         scaleFontColor: '#000000',
         responsive: true,

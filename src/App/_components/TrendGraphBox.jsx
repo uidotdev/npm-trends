@@ -1,17 +1,21 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Fetch from 'services/Fetch';
+import moment from 'moment';
+
+import PackageDownloads from 'services/PackageDownloads';
 
 import TrendGraph from './TrendGraph';
 
+const momentToStartDate = momentDate => momentDate.startOf('week').format('YYYY-MM-DD');
+
 const propTypes = {
-  timePeriod: PropTypes.number,
+  startDate: PropTypes.string,
   packets: PropTypes.arrayOf(PropTypes.object).isRequired,
   colors: PropTypes.arrayOf(PropTypes.array).isRequired,
 };
 
 const defaultProps = {
-  timePeriod: 6,
+  startDate: momentToStartDate(moment().subtract(6, 'months')),
 };
 
 class TrendGraphBox extends Component {
@@ -19,21 +23,21 @@ class TrendGraphBox extends Component {
     super(props);
     this.state = {
       graphStats: [],
-      timePeriod: props.timePeriod,
+      startDate: props.startDate,
     };
   }
 
   componentDidMount() {
     const { packets } = this.props;
-    const { timePeriod } = this.state;
+    const { startDate } = this.state;
 
-    this.getStats(packets, timePeriod);
+    this.getStats(packets, startDate);
   }
 
   componentWillReceiveProps(nextProps) {
-    const { timePeriod } = this.state;
+    const { startDate } = this.state;
 
-    this.getStats(nextProps.packets, timePeriod);
+    this.getStats(nextProps.packets, startDate);
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -43,41 +47,25 @@ class TrendGraphBox extends Component {
     return nextState.graphStats !== graphStats;
   }
 
-  getStats = (packets, period) => {
+  getStats = async (packets, startDate) => {
     if (packets.length > 0) {
       const packetNames = packets.map(packet => packet.name);
-      const endDate = Date.today().toString('yyyy-MM-dd');
-      const timeAgo = Date.today().addMonths(-period);
-      // Get full start week data by making start date a monday
-      const startDate = timeAgo.is().monday()
-        ? timeAgo.toString('yyyy-MM-dd')
-        : timeAgo
-          .next()
-          .monday()
-          .toString('yyyy-M-dd');
+      const endDate = moment()
+        .endOf('week')
+        .format('YYYY-MM-DD');
+
+      const graphStats = [];
 
       packetNames.forEach(packetName => {
-        const url = `https://api.npmjs.org/downloads/range/${startDate}:${endDate}/${packetName}`;
-        Fetch.getJSON(`${process.env.REACT_APP_PROXY_URL}?url=${url}`).then(data => {
-          addData(data, this);
-        });
-      }, this);
+        const downloads = PackageDownloads.fetchDownloads(packetName, startDate, endDate);
+        graphStats.push(downloads);
+      });
 
-      const totalRequests = packets.length;
-      let requestsCompleted = 0;
-      const graphStatsData = {};
+      const fetchedGraphStats = await Promise.all(graphStats);
 
-      const addData = (data, passedThis) => {
-        requestsCompleted += 1;
-        graphStatsData[data.package] = data;
-        if (requestsCompleted === totalRequests) {
-          // persists order
-          const graphStats = packetNames.map(packetName => graphStatsData[packetName]);
-          passedThis.setState({ graphStats, timePeriod: period });
-        }
-      };
+      this.setState({ graphStats: fetchedGraphStats, startDate });
     } else {
-      this.setState({ graphStats: [], timePeriod: period });
+      this.setState({ graphStats: [], startDate });
     }
   };
 
@@ -87,15 +75,17 @@ class TrendGraphBox extends Component {
   };
 
   heading = () => {
-    const { graphStats, timePeriod } = this.state;
+    const { graphStats, startDate } = this.state;
 
     if (graphStats.length > 0) {
       const selectOptionsData = [
-        ['1 Month', 1],
-        ['3 Months', 3],
-        ['6 Months', 6],
-        ['1 Year', 12],
-        ['2 Years', 24],
+        ['1 Month', momentToStartDate(moment().subtract(1, 'month'))],
+        ['3 Months', momentToStartDate(moment().subtract(3, 'month'))],
+        ['6 Months', momentToStartDate(moment().subtract(6, 'month'))],
+        ['1 Year', momentToStartDate(moment().subtract(1, 'year'))],
+        ['2 Years', momentToStartDate(moment().subtract(2, 'year'))],
+        ['5 Years', momentToStartDate(moment().subtract(5, 'year'))],
+        ['All time', momentToStartDate(moment('2015-01-10'))],
       ];
       const selectOptions = selectOptionsData.map(option => (
         <option key={option[1]} value={option[1]}>
@@ -106,7 +96,7 @@ class TrendGraphBox extends Component {
         <h2 className="chart-heading">
           Downloads <span className="text--light">in past</span>
           <span className="select-container">
-            <select className="chart-heading-select" value={timePeriod} onChange={this.handlePeriodChange}>
+            <select className="chart-heading-select" value={startDate} onChange={this.handlePeriodChange}>
               {selectOptions}
             </select>
           </span>
