@@ -18,7 +18,7 @@ export const groupDownloadsByPeriod = (dates, period = 'week') => {
   });
 
   return Object.entries(downloadsGroupedByPeriod).map(([key, value]) => ({
-    period: moment(key).format('MMM D'),
+    period: moment(key).toDate(),
     downloads: value,
   }));
 };
