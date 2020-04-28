@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
+import moment from 'moment';
 import Chart from 'chart.js';
 
 import { groupDownloadsByPeriod } from 'utils/groupDates';
@@ -35,7 +35,11 @@ class TrendGraph extends Component {
           const labels = groupedData.map(periodData => periodData.period);
           chartData.labels = labels;
         }
-        const data = groupedData.map(periodData => periodData.downloads);
+
+        const data = groupedData.map(periodData => ({
+          x: periodData.period,
+          y: periodData.downloads,
+        }));
 
         const hidePoints = data.length < 100;
 
@@ -55,6 +59,20 @@ class TrendGraph extends Component {
         };
         chartData.datasets.push(dataset);
       }, this);
+
+      const firstDateForChartMoment = moment(graphStats[0].downloads[0].day);
+
+      const monthsToNow = moment().diff(firstDateForChartMoment, 'months');
+
+      let xAxisDispalyUnit = 'week';
+
+      if (monthsToNow >= 24) {
+        xAxisDispalyUnit = 'year';
+      } else if (monthsToNow >= 12) {
+        xAxisDispalyUnit = 'quarter';
+      } else if (monthsToNow >= 3) {
+        xAxisDispalyUnit = 'month';
+      }
 
       const chartOptions = {
         scaleFontColor: '#000000',
@@ -76,20 +94,29 @@ class TrendGraph extends Component {
           ],
           xAxes: [
             {
-              ticks: {},
+              type: 'time',
+              time: {
+                unit: xAxisDispalyUnit,
+                tooltipFormat: 'll',
+                displayFormats: {
+                  quarter: 'MMM YYYY',
+                },
+              },
             },
           ],
         },
         tooltips: {
           callbacks: {
             label: (tooltipItem, data) => {
-              const value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
-              return Number(value).toLocaleString();
+              const value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].y;
+              return ` ${Number(value).toLocaleString()}`;
             },
           },
         },
       };
+
       const ctx = document.getElementById('download_chart').getContext('2d');
+
       this.download_chart = new Chart(ctx, {
         type: 'line',
         data: chartData,
