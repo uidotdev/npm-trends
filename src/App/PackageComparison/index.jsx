@@ -6,13 +6,13 @@ import Fetch from 'services/Fetch';
 import API from 'services/API';
 import { urlWithProxy } from 'utils/proxy';
 
-import PackageComparisonHeading from 'App/_components/PackageComparisonHeading';
-import SearchForm from 'App/_components/SearchForm';
-import PackageTags from 'App/_components/PackageTags';
-import TrendGraphBox from 'App/_components/TrendGraphBox';
-import PackageStats from 'App/_components/PackageStats';
-import PopularSearches from 'App/_components/PopularSearches';
-import RelatedSearches from 'App/_components/RelatedSearches';
+import SearchForm from 'App/_search/SearchForm';
+import PackageTags from 'App/_search/PackageTags';
+import TrendGraphBox from 'App/_chart/TrendGraphBox';
+import PackageStats from 'App/_statsTable/PackageStats';
+import PopularSearches from 'App/_searchLists/PopularSearches';
+import RelatedSearches from 'App/_searchLists/RelatedSearches';
+import PackageComparisonHeading from './_components/PackageComparisonHeading';
 
 const propTypes = {
   params: PropTypes.object.isRequired,
