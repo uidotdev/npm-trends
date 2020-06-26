@@ -2,6 +2,6 @@
 
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <sitemap>
-    <loc>https://api.npmtrends.com/sitemap.xml.gz</loc>
+    <loc>https://npmtrends.s3.amazonaws.com/sitemaps/sitemap.xml.gz</loc>
   </sitemap>
 </sitemapindex>
