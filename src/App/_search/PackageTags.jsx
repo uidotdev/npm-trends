@@ -68,10 +68,12 @@ class PackageTags extends Component {
       const border = `2px solid rgb(${colors[i].join(',')})`;
       return (
         <li key={packet.id} className="package-search-tag" style={{ border }}>
-          <Link to={this.newUrlAfterRemove(packet.name)}>
-            <span className="search-tag-name">{packet.name}</span>
-            <i className="icon icon-cross" />
-          </Link>
+          <DetailsPopover packageName={packet.name}>
+            <Link to={this.newUrlAfterRemove(packet.name)}>
+              <span className="search-tag-name">{packet.name}</span>
+              <i className="icon icon-cross" />
+            </Link>
+          </DetailsPopover>
         </li>
       );
     });

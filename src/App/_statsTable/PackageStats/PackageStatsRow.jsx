@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 
 import Package from 'services/Package';
 
+import DetailsPopover from 'App/_components/_popovers/DetailsPopover';
+
 const propTypes = {
   packet: PropTypes.object,
   columns: PropTypes.arrayOf(PropTypes.array),
@@ -44,13 +46,24 @@ class PackageStatsRow extends Component {
       case 'color':
         return <div className="stats-row--color" style={{ backgroundColor: `rgb(${packet.color.join(',')})` }} />;
       case 'name':
-        return packageStats && packageStats[apiSource] ? (
-          <a className="name-header" target="_blank" rel="noopener noreferrer" href={packageStats[apiSource].html_url}>
-            {' '}
-            {packet.name}{' '}
-          </a>
-        ) : (
-          <div className="name-header">{packet.name}</div>
+        return (
+          <div>
+            <DetailsPopover packageName={packet.name}>
+              {packageStats && packageStats[apiSource] ? (
+                <a
+                  className="name-header"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href={packageStats[apiSource].html_url}
+                >
+                  {' '}
+                  {packet.name}{' '}
+                </a>
+              ) : (
+                <div className="name-header">{packet.name}</div>
+              )}
+            </DetailsPopover>
+          </div>
         );
       case 'stargazers_count':
       case 'open_issues_count':

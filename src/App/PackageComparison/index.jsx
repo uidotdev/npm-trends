@@ -2,9 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import $ from 'jquery';
 
-import Fetch from 'services/Fetch';
+import Package from 'services/Package';
 import API from 'services/API';
-import { urlWithProxy } from 'utils/proxy';
 
 import SearchForm from 'App/_search/SearchForm';
 import PackageTags from 'App/_search/PackageTags';
@@ -54,7 +53,7 @@ class PackageComparison extends Component {
     [1, 255, 112],
   ];
 
-  loadPackets = props => {
+  loadPackets = async props => {
     const { packets } = props.params;
 
     if (!packets) {
@@ -64,8 +63,6 @@ class PackageComparison extends Component {
     }
 
     const packetsArr = packets.split('-vs-');
-    const packetsData = [];
-    let packetsLeft = packetsArr.length;
 
     const maxPacketsForSearch = 10;
 
@@ -74,45 +71,49 @@ class PackageComparison extends Component {
       return;
     }
 
-    packetsArr.forEach((packet, i) => {
-      const url = `https://api.npms.io/v2/package/${encodeURIComponent(encodeURIComponent(packet))}`;
+    const fetchedPackages = await Promise.all(
+      packetsArr.map(async packageName => {
+        try {
+          return await Package.fetchPackageDetails(packageName);
+        } catch {
+          return {
+            error: true,
+            packageName,
+          };
+        }
+      }),
+    );
 
-      Fetch.getJSON(urlWithProxy(url))
-        .then(data => {
-          addData(data, i, this);
-        })
-        .catch(() => {
-          this.handleInvalidQuery(packet);
-        });
-    }, this);
+    const missingPackages = fetchedPackages.filter(p => p.error).map(p => p.packageName);
 
-    function addData(data, i, passedThis) {
-      const formattedData = {
-        id: data.collected.metadata.name,
-        name: data.collected.metadata.name,
-        description: data.collected.metadata.description,
-        repository: data.collected.metadata.repository,
-        npmsData: data,
-        color: passedThis.colors()[i],
-      };
-      packetsData.push(formattedData);
-      packetsLeft -= 1;
-      if (packetsLeft === 0) {
-        // preserve original order
-        const sortedData = packetsArr.map(packetName => {
-          let dataHash;
-          packetsData.forEach(packetData => {
-            if (packetData.name === decodeURIComponent(packetName)) {
-              dataHash = packetData;
-            }
-          });
-          return dataHash;
-        });
-        passedThis.setPageMeta(packetsArr);
-        passedThis.setState({ packets: sortedData });
-        passedThis.logSearch();
-      }
+    if (missingPackages.length) {
+      const { params, history } = this.props;
+      const packetsArray = params.packets.split('-vs-');
+
+      const remainingPackets = packetsArray.filter(packet => !missingPackages.includes(packet));
+
+      const packetsUrl = remainingPackets.length > 1 ? remainingPackets.join('-vs-') : remainingPackets.join('');
+      const url = `/${packetsUrl}`;
+
+      history.push(url);
+
+      return;
     }
+
+    const formattedPackageData = fetchedPackages
+      .filter(p => !p.error)
+      .map((packageData, i) => ({
+        id: packageData.collected.metadata.name,
+        name: packageData.collected.metadata.name,
+        description: packageData.collected.metadata.description,
+        repository: packageData.collected.metadata.repository,
+        npmsData: packageData,
+        color: this.colors()[i],
+      }));
+
+    this.setPageMeta(packetsArr);
+    this.setState({ packets: formattedPackageData });
+    this.logSearch();
   };
 
   setPageMeta = packetsArr => {
@@ -135,22 +136,6 @@ class PackageComparison extends Component {
     const { history } = this.props;
 
     const packetsUrl = packetNamesArray.join('-vs-');
-    const url = `/${packetsUrl}`;
-
-    history.push(url);
-  };
-
-  handleInvalidQuery = query => {
-    const { params, history } = this.props;
-
-    const packetsArray = params.packets.split('-vs-');
-    const remainingPackets = [];
-    packetsArray.forEach(packet => {
-      if (packet !== query) {
-        remainingPackets.push(packet);
-      }
-    });
-    const packetsUrl = remainingPackets.length > 1 ? remainingPackets.join('-vs-') : remainingPackets.join('');
     const url = `/${packetsUrl}`;
 
     history.push(url);
