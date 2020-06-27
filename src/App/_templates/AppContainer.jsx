@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 
-import Meta from 'App/_components/Meta';
-import PackageComparison from 'App/_components/PackageComparison';
+import PackageComparison from 'App/PackageComparison';
 import { searchPathToDisplayString, getCanonical } from 'utils/format';
+import Meta from './_components/Meta';
 import Header from './Header';
 import Footer from './Footer';
 

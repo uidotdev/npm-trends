@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import Fetch from 'services/Fetch';
 import queryString from 'query-string';
+
+import Fetch from 'services/Fetch';
+import DetailsPopover from 'App/_components/_popovers/DetailsPopover';
 
 const propTypes = {
   packets: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -66,10 +68,12 @@ class PackageTags extends Component {
       const border = `2px solid rgb(${colors[i].join(',')})`;
       return (
         <li key={packet.id} className="package-search-tag" style={{ border }}>
-          <Link to={this.newUrlAfterRemove(packet.name)}>
-            <span className="search-tag-name">{packet.name}</span>
-            <i className="icon icon-cross" />
-          </Link>
+          <DetailsPopover packageName={packet.name}>
+            <Link to={this.newUrlAfterRemove(packet.name)}>
+              <span className="search-tag-name">{packet.name}</span>
+              <i className="icon icon-cross" />
+            </Link>
+          </DetailsPopover>
         </li>
       );
     });
@@ -86,10 +90,12 @@ class PackageTags extends Component {
     return relatedPackets.map((packet, i) => (
       <li key={packet} className="related-package" style={{ marginLeft: i === 0 && '10px' }}>
         <div>
-          <Link to={this.newUrlAfterAdd(packet)}>
-            <i className="icon icon-plus" />
-            <span className="related-package--name">{packet}</span>
-          </Link>
+          <DetailsPopover packageName={packet}>
+            <Link to={this.newUrlAfterAdd(packet)}>
+              <i className="icon icon-plus" />
+              <span className="related-package--name">{packet}</span>
+            </Link>
+          </DetailsPopover>
         </div>
       </li>
     ));
