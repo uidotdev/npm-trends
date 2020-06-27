@@ -9,7 +9,6 @@ const columns = [
   ['', '', 'color'],
   ['', 'github', 'name'],
   ['stars 🌟', 'github', 'stargazers_count'],
-  ['forks 🍽', 'github', 'forks_count'],
   ['issues ⚠️', 'github', 'open_issues_count'],
   ['updated 🛠', 'github', 'pushed_at'],
   ['created 🐣', 'github', 'created_at'],
