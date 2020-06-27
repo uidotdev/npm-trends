@@ -77,14 +77,14 @@ class PackageComparison extends Component {
           return await Package.fetchPackageDetails(packageName);
         } catch {
           return {
-            error: true,
+            hasError: true,
             packageName,
           };
         }
       }),
     );
 
-    const missingPackages = fetchedPackages.filter(p => p.error).map(p => p.packageName);
+    const missingPackages = fetchedPackages.filter(p => p.hasError || !p.collected).map(p => p.packageName);
 
     if (missingPackages.length) {
       const { params, history } = this.props;
@@ -101,7 +101,7 @@ class PackageComparison extends Component {
     }
 
     const formattedPackageData = fetchedPackages
-      .filter(p => !p.error)
+      .filter(p => !p.hasError && p.collected)
       .map((packageData, i) => ({
         id: packageData.collected.metadata.name,
         name: packageData.collected.metadata.name,
