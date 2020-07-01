@@ -36,13 +36,17 @@ const DetailsPopover = ({ packageName, children }) => {
           <div className="package-details-popover--name">{packageData.collected.metadata.name}</div>
           <div className="package-details-popover--description">{packageData.collected.metadata.description}</div>
           <div className="package-details-popover--stats">
-            <div className="package-details-popover--stars">
-              <i className="icon icon-star-fas" /> {abbreviateNumber(packageData.collected.github.starsCount)}
-            </div>
-            <div className="package-details-popover--weekly-downloads">
-              <i className="icon icon-arrow-alt-circle-down" />{' '}
-              {abbreviateNumber(packageData.collected.npm.downloads[1].count)}/wk
-            </div>
+            {packageData.collected.github && packageData.collected.github.starsCount && (
+              <div className="package-details-popover--stars">
+                <i className="icon icon-star-fas" /> {abbreviateNumber(packageData.collected.github.starsCount)}
+              </div>
+            )}
+            {packageData.collected.npm && packageData.collected.npm.downloads && (
+              <div className="package-details-popover--weekly-downloads">
+                <i className="icon icon-arrow-alt-circle-down" />{' '}
+                {abbreviateNumber(packageData.collected.npm.downloads[1].count)}/wk
+              </div>
+            )}
           </div>
         </div>
       )}
