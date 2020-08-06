@@ -9,6 +9,7 @@
     "clipboard": "1.6.1",
     "css-loader": "^0.25.0",
     "datejs": "1.0.0-rc3",
+    "dom-to-image": "^2.6.0",
     "dotenv": "1.2.0",
     "history": "^4.10.1",
     "immutable": "^3.7.6",
