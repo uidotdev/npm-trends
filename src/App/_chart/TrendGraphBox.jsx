@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import dom2image from 'dom-to-image';
 
 import PackageDownloads from 'services/PackageDownloads';
 
@@ -77,6 +78,16 @@ class TrendGraphBox extends Component {
     this.getStats(packets, e.target.value);
   };
 
+  createImg = e => {
+    const $content = document.getElementById('coreArea')
+    dom2image.toPng($content).then(dataUrl => {
+        let link = document.createElement('a');
+        link.download = 'npm-trends.jpeg';
+        link.href = dataUrl;
+        link.click();
+    });
+  };
+
   heading = () => {
     const { graphStats, startDate } = this.state;
 
@@ -103,6 +114,7 @@ class TrendGraphBox extends Component {
               {selectOptions}
             </select>
           </span>
+          <button onClick={this.createImg}>create image</button>
         </h2>
       );
     }

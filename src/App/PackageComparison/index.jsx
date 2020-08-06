@@ -184,7 +184,7 @@ class PackageComparison extends Component {
         <SearchForm onSearch={this.updateFromSearch} />
         <PackageTags packets={packets} colors={this.colors()} />
         {packets.length > 0 && (
-          <div>
+          <div id="coreArea">
             <TrendGraphBox packets={packets} colors={this.colors()} />
             <PackageStats packets={packets} />
           </div>
