@@ -1,43 +1,40 @@
 {
   "name": "npm-trends",
-  "version": "1.0.0",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
   "dependencies": {
     "async-retry": "1.2.1",
     "autocomplete.js": "^0.37.1",
     "chart.js": "2.9.3",
     "classnames": "2.2.5",
     "clipboard": "1.6.1",
-    "css-loader": "^0.25.0",
     "datejs": "1.0.0-rc3",
-    "dotenv": "1.2.0",
     "history": "^4.10.1",
     "immutable": "^3.7.6",
     "jquery": "^3.4.1",
     "moment": "^2.24.0",
-    "node-sass-chokidar": "^1.2.2",
+    "next": "9.5.2",
     "normalize.css": "^8.0.0",
     "normalizr": "3.2.1",
     "npm-run-all": "^4.1.5",
     "prop-types": "15.5.10",
     "query-string": "^6.11.0",
-    "react": "^16.12.0",
-    "react-dom": "^16.13.0",
+    "react": "16.13.1",
+    "react-dom": "16.13.1",
     "react-ga": "^2.7.0",
     "react-meta-tags": "^0.7.4",
     "react-moment": "^0.9.7",
-    "react-redux": "^7.2.0",
     "react-router-dom": "5.1.2",
-    "react-scripts": "3.4.0",
     "react-tiny-popover": "^4.1.0",
-    "redux": "^3.3.1",
-    "redux-immutable": "3.1.0",
-    "redux-promise": "^0.5.3",
-    "redux-thunk": "2.2.0",
     "reset-css": "^2.2.1"
   },
   "devDependencies": {
     "babel-eslint": "10.0.3",
-    "babel-jest": "^24.9.0",
     "eslint": "^6.6.0",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-plugin-import": "^2.17.2",
@@ -45,27 +42,5 @@
     "eslint-plugin-react": "^7.17.0",
     "eslint-plugin-react-hooks": "^1.7.0",
     "prettier": "^1.19.1"
-  },
-  "scripts": {
-    "build-css": "node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/",
-    "watch-css": "npm run build-css && node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/ --watch --recursive",
-    "start-js": "PORT=3001 react-scripts start",
-    "start": "npm-run-all -p watch-css start-js",
-    "build-js": "react-scripts build",
-    "build": "npm-run-all build-css build-js",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
   }
 }
