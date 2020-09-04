@@ -1,30 +1,17 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# NPM Trends - Frontend Client ([npmtrends.com](http://www.npmtrends.com))
 
-## Getting Started
+NPM package comparison app
 
-First, run the development server:
+## Why?
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+NPM Trends was initially built in late 2015 when I was just getting into frontend development. Coming from a background in Rails, I was frustrated with how many decisions you had to make early on as a javascript developer. I didn't give an F what my build tool was, I just wanted to get a web app in front of users as quickly as possible. I'm a startup founder first and a web developer second.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+I didn't want to have to worry that 6 months down the road, the framework that I decided to use wouldn't be supported anymore. I wanted a way to see what packages were being used and what way their use was trending. My hypothesis was that you could use the change in download counts over time to predict whether the developer community of a given package or library would be strong for the foreseeable future.
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+This approach paid off early on when NPM Trends led me to choose Redux over the multitude of other Flux frameworks out at the time. When I looked at the download trends in November of 2015, I saw Redux beginning to pull away from the pack. If you look at the stats now, there is no comparison.
 
-## Learn More
+![Redux Trend Graph](/src/images/ReduxTrendGraph.png?raw=true)
 
-To learn more about Next.js, take a look at the following resources:
+You shouldn't use an NPM package solely based on the number of downloads the package has, but it should definitely be another data point in your decision making process. Hopefully NPM Trends will help you make better decisions, so you can spend less time jumping from package to package and more time building meaningful applications.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/import?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Cheers! 🍻
