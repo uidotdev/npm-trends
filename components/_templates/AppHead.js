@@ -12,7 +12,9 @@ const propTypes = {
 const AppHead = ({ title, description, canonical }) => {
   const { asPath } = useRouter();
 
-  const url = `${process.env.NEXT_PUBLIC_FRONTEND_URL}${asPath}`;
+  const rootUrl = process.env.NEXT_PUBLIC_FRONTEND_URL;
+
+  const url = `${rootUrl}${asPath}`;
 
   return (
     <Head>
@@ -25,14 +27,14 @@ const AppHead = ({ title, description, canonical }) => {
 
       <meta key="og_title" property="og:title" content={title} />
       <meta key="og_description" property="og:description" content={description} />
-      <meta key="og_image" property="og:image" content="/images/npm_trends_share_image.png" />
+      <meta key="og_image" property="og:image" content={`${rootUrl}/images/npm_trends_share_image.png`} />
       <meta key="og_type" property="og:type" content="website" />
       <meta key="og_url" property="og:url" content={url} />
 
       <meta key="twitter_card" name="twitter:card" content="summary_large_image" />
       <meta key="twitter_title" name="twitter:title" content={title} />
       <meta key="twitter_description" name="twitter:description" content={description} />
-      <meta key="twitter_image" name="twitter:image" content="/images/npm_trends_share_image.png" />
+      <meta key="twitter_image" name="twitter:image" content={`${rootUrl}/images/npm_trends_share_image.png`} />
     </Head>
   );
 };
