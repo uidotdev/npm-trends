@@ -23,7 +23,7 @@ const Packets = ({ packets, updateUrlWithPackets }) => {
     if (packets.length) {
       const packetsArray = packets.map((p) => p.name);
 
-      API.logSearch(packetsArray, 'package_added');
+      API.logSearch(packetsArray, 'view');
     }
 
     if (updateUrlWithPackets) {
