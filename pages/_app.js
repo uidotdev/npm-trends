@@ -1,9 +1,11 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import ReactGA from 'react-ga';
+import Router from 'next/router';
 import $ from 'jquery';
 
 import AppHead from 'components/_templates/AppHead';
+
+import { initGA, logPageView } from 'utils/googleAnalytics';
 
 import 'normalize.css/normalize.css';
 import 'reset-css/reset.css';
@@ -11,20 +13,25 @@ import '../styles/index.scss';
 
 require('datejs');
 
-ReactGA.initialize(process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_TRACKING_ID);
-
 const propTypes = {
   Component: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
   pageProps: PropTypes.object,
 };
 
 const MyApp = ({ Component, pageProps }) => {
-  // TODO: track GA somehow
-  // ReactGA.pageview(pathname);
-
   useEffect(() => {
     window.jQuery = $;
     window.$ = $;
+
+    if (!window.GA_INITIALIZED) {
+      initGA();
+      window.GA_INITIALIZED = true;
+    }
+    logPageView();
+
+    Router.events.on('routeChangeComplete', () => {
+      logPageView();
+    });
   }, []);
 
   const pageTitle = 'NPM Trends: Compare NPM package downloads';

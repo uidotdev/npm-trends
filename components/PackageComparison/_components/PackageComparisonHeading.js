@@ -37,16 +37,16 @@ class PackageComparisonHeading extends Component {
         <div className="comparison-heading--links">
           <div className="comparison-heading--divider" />
           <a href={links.npm} className="link-icon-npm" target="_blank" rel="noopener noreferrer">
-            <i className="icon icon-npm" />
+            <i className="icon icon-npm" aria-hidden />
           </a>
           {links.repository && (
             <a href={links.repository} className="link-icon-github" target="_blank" rel="noopener noreferrer">
-              <i className="icon icon-github" />
+              <i className="icon icon-github" aria-hidden />
             </a>
           )}
           {links.homepage && (
             <a href={links.homepage} className="link-icon-website" target="_blank" rel="noopener noreferrer">
-              <i className="icon icon-link" />
+              <i className="icon icon-link" aria-hidden />
             </a>
           )}
         </div>
