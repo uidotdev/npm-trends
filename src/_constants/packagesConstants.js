@@ -1,6 +1,0 @@
-const actionTypes = {
-  FETCH_PACKAGES_SUCCESS: 'FETCH_PACKAGES_SUCCESS',
-  FETCH_PACKAGES_FAILURE: 'FETCH_PACKAGES_FAILURE',
-};
-
-export default actionTypes;
