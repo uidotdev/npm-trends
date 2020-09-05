@@ -34,7 +34,7 @@ class TrendGraphBox extends Component {
     this.getStats(packets, startDate);
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     const { startDate } = this.state;
 
     this.getStats(nextProps.packets, startDate);

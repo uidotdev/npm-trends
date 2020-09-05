@@ -15,28 +15,16 @@ export default class PopularSearches extends Component {
   };
 
   fetchPopularSearches = () => {
-    Fetch.getJSON('/s/popular').then(data => {
-      const searches = data.map(searchQuery => searchQuery.slug.split('_').join('-vs-'));
+    Fetch.getJSON('/s/popular').then((data) => {
+      const searches = data.map((searchQuery) => searchQuery.slug.split('_').join('-vs-'));
       this.setState({ searches });
     });
-  };
-
-  handleClick = e => {
-    // don't scroll if opened in new tab
-    if (
-      !e.ctrlKey &&
-      !e.shiftKey &&
-      !e.metaKey && // apple
-      !(e.button && e.button === 1) // middle click, >IE9 + everyone else
-    ) {
-      window.scrollTo(0, 0);
-    }
   };
 
   searchesList = () => {
     const { searches } = this.state;
 
-    return searches.map(search => {
+    return searches.map((search) => {
       const href = `/${search}`;
       const searchPacketsArray = search.split('-vs-');
       const packetNames = searchPacketsArray.map((name, i) => (
@@ -47,10 +35,8 @@ export default class PopularSearches extends Component {
       ));
       return (
         <li key={search}>
-          <Link href="/[packets]" as={href}>
-            <a onClick={this.handleClick} title={searchPacketsArray.join(' vs ')}>
-              {packetNames}
-            </a>
+          <Link href="/[[...packets]]" as={href}>
+            <a title={searchPacketsArray.join(' vs ')}>{packetNames}</a>
           </Link>
         </li>
       );

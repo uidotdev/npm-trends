@@ -24,7 +24,7 @@ class RelatedSearches extends Component {
     }
   };
 
-  componentWillReceiveProps = nextProps => {
+  UNSAFE_componentWillReceiveProps = (nextProps) => {
     const { packetsArray } = this.props;
 
     if (packetsArray !== nextProps.packetsArray) {
@@ -32,7 +32,7 @@ class RelatedSearches extends Component {
     }
   };
 
-  fetchRelatedSearches = packetsArray => {
+  fetchRelatedSearches = (packetsArray) => {
     if (!packetsArray.length) {
       this.setState({ searches: [] });
       return;
@@ -42,28 +42,16 @@ class RelatedSearches extends Component {
       'search_query[]': packetsArray,
     });
 
-    Fetch.getJSON(`/s/related?${searchQueryParams}`).then(data => {
-      const searches = data.map(searchQuery => searchQuery.slug.split('_').join('-vs-'));
+    Fetch.getJSON(`/s/related?${searchQueryParams}`).then((data) => {
+      const searches = data.map((searchQuery) => searchQuery.slug.split('_').join('-vs-'));
       this.setState({ searches });
     });
-  };
-
-  handleClick = e => {
-    // don't scroll if opened in new tab
-    if (
-      !e.ctrlKey &&
-      !e.shiftKey &&
-      !e.metaKey && // apple
-      !(e.button && e.button === 1) // middle click, >IE9 + everyone else
-    ) {
-      window.scrollTo(0, 0);
-    }
   };
 
   searchesList = () => {
     const { searches } = this.state;
 
-    return searches.map(search => {
+    return searches.map((search) => {
       const href = `/${search}`;
       const searchPacketsArray = search.split('-vs-');
       const packetNames = searchPacketsArray.map((name, i) => (
@@ -74,10 +62,8 @@ class RelatedSearches extends Component {
       ));
       return (
         <li key={search}>
-          <Link href="/[packets]" as={href}>
-            <a onClick={this.handleClick} title={searchPacketsArray.join(' vs ')}>
-              {packetNames}
-            </a>
+          <Link href="/[[...packets]]" as={href}>
+            <a title={searchPacketsArray.join(' vs ')}>{packetNames}</a>
           </Link>
         </li>
       );

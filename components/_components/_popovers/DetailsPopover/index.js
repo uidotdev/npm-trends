@@ -29,7 +29,7 @@ const DetailsPopover = ({ packageName, children }) => {
     fetchPackage();
   }, [isOpen, packageName]);
 
-  const popoverContent = popoverProps => (
+  const popoverContent = (popoverProps) => (
     <PopoverContentContainer {...popoverProps}>
       {packageData && (
         <div className={styles.popover}>
@@ -55,10 +55,9 @@ const DetailsPopover = ({ packageName, children }) => {
 
   return (
     <Popover isOpen={isOpen} position="bottom" windowBorderPadding={30} content={popoverContent}>
-      {React.cloneElement(children, {
-        onMouseEnter: () => setIsOpen(true),
-        onMouseLeave: () => setIsOpen(false),
-      })}
+      <span onMouseEnter={() => setIsOpen(true)} onMouseLeave={() => setIsOpen(false)}>
+        {children}
+      </span>
     </Popover>
   );
 };

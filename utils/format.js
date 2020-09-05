@@ -1,13 +1,4 @@
-// 'react-vs-angular' -> 'react vs angular'
-export const searchPathToDisplayString = searchPath => searchPath.replace('-', ' ');
-
-export const getCanonical = searchPath =>
-  `/${searchPath
-    .split('-vs-')
-    .sort()
-    .join('-vs-')}`;
-
-export const abbreviateNumber = value => {
+export const abbreviateNumber = (value) => {
   let newValue = value;
   if (value >= 1000) {
     const suffixes = ['', 'k', 'm', 'b', 't'];

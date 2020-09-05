@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import $ from 'jquery';
 
 import Fetch from 'services/Fetch';
 
@@ -15,14 +14,12 @@ class SearchForm extends Component {
   }
 
   componentDidMount() {
-    window.jQuery = $;
-    window.$ = $;
-
     const component = this;
 
     import('autocomplete.js/dist/autocomplete.jquery.js').then(() => {
       const getAutocompleteResults = (query, cb) => {
         const suggestQuery = {
+          // eslint-disable-next-line
           autocomplete_suggest: {
             text: query,
             completion: {
@@ -33,7 +30,7 @@ class SearchForm extends Component {
 
         Fetch.getJSON(
           `${process.env.NEXT_PUBLIC_ELASTICSEARCH_URL}/npm/_suggest?source=${JSON.stringify(suggestQuery)}`,
-        ).then(data => {
+        ).then((data) => {
           cb(data.autocomplete_suggest[0].options);
         });
       };
@@ -58,10 +55,10 @@ class SearchForm extends Component {
           this.searchFormRef.current.form.reset();
           $('.autocomplete').autocomplete('val', '');
         });
-    })
+    });
   }
 
-  handleSubmit = e => {
+  handleSubmit = (e) => {
     const { onSearch } = this.props;
 
     e.preventDefault();

@@ -27,7 +27,7 @@ class PackageTags extends Component {
     }
   };
 
-  componentDidUpdate = prevProps => {
+  componentDidUpdate = (prevProps) => {
     const { packets } = this.props;
 
     if (packets !== prevProps.packets) {
@@ -38,7 +38,7 @@ class PackageTags extends Component {
   packetNamesArray = () => {
     const { packets } = this.props;
 
-    return packets.map(packet => packet.name);
+    return packets.map((packet) => packet.name);
   };
 
   fetchRelatedPackets = () => {
@@ -49,17 +49,17 @@ class PackageTags extends Component {
       'search_query[]': this.packetNamesArray(),
     });
 
-    Fetch.getJSON(`/s/related_packages?${searchQueryParams}`).then(data => {
+    Fetch.getJSON(`/s/related_packages?${searchQueryParams}`).then((data) => {
       this.setState({ relatedPackets: data });
     });
   };
 
-  newUrlAfterRemove = packetNameToRemove => {
-    const remainingPackets = this.packetNamesArray().filter(packet => packet !== packetNameToRemove);
+  newUrlAfterRemove = (packetNameToRemove) => {
+    const remainingPackets = this.packetNamesArray().filter((packet) => packet !== packetNameToRemove);
     return `/${remainingPackets.join('-vs-')}`;
   };
 
-  newUrlAfterAdd = packetNameToAdd => `/${this.packetNamesArray().join('-vs-')}-vs-${packetNameToAdd}`;
+  newUrlAfterAdd = (packetNameToAdd) => `/${this.packetNamesArray().join('-vs-')}-vs-${packetNameToAdd}`;
 
   packetTags = () => {
     const { packets, colors } = this.props;
@@ -69,10 +69,10 @@ class PackageTags extends Component {
       return (
         <li key={packet.id} className="package-search-tag" style={{ border }}>
           <DetailsPopover packageName={packet.name}>
-            <Link href={packets.length <= 1 ? '/' : '/[packets]'} as={this.newUrlAfterRemove(packet.name)}>
+            <Link href="/[[...packets]]" as={this.newUrlAfterRemove(packet.name)}>
               <a>
                 <span className="search-tag-name">{packet.name}</span>
-                <i className="icon icon-cross" />
+                <i className="icon icon-cross" aria-hidden />
               </a>
             </Link>
           </DetailsPopover>
@@ -93,9 +93,9 @@ class PackageTags extends Component {
       <li key={packet} className="related-package" style={{ marginLeft: i === 0 && '10px' }}>
         <div>
           <DetailsPopover packageName={packet}>
-            <Link href={packets.length <= 1 ? '/' : '/[packets]'} as={this.newUrlAfterRemove(packet.name)}>
+            <Link href="/[[...packets]]" as={this.newUrlAfterAdd(packet)}>
               <a>
-                <i className="icon icon-plus" />
+                <i className="icon icon-plus" aria-hidden />
                 <span className="related-package--name">{packet}</span>
               </a>
             </Link>
