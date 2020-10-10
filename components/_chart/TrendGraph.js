@@ -22,8 +22,8 @@ class TrendGraph extends Component {
   loadChart = () => {
     const { graphStats, colors } = this.props;
 
-    if (typeof this.download_chart !== 'undefined') {
-      this.download_chart.destroy();
+    if (typeof this.downloadChart !== 'undefined') {
+      this.downloadChart.destroy();
     }
     if (graphStats.length > 0) {
       const chartData = { labels: [], datasets: [] };
@@ -32,28 +32,26 @@ class TrendGraph extends Component {
 
         const groupedData = groupDownloadsByPeriod(graphStat.downloads, 'week');
         if (i === 0) {
-          const labels = groupedData.map(periodData => periodData.period);
+          const labels = groupedData.map((periodData) => periodData.period);
           chartData.labels = labels;
         }
 
-        const data = groupedData.map(periodData => ({
+        const data = groupedData.map((periodData) => ({
           x: periodData.period,
           y: periodData.downloads,
         }));
 
-        const hidePoints = data.length < 100;
-
         const dataset = {
           label: graphStat.package,
-          backgroundColor: `rgba(${dataColor},0)`,
+          backgroundColor: `rgba(${dataColor},1)`,
           borderColor: `rgba(${dataColor},1)`,
-          pointRadius: 5,
-          pointHoverRadius: 5,
-          pointBackgroundColor: hidePoints ? `rgba(${dataColor},1)` : 'transparent',
-          pointBorderColor: hidePoints ? '#fff' : 'transparent',
+          pointRadius: 4,
+          pointHoverRadius: 4,
           pointBorderWidth: 1,
-          pointHoverBackgroundColor: '#ffffff',
-          pointHoverBorderColor: `rgba(${dataColor},1)`,
+          pointBackgroundColor: 'transparent',
+          pointBorderColor: 'transparent',
+          pointHoverBackgroundColor: `rgba(${dataColor},1)`,
+          pointHoverBorderColor: '#ffffff',
           fill: false,
           data,
         };
@@ -81,14 +79,31 @@ class TrendGraph extends Component {
         scaleLabel: "<%= ' ' + value%>",
         maintainAspectRatio: false,
         legend: {
-          onClick: e => e.stopPropagation(),
+          onClick: (e) => e.stopPropagation(),
+          labels: {
+            padding: 25,
+            fontSize: 14,
+            usePointStyle: true,
+            generateLabels: (chart) => {
+              const { data } = chart;
+              if (!data.datasets.length) {
+                return [];
+              }
+
+              return data.datasets.map((dataset) => ({
+                text: dataset.label,
+                fillStyle: dataset.borderColor,
+                strokeStyle: 'transparent',
+              }));
+            },
+          },
         },
         scales: {
           yAxes: [
             {
               ticks: {
                 beginAtZero: true,
-                callback: value => Number(value).toLocaleString(),
+                callback: (value) => Number(value).toLocaleString(),
               },
             },
           ],
@@ -106,18 +121,34 @@ class TrendGraph extends Component {
           ],
         },
         tooltips: {
+          mode: 'index',
+          intersect: false,
+          displayColors: true,
+          multiKeyBackground: 'transparent',
+          xPadding: 10,
+          yPadding: 10,
+          titleMarginBottom: 10,
+          bodySpacing: 10,
           callbacks: {
             label: (tooltipItem, data) => {
               const value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].y;
               return ` ${Number(value).toLocaleString()}`;
             },
+            labelColor: (tooltipItem, chart) => ({
+              backgroundColor: chart.data.datasets[tooltipItem.datasetIndex].backgroundColor,
+              borderColor: 'transparent',
+            }),
           },
+        },
+        hover: {
+          mode: 'index',
+          intersect: false,
         },
       };
 
       const ctx = document.getElementById('download_chart').getContext('2d');
 
-      this.download_chart = new Chart(ctx, {
+      this.downloadChart = new Chart(ctx, {
         type: 'line',
         data: chartData,
         options: chartOptions,
