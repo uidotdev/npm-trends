@@ -1,13 +1,15 @@
 @import 'styles/_mixins';
 
-/****** Layout ******/
 body {
   background-color: #ffffff;
-  font-family: 'system-ui', 'helvetica neue', arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans,
+    Helvetica Neue, sans-serif;
   font-weight: 300;
   letter-spacing: 1px;
   color: $dark;
 }
+
+/****** Layout ******/
 
 .container {
   max-width: 1400px;
@@ -35,14 +37,12 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: 'helvetica neue', arial, sans-serif;
   color: $dark;
   font-weight: 400;
   letter-spacing: 2px;
 }
 
 h1 {
-  font-family: 'helvetica neue', arial, sans-serif;
   color: #000000;
   font-weight: 200;
   letter-spacing: 2px;
