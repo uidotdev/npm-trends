@@ -33,21 +33,8 @@ const DetailsPopover = ({ packageName, children }) => {
     <PopoverContentContainer {...popoverProps}>
       {packageData && (
         <div className={styles.popover}>
-          <div className={styles.popover__name}>{packageData.collected.metadata.name}</div>
-          <div className={styles.popover__description}>{packageData.collected.metadata.description}</div>
-          <div className={styles.popover__stats}>
-            {packageData.collected.github && packageData.collected.github.starsCount && (
-              <div className={styles.popover__stars}>
-                <i className="icon icon-star-fas" /> {abbreviateNumber(packageData.collected.github.starsCount)}
-              </div>
-            )}
-            {packageData.collected.npm && packageData.collected.npm.downloads && (
-              <div className={styles.popover__weekly_downloads}>
-                <i className="icon icon-arrow-alt-circle-down" />{' '}
-                {abbreviateNumber(packageData.collected.npm.downloads[1].count)}/wk
-              </div>
-            )}
-          </div>
+          <div className={styles.popover__name}>{packageData.name}</div>
+          <div className={styles.popover__description}>{packageData.description}</div>
         </div>
       )}
     </PopoverContentContainer>

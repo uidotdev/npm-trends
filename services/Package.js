@@ -24,22 +24,16 @@ class Package {
       }),
     );
 
-    const validPackages = fetchedPackages.filter((p) => !p.hasError);
-    const invalidPackages = fetchedPackages.filter((p) => p.hasError || !p.collected).map((p) => p.name);
-
-    const formattedPackageData = validPackages.map((packageData, i) => ({
-      id: packageData.collected.metadata.name,
-      name: packageData.collected.metadata.name,
-      description: packageData.collected.metadata.description,
-      repository: packageData.collected.metadata.repository,
-      npmsData: packageData,
+    const formattedPackageData = fetchedPackages.map((packageData, i) => ({
+      id: packageData.name,
+      name: packageData.name,
+      description: packageData.description,
+      repository: packageData.repository,
+      npmData: packageData,
       color: colors[i],
     }));
 
-    return {
-      validPackages: formattedPackageData,
-      invalidPackages,
-    };
+    return { formattedPackageData };
   }
 
   static fetchStats(packet) {
@@ -55,21 +49,21 @@ class Package {
   }
 
   static async fetchPackageDetails(packetName) {
-    const url = `https://api.npms.io/v2/package/${encodeURIComponent(encodeURIComponent(packetName))}`;
+    const url = `https://registry.npmjs.org/${encodeURIComponent(encodeURIComponent(packetName))}`;
 
     return Fetch.getJSON(urlWithProxy(url));
   }
 
-  static async fetchGithubStats(npmsPackageData) {
-    if (npmsPackageData.repository && npmsPackageData.repository.url.indexOf('github') >= 0) {
+  static async fetchGithubStats(npmPackageData) {
+    if (npmPackageData.repository && npmPackageData.repository.url.indexOf('github') >= 0) {
       try {
-        return this.fetchGithubRepo(npmsPackageData.repository.url);
+        return this.fetchGithubRepo(npmPackageData.repository.url);
       } catch {
-        const packetData = { name: npmsPackageData.name };
+        const packetData = { name: npmPackageData.name };
         return packetData;
       }
     } else {
-      const packetData = { name: npmsPackageData.name };
+      const packetData = { name: npmPackageData.name };
       return packetData;
     }
   }

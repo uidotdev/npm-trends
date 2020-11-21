@@ -70,9 +70,9 @@ const PackageComparison = ({ packets }) => {
           <a target="_blank" rel="noopener noreferrer" href="https://github.com/npm/download-counts">
             download counts
           </a>{' '}
-          api and package details come from{' '}
-          <a target="_blank" rel="noopener noreferrer" href="https://api-docs.npms.io/">
-            npms.io
+          api and package details come from {"npm's "}
+          <a target="_blank" rel="noopener noreferrer" href="https://docs.npmjs.com/cli/v6/using-npm/registry">
+            registry
           </a>
           .
         </p>

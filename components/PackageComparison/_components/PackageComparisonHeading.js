@@ -30,22 +30,22 @@ class PackageComparisonHeading extends Component {
   singlePacketContent = () => {
     const { packets } = this.props;
     const firstPacket = packets[0];
-    const { links } = firstPacket.npmsData.collected.metadata;
+
     return (
       <div className="comparison-heading--subheading">
         <p className="comparison-heading--description">{firstPacket.description}</p>
         <div className="comparison-heading--links">
           <div className="comparison-heading--divider" />
-          <a href={links.npm} className="link-icon-npm" target="_blank" rel="noopener noreferrer">
+          <a href={`https://www.npmjs.com/package/${firstPacket.npmData.name}`} className="link-icon-npm" target="_blank" rel="noopener noreferrer">
             <i className="icon icon-npm" aria-hidden />
           </a>
-          {links.repository && (
-            <a href={links.repository} className="link-icon-github" target="_blank" rel="noopener noreferrer">
+          {firstPacket.npmData.repository && (
+            <a href={firstPacket.npmData.repository.url} className="link-icon-github" target="_blank" rel="noopener noreferrer">
               <i className="icon icon-github" aria-hidden />
             </a>
           )}
-          {links.homepage && (
-            <a href={links.homepage} className="link-icon-website" target="_blank" rel="noopener noreferrer">
+          {firstPacket.npmData.homepage && (
+            <a href={firstPacket.npmData.homepage} className="link-icon-website" target="_blank" rel="noopener noreferrer">
               <i className="icon icon-link" aria-hidden />
             </a>
           )}

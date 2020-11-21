@@ -67,7 +67,7 @@ export async function getServerSideProps({ query }) {
     return { props: { packets: [] } };
   }
 
-  const { validPackages, invalidPackages } = await Package.fetchPackages(queryParamPackets);
+  const packages = await Package.fetchPackages(queryParamPackets);
 
   // https://github.com/vercel/next.js/discussions/11281
   // Currently no way to redirect directly from getServerSideProps
@@ -75,16 +75,12 @@ export async function getServerSideProps({ query }) {
 
   const maxPacketsForSearch = 10;
 
-  if (validPackages.length > maxPacketsForSearch) {
-    return manualRedirect(validPackages.slice(0, maxPacketsForSearch));
-  }
-
-  if (invalidPackages.length) {
-    return manualRedirect(validPackages);
+  if (packages.length > maxPacketsForSearch) {
+    return manualRedirect(packages.slice(0, maxPacketsForSearch));
   }
 
   // Pass data to the page via props
-  return { props: { packets: validPackages } };
+  return { props: { packets: packages } };
 }
 
 export default Packets;
