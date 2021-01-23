@@ -35,7 +35,7 @@ class PackageComparisonHeading extends Component {
       <div className="comparison-heading--subheading">
         <p className="comparison-heading--description">{firstPacket.description}</p>
         <div className="comparison-heading--links">
-          <div className="comparison-heading--divider" />
+          {firstPacket.description && <div className="comparison-heading--divider" />}
           <a href={links.npm} className="link-icon-npm" target="_blank" rel="noopener noreferrer">
             <i className="icon icon-npm" aria-hidden />
           </a>

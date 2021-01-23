@@ -8,6 +8,7 @@ import { getPacketsParamFromQuery, searchPathToDisplayString, getCanonical } fro
 
 import AppHead from 'components/_templates/AppHead';
 import Layout from 'components/_templates/Layout';
+import ErrorBoundary from 'components/_templates/ErrorBoundary';
 import PackageComparison from 'components/PackageComparison';
 
 const propTypes = {
@@ -20,16 +21,14 @@ const Packets = ({ packets, updateUrlWithPackets }) => {
   const { query, push } = useRouter();
 
   useEffect(() => {
-    if (packets.length) {
-      const packetsArray = packets.map((p) => p.name);
-
-      API.logSearch(packetsArray, 'view');
-    }
-
     if (updateUrlWithPackets) {
       const packetsUrlParam = packets.map((p) => p.name).join('-vs-');
 
       push(`/${packetsUrlParam}`, undefined);
+    } else if (packets.length) {
+      const packetsArray = packets.map((p) => p.name);
+
+      API.logSearch(packetsArray, 'view');
     }
   }, [packets, updateUrlWithPackets, push]);
 
@@ -49,12 +48,12 @@ const Packets = ({ packets, updateUrlWithPackets }) => {
   }
 
   return (
-    <>
+    <ErrorBoundary>
       <AppHead title={pageTitle} description={pageDescription} canonical={canonical} />
       <Layout>
         <PackageComparison packets={packets} />
       </Layout>
-    </>
+    </ErrorBoundary>
   );
 };
 

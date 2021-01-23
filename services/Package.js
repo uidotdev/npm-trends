@@ -1,3 +1,5 @@
+import { get as _get } from 'lodash';
+
 import { urlWithProxy } from 'utils/proxy';
 import { colors } from 'utils/colors';
 import Fetch from './Fetch';
@@ -24,14 +26,16 @@ class Package {
       }),
     );
 
-    const validPackages = fetchedPackages.filter((p) => !p.hasError);
-    const invalidPackages = fetchedPackages.filter((p) => p.hasError || !p.collected).map((p) => p.name);
+    const isValidPackage = (p) => !p.hasError && p.collected;
+
+    const validPackages = fetchedPackages.filter((p) => isValidPackage(p));
+    const invalidPackages = fetchedPackages.filter((p) => !isValidPackage(p)).map((p) => p.name);
 
     const formattedPackageData = validPackages.map((packageData, i) => ({
-      id: packageData.collected.metadata.name,
-      name: packageData.collected.metadata.name,
-      description: packageData.collected.metadata.description,
-      repository: packageData.collected.metadata.repository,
+      id: _get(packageData, 'collected.metadata.name'),
+      name: _get(packageData, 'collected.metadata.name'),
+      description: _get(packageData, 'collected.metadata.description', ''),
+      repository: _get(packageData, 'collected.metadata.repository', ''),
       npmsData: packageData,
       color: colors[i],
     }));
