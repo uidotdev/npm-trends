@@ -1,5 +1,6 @@
 import { get as _get } from 'lodash';
 
+import ToastService from 'services/ToastService';
 import { urlWithProxy } from 'utils/proxy';
 import { colors } from 'utils/colors';
 import Fetch from './Fetch';
@@ -16,8 +17,9 @@ class Package {
     const fetchedPackages = await Promise.all(
       packetsArr.map(async (packageName) => {
         try {
+          throw Error('ooops');
           return await Package.fetchPackageDetails(packageName);
-        } catch {
+        } catch (e) {
           return {
             hasError: true,
             name: packageName,

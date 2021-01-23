@@ -1,9 +1,11 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
+import { ToastContainer } from 'react-toastify';
 
 import API from 'services/API';
 import Package from 'services/Package';
+import ToastService from 'services/ToastService';
 import { getPacketsParamFromQuery, searchPathToDisplayString, getCanonical } from 'utils/url';
 
 import AppHead from 'components/_templates/AppHead';
@@ -15,14 +17,21 @@ const propTypes = {
   packets: PropTypes.arrayOf(PropTypes.object),
   // If present, update url (allow FE to handle redirect)
   updateUrlWithPackets: PropTypes.bool,
+  packetsWithErrors: PropTypes.arrayOf(PropTypes.string),
 };
 
-const Packets = ({ packets, updateUrlWithPackets }) => {
+const Packets = ({ packets, updateUrlWithPackets, packetsWithErrors }) => {
   const { query, push } = useRouter();
 
   useEffect(() => {
     if (updateUrlWithPackets) {
       const packetsUrlParam = packets.map((p) => p.name).join('-vs-');
+
+      const errorMessage = packetsWithErrors.length
+        ? `Error fetching the following packages: ${packetsWithErrors.join(', ')}.`
+        : 'Error fetching packages.';
+
+      ToastService.error(errorMessage, { autoClose: 8000 });
 
       push(`/${packetsUrlParam}`, undefined);
     } else if (packets.length) {
@@ -30,7 +39,7 @@ const Packets = ({ packets, updateUrlWithPackets }) => {
 
       API.logSearch(packetsArray, 'view');
     }
-  }, [packets, updateUrlWithPackets, push]);
+  }, [packets, updateUrlWithPackets, packetsWithErrors, push]);
 
   const queryParamPackets = getPacketsParamFromQuery(query);
 
@@ -49,6 +58,7 @@ const Packets = ({ packets, updateUrlWithPackets }) => {
 
   return (
     <ErrorBoundary>
+      <ToastContainer />
       <AppHead title={pageTitle} description={pageDescription} canonical={canonical} />
       <Layout>
         <PackageComparison packets={packets} />
@@ -70,7 +80,9 @@ export async function getServerSideProps({ query }) {
 
   // https://github.com/vercel/next.js/discussions/11281
   // Currently no way to redirect directly from getServerSideProps
-  const manualRedirect = (packagesArray) => ({ props: { packets: packagesArray, updateUrlWithPackets: true } });
+  const manualRedirect = (packagesArray, packetsWithErrors = []) => ({
+    props: { packets: packagesArray, updateUrlWithPackets: true, packetsWithErrors },
+  });
 
   const maxPacketsForSearch = 10;
 
@@ -79,7 +91,7 @@ export async function getServerSideProps({ query }) {
   }
 
   if (invalidPackages.length) {
-    return manualRedirect(validPackages);
+    return manualRedirect(validPackages, invalidPackages);
   }
 
   // Pass data to the page via props

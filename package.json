@@ -33,6 +33,7 @@
     "react-moment": "^0.9.7",
     "react-router-dom": "5.1.2",
     "react-tiny-popover": "5.1.0",
+    "react-toastify": "^6.2.0",
     "reset-css": "^2.2.1",
     "sass": "^1.26.10"
   },
