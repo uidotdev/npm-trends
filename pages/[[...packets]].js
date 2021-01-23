@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
-import { ToastContainer } from 'react-toastify';
 
 import API from 'services/API';
 import Package from 'services/Package';
@@ -10,7 +9,6 @@ import { getPacketsParamFromQuery, searchPathToDisplayString, getCanonical } fro
 
 import AppHead from 'components/_templates/AppHead';
 import Layout from 'components/_templates/Layout';
-import ErrorBoundary from 'components/_templates/ErrorBoundary';
 import PackageComparison from 'components/PackageComparison';
 
 const propTypes = {
@@ -57,13 +55,12 @@ const Packets = ({ packets, updateUrlWithPackets, packetsWithErrors }) => {
   }
 
   return (
-    <ErrorBoundary>
-      <ToastContainer />
+    <>
       <AppHead title={pageTitle} description={pageDescription} canonical={canonical} />
       <Layout>
         <PackageComparison packets={packets} />
       </Layout>
-    </ErrorBoundary>
+    </>
   );
 };
 

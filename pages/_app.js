@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Router from 'next/router';
 import $ from 'jquery';
+import { ToastContainer } from 'react-toastify';
 
 import AppHead from 'components/_templates/AppHead';
 
@@ -40,6 +41,7 @@ const MyApp = ({ Component, pageProps }) => {
 
   return (
     <>
+      <ToastContainer />
       <AppHead title={pageTitle} description={pageDescription} />
       <Component {...pageProps} />
     </>
