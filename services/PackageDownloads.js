@@ -40,7 +40,7 @@ class PackageDownloads {
   };
 
   static fetchFromApi = async (packageName, period) => {
-    const url = `https://api.npmjs.org/downloads/range/${period}}/${packageName}`;
+    const url = `https://api.npmjs.org/downloads/range/${period}/${packageName}`;
     return Fetch.getJSON(`${process.env.NEXT_PUBLIC_PROXY_URL}?url=${url}`);
   };
 
