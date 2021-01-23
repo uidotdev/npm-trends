@@ -1,0 +1,46 @@
+@import 'react-toastify/dist/ReactToastify.css';
+
+.Toastify__toast-container {
+  z-index: 999999;
+}
+
+.Toastify__toast {
+  border-radius: 10px;
+  padding: 15px 20px;
+  min-height: 50px;
+  font-size: 14px;
+}
+
+.Toastify__toast-container--bottom-right {
+  margin-bottom: -1rem;
+}
+
+.Toastify__toast-body {
+  margin: auto 10px auto 0;
+  line-height: 1.5;
+}
+
+.Toastify__close-button {
+  margin: auto 0;
+  &:hover:not(:disabled) {
+    border: none;
+    background: none;
+  }
+  &:focus {
+    border: none;
+    background: none;
+  }
+}
+
+/****** Responsive ******/
+
+@include sm-screen {
+  .Toastify__toast-container {
+    top: auto;
+    bottom: 15px;
+    left: 15px;
+    right: 15px;
+    width: auto;
+    z-index: 9999999;
+  }
+}

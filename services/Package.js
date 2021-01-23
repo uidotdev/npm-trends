@@ -1,6 +1,10 @@
+import { get as _get } from 'lodash';
+import hostedGitInfo from 'hosted-git-info';
+
 import { urlWithProxy } from 'utils/proxy';
 import { colors } from 'utils/colors';
 import Fetch from './Fetch';
+import PackageDownloads from './PackageDownloads';
 
 class Package {
   static async fetchPackages(queryParamPackets) {
@@ -14,8 +18,8 @@ class Package {
     const fetchedPackages = await Promise.all(
       packetsArr.map(async (packageName) => {
         try {
-          return await Package.fetchPackageDetails(packageName);
-        } catch {
+          return await this.fetchPackage(packageName);
+        } catch (e) {
           return {
             hasError: true,
             name: packageName,
@@ -24,30 +28,58 @@ class Package {
       }),
     );
 
-    const validPackages = fetchedPackages.filter((p) => !p.hasError);
-    const invalidPackages = fetchedPackages.filter((p) => p.hasError || !p.collected).map((p) => p.name);
+    const isValidPackage = (p) => !p.hasError && p.name;
 
-    const formattedPackageData = validPackages.map((packageData, i) => ({
-      id: packageData.collected.metadata.name,
-      name: packageData.collected.metadata.name,
-      description: packageData.collected.metadata.description,
-      repository: packageData.collected.metadata.repository,
-      npmsData: packageData,
-      color: colors[i],
-    }));
+    const validPackages = fetchedPackages
+      .filter((p) => isValidPackage(p))
+      .map((p, i) => ({
+        ...p,
+        color: colors[i],
+      }));
+    const invalidPackages = fetchedPackages.filter((p) => !isValidPackage(p)).map((p) => p.name);
 
     return {
-      validPackages: formattedPackageData,
+      validPackages,
       invalidPackages,
     };
   }
 
-  static fetchStats(packet) {
-    return Promise.all([this.fetchGithubStats(packet)]).then(([github]) => ({ github }));
+  static formatRepositoryData(npmRepositoryData) {
+    const gitInfo = hostedGitInfo.fromUrl(npmRepositoryData);
+
+    return {
+      type: gitInfo.type,
+      url: gitInfo.browse(),
+    };
   }
 
-  static async fetchGithubRepo(repoUrl) {
-    const repositoryPath = repoUrl.split('.com')[1].replace('.git', '');
+  static async fetchPackage(packageName) {
+    const npmPackageData = await Package.fetchPackageDetails(packageName);
+
+    const repository = this.formatRepositoryData(_get(npmPackageData, 'repository.url', ''));
+
+    const github = repository.type === 'github' ? await this.fetchGithubRepo(repository.url) : null;
+
+    const weeklyDownloads = await PackageDownloads.fetchPoint(npmPackageData.name, 'last-week');
+
+    return {
+      id: npmPackageData.name,
+      name: npmPackageData.name,
+      description: _get(npmPackageData, 'description', ''),
+      repository,
+      links: {
+        npm: `https://npmjs.com/package/${npmPackageData.name}`,
+        homepage: _get(npmPackageData, 'homepage', ''),
+      },
+      github,
+      downloads: {
+        weekly: weeklyDownloads.downloads,
+      },
+    };
+  }
+
+  static async fetchGithubRepo(url) {
+    const repositoryPath = url.split('.com')[1].replace('.git', '');
 
     const githubUrl = `https://api.github.com/repos${repositoryPath}`;
 
@@ -55,23 +87,9 @@ class Package {
   }
 
   static async fetchPackageDetails(packetName) {
-    const url = `https://api.npms.io/v2/package/${encodeURIComponent(encodeURIComponent(packetName))}`;
+    const url = `https://registry.npmjs.org/${packetName}`;
 
     return Fetch.getJSON(urlWithProxy(url));
-  }
-
-  static async fetchGithubStats(npmsPackageData) {
-    if (npmsPackageData.repository && npmsPackageData.repository.url.indexOf('github') >= 0) {
-      try {
-        return this.fetchGithubRepo(npmsPackageData.repository.url);
-      } catch {
-        const packetData = { name: npmsPackageData.name };
-        return packetData;
-      }
-    } else {
-      const packetData = { name: npmsPackageData.name };
-      return packetData;
-    }
   }
 }
 
