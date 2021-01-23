@@ -30,7 +30,7 @@ class PackageComparisonHeading extends Component {
   singlePacketContent = () => {
     const { packets } = this.props;
     const firstPacket = packets[0];
-    const { links } = firstPacket.npmsData.collected.metadata;
+    const { links } = firstPacket;
     return (
       <div className="comparison-heading--subheading">
         <p className="comparison-heading--description">{firstPacket.description}</p>
@@ -39,8 +39,8 @@ class PackageComparisonHeading extends Component {
           <a href={links.npm} className="link-icon-npm" target="_blank" rel="noopener noreferrer">
             <i className="icon icon-npm" aria-hidden />
           </a>
-          {links.repository && (
-            <a href={links.repository} className="link-icon-github" target="_blank" rel="noopener noreferrer">
+          {firstPacket.repository && firstPacket.repository.type === 'github' && firstPacket.repository.url && (
+            <a href={firstPacket.repository.url} className="link-icon-github" target="_blank" rel="noopener noreferrer">
               <i className="icon icon-github" aria-hidden />
             </a>
           )}

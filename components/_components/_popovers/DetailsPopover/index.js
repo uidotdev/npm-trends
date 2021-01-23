@@ -19,32 +19,31 @@ const DetailsPopover = ({ packageName, children }) => {
 
   useEffect(() => {
     const fetchPackage = async () => {
-      if (isOpen) {
-        const result = await Package.fetchPackageDetails(packageName);
+      if (isOpen && !packageData) {
+        const result = await Package.fetchPackage(packageName);
 
         setPackageData(result);
       }
     };
 
     fetchPackage();
-  }, [isOpen, packageName]);
+  }, [isOpen, packageName, packageData]);
 
   const popoverContent = (popoverProps) => (
     <PopoverContentContainer {...popoverProps}>
       {packageData && (
         <div className={styles.popover}>
-          <div className={styles.popover__name}>{packageData.collected.metadata.name}</div>
-          <div className={styles.popover__description}>{packageData.collected.metadata.description}</div>
+          <div className={styles.popover__name}>{packageData.name}</div>
+          <div className={styles.popover__description}>{packageData.description}</div>
           <div className={styles.popover__stats}>
-            {packageData.collected.github && packageData.collected.github.starsCount && (
+            {packageData.github && packageData.github.stargazers_count && (
               <div className={styles.popover__stars}>
-                <i className="icon icon-star-fas" /> {abbreviateNumber(packageData.collected.github.starsCount)}
+                <i className="icon icon-star-fas" /> {abbreviateNumber(packageData.github.stargazers_count)}
               </div>
             )}
-            {packageData.collected.npm && packageData.collected.npm.downloads && (
+            {packageData.downloads && (
               <div className={styles.popover__weekly_downloads}>
-                <i className="icon icon-arrow-alt-circle-down" />{' '}
-                {abbreviateNumber(packageData.collected.npm.downloads[1].count)}/wk
+                <i className="icon icon-arrow-alt-circle-down" /> {abbreviateNumber(packageData.downloads[1].count)}/wk
               </div>
             )}
           </div>

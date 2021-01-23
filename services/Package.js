@@ -1,6 +1,6 @@
 import { get as _get } from 'lodash';
+import hostedGitInfo from 'hosted-git-info';
 
-import ToastService from 'services/ToastService';
 import { urlWithProxy } from 'utils/proxy';
 import { colors } from 'utils/colors';
 import Fetch from './Fetch';
@@ -17,7 +17,7 @@ class Package {
     const fetchedPackages = await Promise.all(
       packetsArr.map(async (packageName) => {
         try {
-          return await Package.fetchPackageDetails(packageName);
+          return await this.fetchPackage(packageName);
         } catch (e) {
           return {
             hasError: true,
@@ -27,32 +27,53 @@ class Package {
       }),
     );
 
-    const isValidPackage = (p) => !p.hasError && p.collected;
+    const isValidPackage = (p) => !p.hasError && p.name;
 
-    const validPackages = fetchedPackages.filter((p) => isValidPackage(p));
+    const validPackages = fetchedPackages
+      .filter((p) => isValidPackage(p))
+      .map((p, i) => ({
+        ...p,
+        color: colors[i],
+      }));
     const invalidPackages = fetchedPackages.filter((p) => !isValidPackage(p)).map((p) => p.name);
 
-    const formattedPackageData = validPackages.map((packageData, i) => ({
-      id: _get(packageData, 'collected.metadata.name'),
-      name: _get(packageData, 'collected.metadata.name'),
-      description: _get(packageData, 'collected.metadata.description', ''),
-      repository: _get(packageData, 'collected.metadata.repository', ''),
-      npmsData: packageData,
-      color: colors[i],
-    }));
-
     return {
-      validPackages: formattedPackageData,
+      validPackages,
       invalidPackages,
     };
   }
 
-  static fetchStats(packet) {
-    return Promise.all([this.fetchGithubStats(packet)]).then(([github]) => ({ github }));
+  static formatRepositoryData(npmRepositoryData) {
+    const gitInfo = hostedGitInfo.fromUrl(npmRepositoryData);
+
+    return {
+      type: gitInfo.type,
+      url: gitInfo.browse(),
+    };
   }
 
-  static async fetchGithubRepo(repoUrl) {
-    const repositoryPath = repoUrl.split('.com')[1].replace('.git', '');
+  static async fetchPackage(packageName) {
+    const npmPackageData = await Package.fetchPackageDetails(packageName);
+
+    const repository = this.formatRepositoryData(_get(npmPackageData, 'repository.url', ''));
+
+    const github = repository.type === 'github' ? await this.fetchGithubRepo(repository.url) : null;
+
+    return {
+      id: _get(npmPackageData, 'name'),
+      name: _get(npmPackageData, 'name'),
+      description: _get(npmPackageData, 'description', ''),
+      repository,
+      links: {
+        npm: `https://npmjs.com/package/${_get(npmPackageData, 'name')}`,
+        homepage: _get(npmPackageData, 'homepage', ''),
+      },
+      github,
+    };
+  }
+
+  static async fetchGithubRepo(url) {
+    const repositoryPath = url.split('.com')[1].replace('.git', '');
 
     const githubUrl = `https://api.github.com/repos${repositoryPath}`;
 
@@ -60,21 +81,21 @@ class Package {
   }
 
   static async fetchPackageDetails(packetName) {
-    const url = `https://api.npms.io/v2/package/${encodeURIComponent(encodeURIComponent(packetName))}`;
+    const url = `https://registry.npmjs.org/${packetName}`;
 
     return Fetch.getJSON(urlWithProxy(url));
   }
 
-  static async fetchGithubStats(npmsPackageData) {
-    if (npmsPackageData.repository && npmsPackageData.repository.url.indexOf('github') >= 0) {
+  static async fetchGithubStats(packageData) {
+    if (_get(packageData, 'type') === 'github') {
       try {
-        return this.fetchGithubRepo(npmsPackageData.repository.url);
+        return this.fetchGithubRepo(packageData.repository.url);
       } catch {
-        const packetData = { name: npmsPackageData.name };
+        const packetData = { name: packageData.name };
         return packetData;
       }
     } else {
-      const packetData = { name: npmsPackageData.name };
+      const packetData = { name: packageData.name };
       return packetData;
     }
   }
