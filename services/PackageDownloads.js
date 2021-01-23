@@ -23,7 +23,7 @@ class PackageDownloads {
         : callStartMoment.format('YYYY-MM-DD');
       const callEndDate = callEndMoment.format('YYYY-MM-DD');
 
-      const response = this.fetchFromApi(packageName, callStartDate, callEndDate);
+      const response = this.fetchFromApi(packageName, `${callStartDate}:${callEndDate}`);
 
       responses.push(response);
     }
@@ -39,8 +39,13 @@ class PackageDownloads {
     };
   };
 
-  static fetchFromApi = async (packageName, startDate, endDate) => {
-    const url = `https://api.npmjs.org/downloads/range/${startDate}:${endDate}/${packageName}`;
+  static fetchFromApi = async (packageName, period) => {
+    const url = `https://api.npmjs.org/downloads/range/${period}}/${packageName}`;
+    return Fetch.getJSON(`${process.env.NEXT_PUBLIC_PROXY_URL}?url=${url}`);
+  };
+
+  static fetchPoint = async (packageName, period = 'last-month') => {
+    const url = `https://api.npmjs.org/downloads/point/${period}/${packageName}`;
     return Fetch.getJSON(`${process.env.NEXT_PUBLIC_PROXY_URL}?url=${url}`);
   };
 }

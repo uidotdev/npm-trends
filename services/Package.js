@@ -4,6 +4,7 @@ import hostedGitInfo from 'hosted-git-info';
 import { urlWithProxy } from 'utils/proxy';
 import { colors } from 'utils/colors';
 import Fetch from './Fetch';
+import PackageDownloads from './PackageDownloads';
 
 class Package {
   static async fetchPackages(queryParamPackets) {
@@ -59,16 +60,21 @@ class Package {
 
     const github = repository.type === 'github' ? await this.fetchGithubRepo(repository.url) : null;
 
+    const weeklyDownloads = await PackageDownloads.fetchPoint(npmPackageData.name, 'last-week');
+
     return {
-      id: _get(npmPackageData, 'name'),
-      name: _get(npmPackageData, 'name'),
+      id: npmPackageData.name,
+      name: npmPackageData.name,
       description: _get(npmPackageData, 'description', ''),
       repository,
       links: {
-        npm: `https://npmjs.com/package/${_get(npmPackageData, 'name')}`,
+        npm: `https://npmjs.com/package/${npmPackageData.name}`,
         homepage: _get(npmPackageData, 'homepage', ''),
       },
       github,
+      downloads: {
+        weekly: weeklyDownloads.downloads,
+      },
     };
   }
 
@@ -84,20 +90,6 @@ class Package {
     const url = `https://registry.npmjs.org/${packetName}`;
 
     return Fetch.getJSON(urlWithProxy(url));
-  }
-
-  static async fetchGithubStats(packageData) {
-    if (_get(packageData, 'type') === 'github') {
-      try {
-        return this.fetchGithubRepo(packageData.repository.url);
-      } catch {
-        const packetData = { name: packageData.name };
-        return packetData;
-      }
-    } else {
-      const packetData = { name: packageData.name };
-      return packetData;
-    }
   }
 }
 

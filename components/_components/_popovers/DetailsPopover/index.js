@@ -41,9 +41,9 @@ const DetailsPopover = ({ packageName, children }) => {
                 <i className="icon icon-star-fas" /> {abbreviateNumber(packageData.github.stargazers_count)}
               </div>
             )}
-            {packageData.downloads && (
+            {packageData.downloads && packageData.downloads.weekly > 0 && (
               <div className={styles.popover__weekly_downloads}>
-                <i className="icon icon-arrow-alt-circle-down" /> {abbreviateNumber(packageData.downloads[1].count)}/wk
+                <i className="icon icon-arrow-alt-circle-down" /> {abbreviateNumber(packageData.downloads.weekly)}/wk
               </div>
             )}
           </div>
