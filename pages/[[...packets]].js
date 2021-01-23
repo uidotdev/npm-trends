@@ -31,7 +31,7 @@ const Packets = ({ packets, updateUrlWithPackets, packetsWithErrors }) => {
         ? `Error fetching the following packages: ${packetsWithErrors.join(', ')}.`
         : 'Error fetching packages.';
 
-      ToastService.error(errorMessage, { autoClose: 8000 });
+      ToastService.error(errorMessage);
 
       push(`/${packetsUrlParam}`, undefined);
     } else if (packets.length) {

@@ -17,7 +17,6 @@ class Package {
     const fetchedPackages = await Promise.all(
       packetsArr.map(async (packageName) => {
         try {
-          throw Error('ooops');
           return await Package.fetchPackageDetails(packageName);
         } catch (e) {
           return {
