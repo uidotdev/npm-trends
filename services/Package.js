@@ -44,13 +44,20 @@ class Package {
     };
   }
 
-  static formatRepositoryData(npmRepositoryData) {
-    const gitInfo = hostedGitInfo.fromUrl(npmRepositoryData);
+  static formatRepositoryData(npmRepositoryUrl) {
+    try {
+      const gitInfo = hostedGitInfo.fromUrl(npmRepositoryUrl);
 
-    return {
-      type: gitInfo.type,
-      url: gitInfo.browse(),
-    };
+      return {
+        type: gitInfo.type,
+        url: gitInfo.browse(),
+      };
+    } catch {
+      return {
+        type: null,
+        url: null,
+      };
+    }
   }
 
   static async fetchPackage(packageName) {
