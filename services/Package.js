@@ -94,7 +94,7 @@ class Package {
   }
 
   static async fetchPackageDetails(packetName) {
-    const url = `https://registry.npmjs.org/${packetName}`;
+    const url = `https://registry.npmjs.org/${encodeURIComponent(packetName)}`;
 
     return Fetch.getJSON(urlWithProxy(url));
   }
