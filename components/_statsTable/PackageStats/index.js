@@ -35,12 +35,21 @@ const columns = [
       </div>
     ),
   },
-  { heading: 'stars 🌟', renderer: (packet) => Number(_get(packet, 'github.stargazers_count')).toLocaleString() },
-  { heading: 'issues ⚠️', renderer: (packet) => Number(_get(packet, 'github.open_issues_count')).toLocaleString() },
-  { heading: 'updated 🛠', renderer: (packet) => Date.parse(_get(packet, 'github.pushed_at')).toString('MMM d, yyyy') },
+  {
+    heading: 'stars 🌟',
+    renderer: (packet) => (packet.github ? Number(_get(packet, 'github.stargazers_count')).toLocaleString() : ''),
+  },
+  {
+    heading: 'issues ⚠️',
+    renderer: (packet) => (packet.github ? Number(_get(packet, 'github.open_issues_count')).toLocaleString() : ''),
+  },
+  {
+    heading: 'updated 🛠',
+    renderer: (packet) => (packet.github ? Date.parse(_get(packet, 'github.pushed_at')).toString('MMM d, yyyy') : ''),
+  },
   {
     heading: 'created 🐣',
-    renderer: (packet) => Date.parse(_get(packet, 'github.created_at')).toString('MMM d, yyyy'),
+    renderer: (packet) => (packet.github ? Date.parse(_get(packet, 'github.created_at')).toString('MMM d, yyyy') : ''),
   },
   { heading: 'size 🏋️‍♀️', renderer: (packet) => <BundlephobiaRenderer packet={packet} /> },
 ];
