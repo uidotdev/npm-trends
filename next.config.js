@@ -9,6 +9,10 @@ module.exports = {
         source: '/index',
         destination: '/[[...packets]]',
       },
+      {
+        source: '/sitemap.xml',
+        destination: 'https://npmtrends.s3.amazonaws.com/sitemaps/sitemap.xml.gz',
+      },
     ];
   },
 };
