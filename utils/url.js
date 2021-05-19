@@ -1,4 +1,4 @@
-export const getPacketsParamFromQuery = (query) => {
+export const getPacketParamFromQuery = (query) => {
   // Some packages are namespaced like @angular/core
   // The challenge with this is that the slash acts as a delimeter
   // Next.js treats these as two path segments
@@ -12,7 +12,15 @@ export const getPacketsParamFromQuery = (query) => {
   return queryParamPacketsArray && queryParamPacketsArray.length ? queryParamPacketsArray.join('/') : '';
 };
 
-// 'react-vs-angular' -> 'react vs angular'
-export const searchPathToDisplayString = (searchPath) => searchPath.replace(/-/g, ' ');
+export const getPacketNamesFromQuery = (query) => {
+  const param = getPacketParamFromQuery(query);
 
-export const getCanonical = (searchPath) => `/${searchPath.split('-vs-').sort().join('-vs-')}`;
+  return param.length ? param.split('-vs-') : [];
+};
+
+export const packetNamesToParam = (packetNames) => packetNames.join('-vs-');
+
+// 'react-vs-angular' -> 'react vs angular'
+export const searchPathToDisplayString = (packetNames) => packetNames.join(' vs ');
+
+export const getCanonical = (packetNames) => `/${packetNames.sort().join('-vs-')}`;

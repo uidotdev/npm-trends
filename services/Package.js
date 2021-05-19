@@ -7,16 +7,14 @@ import Fetch from './Fetch';
 import PackageDownloads from './PackageDownloads';
 
 class Package {
-  static async fetchPackages(queryParamPackets) {
-    // queryParamPackets format: react-vs-@angular-core
-    if (!queryParamPackets) {
+  static async fetchPackages(packetNames) {
+    // packageNames format: ['react', '@angular-core']
+    if (!packetNames) {
       return [];
     }
 
-    const packetsArr = queryParamPackets.split('-vs-');
-
     const fetchedPackages = await Promise.all(
-      packetsArr.map(async (packageName) => {
+      packetNames.map(async (packageName) => {
         try {
           return await this.fetchPackage(packageName);
         } catch (e) {

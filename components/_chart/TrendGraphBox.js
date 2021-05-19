@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 
@@ -6,80 +6,58 @@ import PackageDownloads from 'services/PackageDownloads';
 
 import TrendGraph from './TrendGraph';
 
-const momentToStartDate = momentDate => momentDate.startOf('week').format('YYYY-MM-DD');
+const momentToStartDate = (momentDate) => momentDate.startOf('week').format('YYYY-MM-DD');
 
 const propTypes = {
-  startDate: PropTypes.string,
   packets: PropTypes.arrayOf(PropTypes.object).isRequired,
   colors: PropTypes.arrayOf(PropTypes.array).isRequired,
 };
 
-const defaultProps = {
-  startDate: momentToStartDate(moment().subtract(6, 'months')),
-};
+const TrendGraphBox = ({ packets, colors }) => {
+  const [graphStats, setGraphStats] = useState([]);
+  const [startDate, setStartDate] = useState(momentToStartDate(moment().subtract(6, 'months')));
 
-class TrendGraphBox extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      graphStats: [],
-      startDate: props.startDate,
-    };
-  }
-
-  componentDidMount() {
-    const { packets } = this.props;
-    const { startDate } = this.state;
-
-    this.getStats(packets, startDate);
-  }
-
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    const { startDate } = this.state;
-
-    this.getStats(nextProps.packets, startDate);
-  }
-
-  shouldComponentUpdate(nextProps, nextState) {
-    const { graphStats } = this.state;
-
-    // prevents updating before new stats are fetched
-    return nextState.graphStats !== graphStats;
-  }
-
-  getStats = async (packets, startDate) => {
-    if (packets.length > 0) {
-      const packetNames = packets.map(packet => packet.name);
-
-      // Only show last full week
-      const endDate = moment()
-        .subtract(1, 'week')
-        .endOf('week')
-        .format('YYYY-MM-DD');
-
-      const graphStats = [];
-
-      packetNames.forEach(packetName => {
-        const downloads = PackageDownloads.fetchDownloads(packetName, startDate, endDate);
-        graphStats.push(downloads);
-      });
-
-      const fetchedGraphStats = await Promise.all(graphStats);
-
-      this.setState({ graphStats: fetchedGraphStats, startDate });
-    } else {
-      this.setState({ graphStats: [], startDate });
+  const getStats = useCallback(async () => {
+    if (packets.length < 0) {
+      setGraphStats([]);
     }
+
+    const packetNames = packets.map((packet) => packet.name);
+
+    // Only show last full week
+    const endDate = moment().subtract(1, 'week').endOf('week').format('YYYY-MM-DD');
+
+    const fetchGraphStatsPromiseArray = packetNames.map((packetName) =>
+      PackageDownloads.fetchDownloads(packetName, startDate, endDate),
+    );
+
+    const fetchedGraphStats = await Promise.all(fetchGraphStatsPromiseArray);
+
+    setGraphStats(fetchedGraphStats);
+  }, [packets, startDate]);
+
+  useEffect(() => {
+    getStats();
+  }, [getStats, packets, startDate]);
+
+  // UNSAFE_componentWillReceiveProps(nextProps) {
+  //   const { startDate } = this.state;
+  //
+  //   this.getStats(nextProps.packets, startDate);
+  // }
+  //
+  // shouldComponentUpdate(nextProps, nextState) {
+  //   const { graphStats } = this.state;
+  //
+  //   // prevents updating before new stats are fetched
+  //   return nextState.graphStats !== graphStats;
+  // }
+
+  const handlePeriodChange = (e) => {
+    setStartDate(e.target.value);
   };
 
-  handlePeriodChange = e => {
-    const { packets } = this.props;
-    this.getStats(packets, e.target.value);
-  };
-
-  heading = () => {
-    const { graphStats, startDate } = this.state;
-
+  const heading = () => {
     if (graphStats.length > 0) {
       const selectOptionsData = [
         ['1 Month', momentToStartDate(moment().subtract(1, 'month'))],
@@ -90,7 +68,7 @@ class TrendGraphBox extends Component {
         ['5 Years', momentToStartDate(moment().subtract(5, 'year'))],
         ['All time', momentToStartDate(moment('2015-01-10'))],
       ];
-      const selectOptions = selectOptionsData.map(option => (
+      const selectOptions = selectOptionsData.map((option) => (
         <option key={option[1]} value={option[1]}>
           {option[0]}
         </option>
@@ -99,7 +77,7 @@ class TrendGraphBox extends Component {
         <h2 className="chart-heading">
           Downloads <span className="text--light">in past</span>
           <span className="select-container">
-            <select className="chart-heading-select" value={startDate} onChange={this.handlePeriodChange}>
+            <select className="chart-heading-select" value={startDate} onChange={handlePeriodChange}>
               {selectOptions}
             </select>
           </span>
@@ -109,21 +87,14 @@ class TrendGraphBox extends Component {
     return null;
   };
 
-  render() {
-    const { colors } = this.props;
-    const { graphStats } = this.state;
-
-    return (
-      <div>
-        {this.heading()}
-        <TrendGraph graphStats={graphStats} colors={colors} />
-      </div>
-    );
-  }
-}
+  return (
+    <div>
+      {heading()}
+      <TrendGraph graphStats={graphStats} colors={colors} />
+    </div>
+  );
+};
 
 TrendGraphBox.propTypes = propTypes;
-
-TrendGraphBox.defaultProps = defaultProps;
 
 export default TrendGraphBox;

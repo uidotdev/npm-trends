@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useEffect, useCallback, useRef } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import Chart from 'chart.js';
@@ -10,21 +10,18 @@ const propTypes = {
   colors: PropTypes.arrayOf(PropTypes.array).isRequired,
 };
 
-class TrendGraph extends Component {
-  componentDidMount() {
-    this.loadChart();
-  }
+const TrendGraph = ({ graphStats, colors }) => {
+  const chartInstance = useRef();
+  const downloadChart = useRef();
 
-  componentDidUpdate() {
-    this.loadChart();
-  }
+  const loadChart = useCallback(() => {
+    if (!downloadChart.current) return;
 
-  loadChart = () => {
-    const { graphStats, colors } = this.props;
-
-    if (typeof this.downloadChart !== 'undefined') {
-      this.downloadChart.destroy();
+    if (!chartInstance.current) {
+      const ctx = downloadChart.current.getContext('2d');
+      chartInstance.current = new Chart(ctx, { type: 'line' });
     }
+
     if (graphStats.length > 0) {
       const chartData = { labels: [], datasets: [] };
       graphStats.forEach((graphStat, i) => {
@@ -146,28 +143,26 @@ class TrendGraph extends Component {
         },
       };
 
-      const ctx = document.getElementById('download_chart').getContext('2d');
+      chartInstance.current.data = chartData;
 
-      this.downloadChart = new Chart(ctx, {
-        type: 'line',
-        data: chartData,
-        options: chartOptions,
-      });
+      chartInstance.current.options = chartOptions;
+
+      chartInstance.current.update();
     }
-  };
+  }, [graphStats, colors]);
 
-  render() {
-    const { graphStats } = this.props;
+  useEffect(() => {
+    loadChart();
+  }, [loadChart, graphStats, colors]);
 
-    if (!graphStats.length) return null;
+  if (!graphStats.length) return null;
 
-    return (
-      <div className="graph-container">
-        <canvas id="download_chart" />
-      </div>
-    );
-  }
-}
+  return (
+    <div className="graph-container">
+      <canvas ref={downloadChart} id="download_chart" />
+    </div>
+  );
+};
 
 TrendGraph.propTypes = propTypes;
 
