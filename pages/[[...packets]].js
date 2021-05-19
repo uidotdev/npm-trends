@@ -16,25 +16,11 @@ const fetchPageData = async (packets) => {
     return { packets: [] };
   }
 
-  const { validPackages, invalidPackages } = await Package.fetchPackages(packets);
-
-  // https://github.com/vercel/next.js/discussions/11281
-  // Currently no way to redirect directly from getServerSideProps
-  const manualRedirect = (packagesArray, packetsWithErrors = []) => ({
-    props: { packets: packagesArray, updateUrlWithPackets: true, packetsWithErrors },
-  });
+  const { validPackages } = await Package.fetchPackages(packets);
 
   const maxPacketsForSearch = 10;
 
-  if (validPackages.length > maxPacketsForSearch) {
-    return manualRedirect(validPackages.slice(0, maxPacketsForSearch));
-  }
-
-  if (invalidPackages.length) {
-    return manualRedirect(validPackages, invalidPackages);
-  }
-
-  return { packets: validPackages };
+  return { packets: validPackages.slice(0, maxPacketsForSearch) };
 };
 
 const propTypes = {
@@ -103,7 +89,7 @@ const getProps = async (context) => {
   const pageData = await fetchPageData(packetNames);
 
   // If error with any packages, remove errored packages from url
-  if (packetNames.length !== pageData.packets.length) {
+  if (pageData.packets && packetNames.length !== pageData.packets.length) {
     const packetsUrlParam = pageData.packets.map((p) => p.name).join('-vs-');
 
     return {

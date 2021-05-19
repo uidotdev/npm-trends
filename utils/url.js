@@ -15,7 +15,7 @@ export const getPacketParamFromQuery = (query) => {
 export const getPacketNamesFromQuery = (query) => {
   const param = getPacketParamFromQuery(query);
 
-  return param.split('-vs-');
+  return param.length ? param.split('-vs-') : [];
 };
 
 export const packetNamesToParam = (packetNames) => packetNames.join('-vs-');
