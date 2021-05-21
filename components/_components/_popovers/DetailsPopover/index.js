@@ -63,7 +63,7 @@ const DetailsPopover = ({ packageName, children }) => {
   return (
     <Popover
       containerStyle={{ pointerEvents: 'none' }}
-      isOpen={isOpen}
+      isOpen={isOpen && packageData}
       position="bottom"
       windowBorderPadding={30}
       content={popoverContent}

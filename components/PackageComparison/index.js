@@ -35,7 +35,7 @@ const PackageComparison = ({ packets, packetNames = [] }) => {
     <div className="container">
       <PackageComparisonHeading packetNames={packetNames} packets={packets} />
       <SearchForm onSearch={updateFromSearch} />
-      <PackageTags packets={packets} colors={colors} />
+      <PackageTags packetNames={packetNames} packets={packets} colors={colors} />
       {packets.length > 0 && (
         <div>
           <TrendGraphBox packets={packets} colors={colors} />

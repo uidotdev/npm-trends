@@ -1,121 +1,90 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
-import queryString from 'query-string';
+import queryString from 'querystring';
 
 import Fetch from 'services/Fetch';
 import DetailsPopover from 'components/_components/_popovers/DetailsPopover';
 
 const propTypes = {
+  packetNames: PropTypes.arrayOf(PropTypes.string).isRequired,
   packets: PropTypes.arrayOf(PropTypes.object).isRequired,
   colors: PropTypes.arrayOf(PropTypes.array).isRequired,
 };
 
-class PackageTags extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      relatedPackets: [],
+const PackageTags = ({ packetNames = [], packets, colors }) => {
+  const [relatedPackets, setRelatedPackets] = useState([]);
+
+  useEffect(() => {
+    const fetchRelatedPackets = async () => {
+      if (!packetNames.length) return;
+
+      const searchQueryParams = queryString.stringify({
+        'search_query[]': packetNames,
+      });
+
+      const fetchedRelatedPackets = await Fetch.getJSON(`/s/related_packages?${searchQueryParams}`);
+
+      setRelatedPackets(fetchedRelatedPackets);
     };
-  }
 
-  componentDidMount = () => {
-    const { packets } = this.props;
+    fetchRelatedPackets();
+  }, [packetNames]);
 
-    if (packets.length) {
-      this.fetchRelatedPackets();
-    }
-  };
-
-  componentDidUpdate = (prevProps) => {
-    const { packets } = this.props;
-
-    if (packets !== prevProps.packets) {
-      this.fetchRelatedPackets();
-    }
-  };
-
-  packetNamesArray = () => {
-    const { packets } = this.props;
-
-    return packets.map((packet) => packet.name);
-  };
-
-  fetchRelatedPackets = () => {
-    const { packets } = this.props;
-    if (!packets.length) return;
-
-    const searchQueryParams = queryString.stringify({
-      'search_query[]': this.packetNamesArray(),
-    });
-
-    Fetch.getJSON(`/s/related_packages?${searchQueryParams}`).then((data) => {
-      this.setState({ relatedPackets: data });
-    });
-  };
-
-  newUrlAfterRemove = (packetNameToRemove) => {
-    const remainingPackets = this.packetNamesArray().filter((packet) => packet !== packetNameToRemove);
+  const newUrlAfterRemove = (packetNameToRemove) => {
+    const remainingPackets = packetNames.filter((packet) => packet !== packetNameToRemove);
     return `/${remainingPackets.join('-vs-')}`;
   };
 
-  newUrlAfterAdd = (packetNameToAdd) => `/${this.packetNamesArray().join('-vs-')}-vs-${packetNameToAdd}`;
+  const newUrlAfterAdd = (packetNameToAdd) => `/${packetNames.join('-vs-')}-vs-${packetNameToAdd}`;
 
-  packetTags = () => {
-    const { packets, colors } = this.props;
-
-    return packets.map((packet, i) => {
+  const renderPacketTags = () =>
+    packets.map((packet, i) => {
       const border = `2px solid rgb(${colors[i].join(',')})`;
       return (
-        <li key={packet.id} className="package-search-tag" style={{ border }}>
-          <DetailsPopover packageName={packet.name}>
-            <Link href="/[[...packets]]" as={this.newUrlAfterRemove(packet.name)}>
+        <DetailsPopover key={packet.id} packageName={packet.name}>
+          <li className="package-search-tag" style={{ border }}>
+            <Link href="/[[...packets]]" as={newUrlAfterRemove(packet.name)}>
               <a>
                 <span className="search-tag-name">{packet.name}</span>
                 <i className="icon icon-cross" aria-hidden />
               </a>
             </Link>
-          </DetailsPopover>
-        </li>
+          </li>
+        </DetailsPopover>
       );
     });
-  };
 
-  relatedPackets = () => {
-    const { packets } = this.props;
-    const { relatedPackets } = this.state;
-
+  const renderRelatedPackets = () => {
     if (!packets.length || !relatedPackets.length) return null;
 
-    if (packets.length >= 10) return null;
+    if (packetNames.length >= 10) return null;
 
     return relatedPackets.map((packet, i) => (
-      <li key={packet} className="related-package" style={{ marginLeft: i === 0 && '10px' }}>
-        <div>
-          <DetailsPopover packageName={packet}>
-            <Link href="/[[...packets]]" as={this.newUrlAfterAdd(packet)}>
+      <DetailsPopover key={packet} packageName={packet}>
+        <li className="related-package" style={{ marginLeft: i === 0 && '10px' }}>
+          <div>
+            <Link href="/[[...packets]]" as={newUrlAfterAdd(packet)}>
               <a>
                 <i className="icon icon-plus" aria-hidden />
                 <span className="related-package--name">{packet}</span>
               </a>
             </Link>
-          </DetailsPopover>
-        </div>
-      </li>
+          </div>
+        </li>
+      </DetailsPopover>
     ));
   };
 
-  render() {
-    return (
-      <div className="package-search--tag-container">
-        <ul className="package-search-tags list-unstyled">
-          {this.packetTags()}
-          {this.relatedPackets()}
-        </ul>
-      </div>
-    );
-  }
-}
+  return (
+    <div className="package-search--tag-container">
+      <ul className="package-search-tags list-unstyled">
+        {renderPacketTags()}
+        {renderRelatedPackets()}
+      </ul>
+    </div>
+  );
+};
 
 PackageTags.propTypes = propTypes;
 
