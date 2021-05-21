@@ -71,6 +71,7 @@ class Package {
       id: npmPackageData.name,
       name: npmPackageData.name,
       description: _get(npmPackageData, 'description', ''),
+      readme: _get(npmPackageData, 'readme', ''),
       repository,
       links: {
         npm: `https://npmjs.com/package/${npmPackageData.name}`,
