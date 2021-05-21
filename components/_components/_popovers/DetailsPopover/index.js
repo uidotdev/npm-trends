@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import Popover from 'react-tiny-popover';
+import { Popover } from 'react-tiny-popover';
 
 import Package from 'services/Package';
 import { abbreviateNumber } from 'utils/format';
@@ -52,9 +52,23 @@ const DetailsPopover = ({ packageName, children }) => {
     </PopoverContentContainer>
   );
 
+  if (typeof window === 'undefined') {
+    return children;
+  }
+
+  const close = () => {
+    setIsOpen(false);
+  };
+
   return (
-    <Popover isOpen={isOpen} position="bottom" windowBorderPadding={30} content={popoverContent}>
-      <span onMouseEnter={() => setIsOpen(true)} onMouseLeave={() => setIsOpen(false)}>
+    <Popover
+      containerStyle={{ pointerEvents: 'none' }}
+      isOpen={isOpen}
+      position="bottom"
+      windowBorderPadding={30}
+      content={popoverContent}
+    >
+      <span onMouseEnter={() => setIsOpen(true)} onMouseLeave={close}>
         {children}
       </span>
     </Popover>
