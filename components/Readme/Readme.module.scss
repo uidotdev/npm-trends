@@ -39,24 +39,29 @@
   }
 
   h1 {
-    font-size: 2em;
+    font-size: 1.8em;
     padding-bottom: 0.3em;
     border-bottom: 1px solid $border;
   }
+
   h2 {
     font-size: 1.5em;
-    padding-bottom: 0.3em;
+    padding-bottom: 0.25em;
     border-bottom: 1px solid $border;
   }
+
   h3 {
     font-size: 1.25em;
   }
+
   h4 {
     font-size: 1em;
   }
+
   h5 {
-    font-size: 0.875em;
+    font-size: 0.9em;
   }
+
   h6 {
     font-size: 0.85em;
   }
@@ -64,7 +69,7 @@
   pre {
     padding: 16px;
     overflow: auto;
-    line-height: 1.45;
+    line-height: 1.4;
     background-color: $background;
     border-radius: 6px;
   }
@@ -110,5 +115,9 @@
     display: block;
     margin-bottom: 0em;
     content: '';
+  }
+
+  img {
+    max-width: 100%;
   }
 }

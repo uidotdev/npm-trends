@@ -21,7 +21,7 @@ const Readme = ({ packets }) => {
     allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img']),
     allowedAttributes: {
       a: ['href', 'name', 'target'],
-      img: ['src', 'width', 'height'],
+      img: ['src', 'width', 'height', 'alt'],
     },
   });
 
