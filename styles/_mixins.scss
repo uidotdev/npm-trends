@@ -9,6 +9,8 @@ $shade-50: #8d8c92;
 $border: #e2e2e2;
 $borderLight: #efefef;
 
+$background: #f7f7f9;
+
 @mixin lg-screen {
   @media screen and (max-width: 1199px) {
     @content;

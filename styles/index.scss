@@ -12,3 +12,10 @@
 
 @import 'styles/plugins/_react-tiny-popover.scss';
 @import 'styles/plugins/_react-toastify.scss';
+
+code,
+pre,
+tt {
+  font-family: Consolas, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono,
+    Courier New;
+}

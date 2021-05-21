@@ -11,6 +11,8 @@ import TrendGraphBox from 'components/_chart/TrendGraphBox';
 import PackageStats from 'components/_statsTable/PackageStats';
 import PopularSearches from 'components/_searchLists/PopularSearches';
 import RelatedSearches from 'components/_searchLists/RelatedSearches';
+import Readme from 'components/Readme';
+
 import PackageComparisonHeading from './_components/PackageComparisonHeading';
 
 const propTypes = {
@@ -46,6 +48,7 @@ const PackageComparison = ({ packets, packetNames = [] }) => {
         <RelatedSearches packetsArray={packetNames} />
         <PopularSearches />
       </div>
+      <Readme packets={packets} />
       <div id="extra_info">
         <p>
           If you find any bugs or have a feature request, please open an issue on{' '}
