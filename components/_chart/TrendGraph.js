@@ -98,6 +98,10 @@ const TrendGraph = ({ graphStats, colors }) => {
         scales: {
           yAxes: [
             {
+              scaleLabel: {
+                display: true,
+                labelString: 'Weekly Downloads',
+              },
               ticks: {
                 beginAtZero: true,
                 callback: (value) => Number(value).toLocaleString(),
