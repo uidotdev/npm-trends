@@ -1,6 +1,7 @@
 import { get as _get } from 'lodash';
 import hostedGitInfo from 'hosted-git-info';
 
+import IPackage from 'types/IPackage';
 import { urlWithProxy } from 'utils/proxy';
 import { colors } from 'utils/colors';
 import Fetch from './Fetch';
@@ -58,8 +59,8 @@ class Package {
     }
   }
 
-  static async fetchPackage(packageName) {
-    const npmPackageData = await Package.fetchPackageDetails(packageName);
+  static async fetchPackage(packageName): IPackage {
+    const npmPackageData = await this.fetchPackageDetails(packageName);
 
     const repository = this.formatRepositoryData(_get(npmPackageData, 'repository.url', ''));
 
@@ -72,11 +73,11 @@ class Package {
       name: npmPackageData.name,
       description: _get(npmPackageData, 'description', ''),
       repository,
+      github,
       links: {
         npm: `https://npmjs.com/package/${npmPackageData.name}`,
         homepage: _get(npmPackageData, 'homepage', ''),
       },
-      github,
       downloads: {
         weekly: weeklyDownloads.downloads,
       },
