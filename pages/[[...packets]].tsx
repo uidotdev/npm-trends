@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import PropTypes from 'prop-types';
+import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/router';
 
+import IPackage from 'types/IPackage';
 import API from 'services/API';
 import Package from 'services/Package';
 import { getPacketNamesFromQuery, searchPathToDisplayString, getCanonical } from 'utils/url';
@@ -23,12 +23,14 @@ const fetchPageData = async (packets) => {
   return { packets: validPackages.slice(0, maxPacketsForSearch) };
 };
 
-const propTypes = {
-  initialData: PropTypes.object,
+type Props = {
+  initialData: {
+    packets: IPackage[];
+  };
 };
 
-const Packets = ({ initialData }) => {
-  const [data, setData] = useState(initialData || {});
+const Packets = ({ initialData }: Props) => {
+  const [data, setData] = useState(initialData || { packets: [] });
 
   const { query } = useRouter();
 
@@ -78,8 +80,6 @@ const Packets = ({ initialData }) => {
     </>
   );
 };
-
-Packets.propTypes = propTypes;
 
 const getProps = async (context) => {
   const { query } = context;

@@ -2,7 +2,14 @@ import { ArrowContainer } from 'react-tiny-popover';
 
 import styles from './PopoverContentContainer.module.scss';
 
-const PopoverContentContainer = ({ children, position, childRect, popoverRect }) => {
+type Props = {
+  children: any;
+  position: any;
+  childRect: any;
+  popoverRect: any;
+};
+
+const PopoverContentContainer = ({ children, position, childRect, popoverRect }: Props) => {
   const getRotation = () => {
     switch (position) {
       case 'top':
@@ -41,7 +48,5 @@ const PopoverContentContainer = ({ children, position, childRect, popoverRect })
     </ArrowContainer>
   );
 };
-
-PopoverContentContainer.propTypes = propTypes;
 
 export default PopoverContentContainer;

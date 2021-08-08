@@ -23,7 +23,7 @@ class PackageDownloads {
         : callStartMoment.format('YYYY-MM-DD');
       const callEndDate = callEndMoment.format('YYYY-MM-DD');
 
-      const response = this.fetchFromApi(packageName, `${callStartDate}:${callEndDate}`);
+      const response = PackageDownloads.fetchFromApi(packageName, `${callStartDate}:${callEndDate}`);
 
       responses.push(response);
     }

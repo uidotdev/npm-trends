@@ -8,13 +8,15 @@ import Fetch from './Fetch';
 import PackageDownloads from './PackageDownloads';
 
 class Package {
-  static async fetchPackages(packetNames: string[]): Promise<{ validPackages: IPackage[]; invalidPackages: string[] }> {
+  static fetchPackages = async (
+    packetNames: string[],
+  ): Promise<{ validPackages: IPackage[]; invalidPackages: string[] }> => {
     // packageNames format: ['react', '@angular-core']
 
     const fetchedPackages: (IPackage | { hasError: boolean; name: string })[] = await Promise.all(
       packetNames.map(async (packageName) => {
         try {
-          return await this.fetchPackage(packageName);
+          return await Package.fetchPackage(packageName);
         } catch (e) {
           return {
             hasError: true,
@@ -39,9 +41,9 @@ class Package {
       validPackages,
       invalidPackages,
     };
-  }
+  };
 
-  static formatRepositoryData(npmRepositoryUrl: string) {
+  static formatRepositoryData = (npmRepositoryUrl: string) => {
     try {
       const gitInfo = hostedGitInfo.fromUrl(npmRepositoryUrl);
 
@@ -55,22 +57,22 @@ class Package {
         url: null,
       };
     }
-  }
+  };
 
-  static async fetchPackage(packageName: string): Promise<IPackage> {
+  static fetchPackage = async (packageName: string): Promise<IPackage> => {
     try {
-      return this.fetchPackageFromNpms(packageName);
+      return Package.fetchPackageFromNpms(packageName);
     } catch {
-      return this.fetchPackageManually(packageName);
+      return Package.fetchPackageManually(packageName);
     }
-  }
+  };
 
-  static async fetchPackageFromNpms(packageName: string): Promise<IPackage> {
+  static fetchPackageFromNpms = async (packageName: string): Promise<IPackage> => {
     const url = `https://api.npms.io/v2/package/${encodeURIComponent(encodeURIComponent(packageName))}`;
 
     const npmsPackageData = await Fetch.getJSON(urlWithProxy(url));
 
-    const repository = this.formatRepositoryData(_get(npmsPackageData, 'collected.metadata.repository.url', null));
+    const repository = Package.formatRepositoryData(_get(npmsPackageData, 'collected.metadata.repository.url', null));
 
     return {
       id: _get(npmsPackageData, 'collected.metadata.name', null),
@@ -93,14 +95,14 @@ class Package {
         weekly: _get(npmsPackageData, 'collected.npm.downloads[1].count', null),
       },
     };
-  }
+  };
 
-  static async fetchPackageManually(packageName: string): Promise<IPackage> {
-    const npmPackageData = await this.fetchPackageDetails(packageName);
+  static fetchPackageManually = async (packageName: string): Promise<IPackage> => {
+    const npmPackageData = await Package.fetchPackageDetails(packageName);
 
-    const repository = this.formatRepositoryData(_get(npmPackageData, 'repository.url', null));
+    const repository = Package.formatRepositoryData(_get(npmPackageData, 'repository.url', null));
 
-    const github = repository.type === 'github' ? await this.fetchGithubRepo(repository.url) : null;
+    const github = repository.type === 'github' ? await Package.fetchGithubRepo(repository.url) : null;
 
     const weeklyDownloads = await PackageDownloads.fetchPoint(npmPackageData.name, 'last-week');
 
@@ -129,21 +131,21 @@ class Package {
         weekly: weeklyDownloads.downloads,
       },
     };
-  }
+  };
 
-  static async fetchGithubRepo(url: string) {
+  static fetchGithubRepo = async (url: string) => {
     const repositoryPath = url.split('.com')[1].replace('.git', '');
 
     const githubUrl = `https://api.github.com/repos${repositoryPath}`;
 
     return Fetch.getJSON(urlWithProxy(githubUrl));
-  }
+  };
 
-  static async fetchPackageDetails(packetName: string): Promise<any> {
+  static fetchPackageDetails = async (packetName: string): Promise<any> => {
     const url = `https://registry.npmjs.org/${encodeURIComponent(packetName)}`;
 
     return Fetch.getJSON(urlWithProxy(url));
-  }
+  };
 }
 
 export default Package;
