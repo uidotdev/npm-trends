@@ -4,13 +4,11 @@ import moment from 'moment';
 // dates: [{"day":"2012-10-22","downloads":279},
 //         {"day":"2012-10-23","downloads":2042}]
 // period: 'week'
-export const groupDownloadsByPeriod = (dates, period = 'week') => {
+export const groupDownloadsByPeriod = (dates, period: moment.unitOfTime.StartOf = 'week') => {
   const downloadsGroupedByPeriod = {};
 
-  dates.forEach(date => {
-    const startOfPeriodDate = moment(date.day)
-      .startOf(period)
-      .format('YYYY-MM-DD');
+  dates.forEach((date) => {
+    const startOfPeriodDate = moment(date.day).startOf(period).format('YYYY-MM-DD');
 
     downloadsGroupedByPeriod[startOfPeriodDate] = downloadsGroupedByPeriod[startOfPeriodDate]
       ? downloadsGroupedByPeriod[startOfPeriodDate] + date.downloads

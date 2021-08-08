@@ -39,12 +39,12 @@ class PackageDownloads {
     };
   };
 
-  static fetchFromApi = async (packageName, period) => {
+  static fetchFromApi = async (packageName, period): Promise<any> => {
     const url = `https://api.npmjs.org/downloads/range/${period}/${packageName}`;
     return Fetch.getJSON(`${process.env.NEXT_PUBLIC_PROXY_URL}?url=${url}`);
   };
 
-  static fetchPoint = async (packageName, period = 'last-month') => {
+  static fetchPoint = async (packageName, period = 'last-month'): Promise<any> => {
     const url = `https://api.npmjs.org/downloads/point/${period}/${packageName}`;
     return Fetch.getJSON(`${process.env.NEXT_PUBLIC_PROXY_URL}?url=${url}`);
   };

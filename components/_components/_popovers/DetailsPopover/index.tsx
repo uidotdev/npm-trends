@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Popover } from 'react-tiny-popover';
 
@@ -64,8 +64,8 @@ const DetailsPopover = ({ packageName, children }) => {
     <Popover
       containerStyle={{ pointerEvents: 'none' }}
       isOpen={isOpen}
-      position="bottom"
-      windowBorderPadding={30}
+      positions={['bottom']}
+      boundaryInset={30}
       content={popoverContent}
     >
       <span onMouseEnter={() => setIsOpen(true)} onMouseLeave={close}>

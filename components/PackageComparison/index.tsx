@@ -1,4 +1,3 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
 
@@ -43,7 +42,7 @@ const PackageComparison = ({ packets, packetNames = [] }) => {
         </div>
       )}
       <div className="suggestions--container">
-        <RelatedSearches packetsArray={packetNames} />
+        <RelatedSearches packetNames={packetNames} />
         <PopularSearches />
       </div>
       <div id="extra_info">

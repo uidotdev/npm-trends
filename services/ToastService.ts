@@ -1,7 +1,7 @@
-import { toast } from 'react-toastify';
+import { toast, ToastPosition } from 'react-toastify';
 
 const config = {
-  position: 'top-right',
+  position: 'top-right' as ToastPosition,
   autoClose: 8000,
   closeOnClick: true,
   pauseOnHover: true,

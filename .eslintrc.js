@@ -1,12 +1,13 @@
 module.exports = {
+  root: true,
   parser: '@typescript-eslint/parser',
   plugins: ['@typescript-eslint', 'css-modules'],
   extends: [
     'airbnb',
     'airbnb/hooks',
     'plugin:react/recommended',
+    'plugin:react/jsx-runtime',
     'plugin:css-modules/recommended',
-    'plugin:@typescript-eslint/eslint-recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:@next/next/recommended',
     'prettier',
@@ -19,7 +20,7 @@ module.exports = {
     'lines-between-class-members': ['error', 'always', { exceptAfterSingleLine: true }],
     'react/forbid-prop-types': [1, { forbid: ['any', 'array'] }],
     'react/require-default-props': 0,
-    'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx'] }],
+    'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx', '.tsx'] }],
     'react/prefer-stateless-function': [0, { ignorePureComponents: true }],
     'import/prefer-default-export': 'off',
     'react/display-name': 0,
@@ -83,6 +84,17 @@ module.exports = {
     ],
     // TODO: remove this as well when we can remove 'indent'
     'template-curly-spacing': 'off',
+    'import/extensions': [
+      'error',
+      'ignorePackages',
+      {
+        js: 'never',
+        jsx: 'never',
+        ts: 'never',
+        tsx: 'never',
+      },
+    ],
+    'react/destructuring-assignment': 0,
   },
   env: {
     browser: true,
@@ -93,6 +105,7 @@ module.exports = {
     'import/resolver': {
       node: {
         paths: ['.'],
+        extensions: ['.js', '.jsx', '.ts', '.tsx'],
       },
     },
   },

@@ -1,4 +1,3 @@
-import React from 'react';
 import Document, { Html, Head, Main, NextScript } from 'next/document';
 
 export default class MyDocument extends Document {
@@ -8,7 +7,7 @@ export default class MyDocument extends Document {
     return (
       <Html lang="en">
         <Head>
-          <script src="https://use.fortawesome.com/978e158e.js" />
+          <script src="https://use.fortawe some.com/978e158e.js" />
           <link rel="shortcut icon" href="/favicon.ico" />
         </Head>
         <body>

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Router from 'next/router';
 import $ from 'jquery';
@@ -21,12 +21,12 @@ const propTypes = {
 
 const MyApp = ({ Component, pageProps }) => {
   useEffect(() => {
-    window.jQuery = $;
-    window.$ = $;
+    (window as any).jQuery = $;
+    (window as any).$ = $;
 
-    if (!window.GA_INITIALIZED) {
+    if (!(window as any).GA_INITIALIZED) {
       initGA();
-      window.GA_INITIALIZED = true;
+      (window as any).GA_INITIALIZED = true;
     }
     logPageView();
 

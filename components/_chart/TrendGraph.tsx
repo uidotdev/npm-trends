@@ -1,24 +1,23 @@
-import React, { useEffect, useCallback, useRef } from 'react';
-import PropTypes from 'prop-types';
+import { useEffect, useCallback, useRef } from 'react';
 import moment from 'moment';
 import Chart from 'chart.js';
 
 import { groupDownloadsByPeriod } from 'utils/groupDates';
 
-const propTypes = {
-  graphStats: PropTypes.arrayOf(PropTypes.object).isRequired,
-  colors: PropTypes.arrayOf(PropTypes.array).isRequired,
+type Props = {
+  graphStats: any[];
+  colors: number[][];
 };
 
-const TrendGraph = ({ graphStats, colors }) => {
-  const chartInstance = useRef();
-  const downloadChart = useRef();
+const TrendGraph = ({ graphStats, colors }: Props) => {
+  const chartInstance = useRef(null);
+  const downloadChart = useRef(null);
 
   const loadChart = useCallback(() => {
-    if (!downloadChart.current) return;
+    if (!downloadChart?.current) return;
 
     if (!chartInstance.current) {
-      const ctx = downloadChart.current.getContext('2d');
+      const ctx = downloadChart?.current.getContext('2d');
       chartInstance.current = new Chart(ctx, { type: 'line' });
     }
 
@@ -163,7 +162,5 @@ const TrendGraph = ({ graphStats, colors }) => {
     </div>
   );
 };
-
-TrendGraph.propTypes = propTypes;
 
 export default TrendGraph;

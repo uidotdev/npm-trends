@@ -1,5 +1,5 @@
-function handleErrors(response) {
-  return new Promise((resolve, reject) => {
+function handleErrors(response): any {
+  return new Promise<void>((resolve, reject) => {
     if (!response.ok) {
       return reject(response);
     }
@@ -8,10 +8,7 @@ function handleErrors(response) {
       return resolve();
     }
 
-    return response
-      .json()
-      .then(resolve)
-      .catch(resolve);
+    return response.json().then(resolve).catch(resolve);
   });
 }
 
