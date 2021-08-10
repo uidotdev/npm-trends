@@ -146,11 +146,9 @@ class Package {
 
     const version = _get(registryPackageData, 'dist-tags.latest');
 
-    const firstVersion = Object.keys(registryPackageData?.versions)
-      .filter((key) => !key.includes('-'))
-      .sort((aKey, bKey) => aKey.localeCompare(bKey))[0];
-
-    const dateOfFirstVersion = <string>registryPackageData?.time[firstVersion];
+    const dateOfFirstVersion = <string>(
+      Object.values(registryPackageData?.time).sort((aKey: any, bKey: any) => aKey.localeCompare(bKey))[0]
+    );
 
     return {
       id: registryPackageData.name,
