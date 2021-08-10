@@ -17,6 +17,7 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 0,
     '@typescript-eslint/explicit-module-boundary-types': 0,
     '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+    'no-console': ['error', { allow: ['warn', 'error'] }],
     'lines-between-class-members': ['error', 'always', { exceptAfterSingleLine: true }],
     'react/forbid-prop-types': [1, { forbid: ['any', 'array'] }],
     'react/require-default-props': 0,

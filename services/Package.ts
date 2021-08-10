@@ -18,6 +18,10 @@ class Package {
         try {
           return await Package.fetchPackage(packageName);
         } catch (e) {
+          console.error(
+            'Problem fetching npms and manual data. This either because the repository does not exist, or we had an error in both of our data sources',
+            e,
+          );
           return {
             hasError: true,
             name: packageName,
@@ -62,7 +66,8 @@ class Package {
   static fetchPackage = async (packageName: string): Promise<IPackage> => {
     try {
       return Package.fetchPackageFromNpms(packageName);
-    } catch {
+    } catch (e) {
+      console.error('Problem fetching npms data', e);
       return Package.fetchPackageManually(packageName);
     }
   };
@@ -139,11 +144,16 @@ class Package {
   };
 
   static fetchGithubRepo = async (url: string) => {
-    const repositoryPath = url.split('.com')[1].replace('.git', '');
+    try {
+      const repositoryPath = url.split('.com')[1].replace('.git', '');
 
-    const githubUrl = `https://api.github.com/repos${repositoryPath}`;
+      const githubUrl = `https://api.github.com/repos${repositoryPath}`;
 
-    return Fetch.getJSON(urlWithProxy(githubUrl));
+      return Fetch.getJSON(urlWithProxy(githubUrl));
+    } catch (e) {
+      console.error('Problem fetching GitHub data', e);
+      return {};
+    }
   };
 
   static fetchPackageDetails = async (packetName: string): Promise<any> => {

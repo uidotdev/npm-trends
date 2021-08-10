@@ -44,21 +44,23 @@ const columns = [
   },
   {
     heading: 'Stars',
-    renderer: (packet: IPackage) => packet.github?.starsCount?.toLocaleString() || '',
+    renderer: (packet: IPackage) => packet.github?.starsCount?.toLocaleString() || <i className="icon icon-dash" />,
   },
   {
     heading: 'Issues',
-    renderer: (packet: IPackage) => packet.github?.openIssuesCount?.toLocaleString() || '',
+    renderer: (packet: IPackage) =>
+      packet.github?.openIssuesCount?.toLocaleString() || <i className="icon icon-dash" />,
   },
   {
     heading: 'Version',
-    renderer: (packet: IPackage) => packet.version || '',
+    renderer: (packet: IPackage) => packet.version || <i className="icon icon-dash" />,
   },
   {
     heading: 'Updated',
     tooltip:
       'Publish date for the version tagged "latest". This may differ from the "Last publish" date seen on the NPM website because that includes all version tags (experimental, next, alpha, etc.)',
-    renderer: (packet: IPackage) => (packet.versionDate ? moment().to(packet.versionDate) : ''),
+    renderer: (packet: IPackage) =>
+      packet.versionDate ? moment().to(packet.versionDate) : <i className="icon icon-dash" />,
   },
   // We fetch from npms as our primary search and npms does not have a created date.
   // Hiding for now since this will be empty most of the time.
