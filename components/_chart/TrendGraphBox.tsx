@@ -15,7 +15,7 @@ const propTypes = {
 
 const TrendGraphBox = ({ packets, colors }) => {
   const [graphStats, setGraphStats] = useState([]);
-  const [startDate, setStartDate] = useState(momentToStartDate(moment().subtract(6, 'months')));
+  const [startDate, setStartDate] = useState(momentToStartDate(moment().subtract(12, 'months')));
 
   const getStats = useCallback(async () => {
     if (packets.length < 0) {

@@ -60,12 +60,14 @@ const columns = [
       'Publish date for the version tagged "latest". This may differ from the "Last publish" date seen on the NPM website because that includes all version tags (experimental, next, alpha, etc.)',
     renderer: (packet: IPackage) => (packet.versionDate ? moment().to(packet.versionDate) : ''),
   },
-  {
-    heading: 'Created',
-    tooltip: 'Date first version was published',
-    renderer: (packet: IPackage) =>
-      packet.createdDate ? moment().to(packet.createdDate, false) : <i className="icon icon-dash" />,
-  },
+  // We fetch from npms as our primary search and npms does not have a created date.
+  // Hiding for now since this will be empty most of the time.
+  // {
+  //   heading: 'Created',
+  //   tooltip: 'Date first version was published',
+  //   renderer: (packet: IPackage) =>
+  //     packet.createdDate ? moment().to(packet.createdDate, false) : <i className="icon icon-dash" />,
+  // },
   { heading: 'Size', renderer: (packet: IPackage) => <BundlephobiaRenderer packet={packet} /> },
 ];
 
