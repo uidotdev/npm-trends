@@ -126,6 +126,7 @@ class Package {
       version,
       versionDate: new Date(npmPackageData?.time[version]).toJSON(),
       createdDate: new Date(dateOfFirstVersion).toJSON(),
+      readme: _get(npmPackageData, 'readme', ''),
       repository,
       github: {
         starsCount: _get(github, 'stargazers_count', null),

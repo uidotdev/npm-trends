@@ -14,6 +14,7 @@ export default interface IPackage {
   version: string;
   versionDate: string;
   createdDate?: string;
+  readme: string;
   color?: number[];
   repository: {
     type: string;
