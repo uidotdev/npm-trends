@@ -11,6 +11,8 @@ import TrendGraphBox from 'components/_chart/TrendGraphBox';
 import PackageStats from 'components/_statsTable/PackageStats';
 import PopularSearches from 'components/_searchLists/PopularSearches';
 import RelatedSearches from 'components/_searchLists/RelatedSearches';
+import Readme from 'components/Readme';
+
 import PackageComparisonHeading from './_components/PackageComparisonHeading';
 
 const propTypes = {
@@ -38,7 +40,7 @@ const PackageComparison = ({ packets, packetNames = [] }) => {
     <div className="container">
       <PackageComparisonHeading packetNames={packetNames} packets={packets} />
       <SearchForm onSearch={updateFromSearch} />
-      <PackageTags packets={packets} colors={colors} />
+      <PackageTags packetNames={packetNames} packets={packets} colors={colors} />
       {packets.length > 0 && (
         <div>
           <TrendGraphBox packets={packets} colors={colors} />
@@ -49,6 +51,7 @@ const PackageComparison = ({ packets, packetNames = [] }) => {
         <RelatedSearches packetNames={packetNames} />
         <PopularSearches />
       </div>
+      <Readme packets={packets} />
       <div id="extra_info">
         <p>
           If you find any bugs or have a feature request, please open an issue on{' '}

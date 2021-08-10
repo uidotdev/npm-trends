@@ -20,6 +20,7 @@
     "immutable": "^3.7.6",
     "jquery": "^3.4.1",
     "lodash": "^4.17.21",
+    "marked": "^2.0.4",
     "moment": "^2.24.0",
     "next": "11.0.1",
     "normalize.css": "^8.0.0",
@@ -37,6 +38,7 @@
     "react-tiny-popover": "6.0.10",
     "react-toastify": "^6.2.0",
     "reset-css": "^2.2.1",
+    "sanitize-html": "^2.4.0",
     "sass": "^1.26.10"
   },
   "devDependencies": {
