@@ -75,9 +75,18 @@ class Package {
   static fetchPackageFromNpms = async (packageName: string): Promise<IPackage> => {
     const url = `https://api.npms.io/v2/package/${encodeURIComponent(encodeURIComponent(packageName))}`;
 
+    const fetchRegistryData = async () => {
+      try {
+        return await Package.fetchRegistryPackageData(packageName);
+      } catch (e) {
+        console.error('Problem fetching NPM registry data', e);
+        return {};
+      }
+    };
+
     const [npmsPackageData, registryPackageData] = await Promise.all([
       Fetch.getJSON(urlWithProxy(url)),
-      Package.fetchRegistryPackageData(packageName),
+      fetchRegistryData(),
     ]);
 
     const repository = Package.formatRepositoryData(_get(npmsPackageData, 'collected.metadata.repository.url', null));
