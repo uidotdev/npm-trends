@@ -1,0 +1,14 @@
+@import 'styles/_mixins.scss';
+
+.links_container {
+  font-size: 24px;
+  a {
+    margin-right: 16px;
+    color: $shade-50;
+  }
+}
+
+.tooltip_icon {
+  margin-left: 5px;
+  color: $shade-50;
+}

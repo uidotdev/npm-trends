@@ -1,10 +1,27 @@
 module.exports = {
-  extends: ['airbnb', 'airbnb/hooks', 'plugin:react/recommended'],
-  parser: '@babel/eslint-parser',
+  root: true,
+  parser: '@typescript-eslint/parser',
+  plugins: ['@typescript-eslint', 'css-modules'],
+  extends: [
+    'airbnb',
+    'airbnb/hooks',
+    'plugin:react/recommended',
+    'plugin:react/jsx-runtime',
+    'plugin:css-modules/recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:@next/next/recommended',
+    'prettier',
+  ],
   rules: {
+    '@typescript-eslint/no-var-requires': 0,
+    '@typescript-eslint/no-explicit-any': 0,
+    '@typescript-eslint/explicit-module-boundary-types': 0,
+    '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+    'no-console': ['error', { allow: ['warn', 'error'] }],
+    'lines-between-class-members': ['error', 'always', { exceptAfterSingleLine: true }],
     'react/forbid-prop-types': [1, { forbid: ['any', 'array'] }],
     'react/require-default-props': 0,
-    'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx'] }],
+    'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx', '.tsx'] }],
     'react/prefer-stateless-function': [0, { ignorePureComponents: true }],
     'import/prefer-default-export': 'off',
     'react/display-name': 0,
@@ -52,6 +69,33 @@ module.exports = {
     'operator-linebreak': 'off',
     'object-curly-newline': 'off',
     camelcase: ['error', { allow: ['^UNSAFE_'] }],
+    'react/jsx-curly-newline': 'off',
+    'function-paren-newline': 'off',
+    'react/jsx-wrap-multilines': [
+      'error',
+      {
+        declaration: 'parens-new-line',
+        assignment: 'parens-new-line',
+        return: 'parens-new-line',
+        arrow: 'parens-new-line',
+        condition: 'parens-new-line',
+        logical: 'ignore',
+        prop: 'ignore',
+      },
+    ],
+    // TODO: remove this as well when we can remove 'indent'
+    'template-curly-spacing': 'off',
+    'import/extensions': [
+      'error',
+      'ignorePackages',
+      {
+        js: 'never',
+        jsx: 'never',
+        ts: 'never',
+        tsx: 'never',
+      },
+    ],
+    'react/destructuring-assignment': 0,
   },
   env: {
     browser: true,
@@ -62,6 +106,7 @@ module.exports = {
     'import/resolver': {
       node: {
         paths: ['.'],
+        extensions: ['.js', '.jsx', '.ts', '.tsx'],
       },
     },
   },

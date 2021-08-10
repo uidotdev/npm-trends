@@ -2,7 +2,7 @@
 
 .popover {
   padding: 5px;
-  max-width: 300px;
+  max-width: 400px;
 }
 
 .popover__name {
@@ -26,10 +26,4 @@
   > div + div {
     margin-left: 20px;
   }
-}
-
-.popover__stars {
-}
-
-.popover__weekly_downloads {
 }

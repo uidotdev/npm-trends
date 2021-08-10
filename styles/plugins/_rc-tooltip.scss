@@ -1,0 +1,12 @@
+@import 'rc-tooltip/assets/bootstrap_white.css';
+
+.rc-tooltip {
+  max-width: 300px;
+  background-color: transparent;
+}
+
+.rc-tooltip-inner {
+  border-radius: 10px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.15);
+  letter-spacing: 0;
+}

@@ -1,0 +1,166 @@
+import { useEffect, useCallback, useRef } from 'react';
+import moment from 'moment';
+import Chart from 'chart.js';
+
+import { groupDownloadsByPeriod } from 'utils/groupDates';
+
+type Props = {
+  graphStats: any[];
+  colors: number[][];
+};
+
+const TrendGraph = ({ graphStats, colors }: Props) => {
+  const chartInstance = useRef(null);
+  const downloadChart = useRef(null);
+
+  const loadChart = useCallback(() => {
+    if (!downloadChart?.current) return;
+
+    if (!chartInstance.current) {
+      const ctx = downloadChart?.current.getContext('2d');
+      chartInstance.current = new Chart(ctx, { type: 'line' });
+    }
+
+    if (graphStats.length > 0) {
+      const chartData = { labels: [], datasets: [] };
+      graphStats.forEach((graphStat, i) => {
+        const dataColor = colors[i].join(',');
+
+        const groupedData = groupDownloadsByPeriod(graphStat.downloads, 'week');
+        if (i === 0) {
+          const labels = groupedData.map((periodData) => periodData.period);
+          chartData.labels = labels;
+        }
+
+        const data = groupedData.map((periodData) => ({
+          x: periodData.period,
+          y: periodData.downloads,
+        }));
+
+        const dataset = {
+          label: graphStat.package,
+          backgroundColor: `rgba(${dataColor},1)`,
+          borderColor: `rgba(${dataColor},1)`,
+          pointRadius: 4,
+          pointHoverRadius: 4,
+          pointBorderWidth: 1,
+          pointBackgroundColor: 'transparent',
+          pointBorderColor: 'transparent',
+          pointHoverBackgroundColor: `rgba(${dataColor},1)`,
+          pointHoverBorderColor: '#ffffff',
+          fill: false,
+          data,
+        };
+        chartData.datasets.push(dataset);
+      }, this);
+
+      const firstDateForChartMoment = moment(graphStats[0].downloads[0].day);
+
+      const monthsToNow = moment().diff(firstDateForChartMoment, 'months');
+
+      let xAxisDispalyUnit = 'week';
+
+      if (monthsToNow >= 24) {
+        xAxisDispalyUnit = 'year';
+      } else if (monthsToNow >= 12) {
+        xAxisDispalyUnit = 'quarter';
+      } else if (monthsToNow >= 3) {
+        xAxisDispalyUnit = 'month';
+      }
+
+      const chartOptions = {
+        scaleFontColor: '#000000',
+        responsive: true,
+        datasetFill: false,
+        scaleLabel: "<%= ' ' + value%>",
+        maintainAspectRatio: false,
+        legend: {
+          onClick: (e) => e.stopPropagation(),
+          labels: {
+            padding: 25,
+            fontSize: 14,
+            usePointStyle: true,
+            generateLabels: (chart) => {
+              const { data } = chart;
+              if (!data.datasets.length) {
+                return [];
+              }
+
+              return data.datasets.map((dataset) => ({
+                text: dataset.label,
+                fillStyle: dataset.borderColor,
+                strokeStyle: 'transparent',
+              }));
+            },
+          },
+        },
+        scales: {
+          yAxes: [
+            {
+              ticks: {
+                beginAtZero: true,
+                callback: (value) => Number(value).toLocaleString(),
+              },
+            },
+          ],
+          xAxes: [
+            {
+              type: 'time',
+              time: {
+                unit: xAxisDispalyUnit,
+                tooltipFormat: 'll',
+                displayFormats: {
+                  quarter: 'MMM YYYY',
+                },
+              },
+            },
+          ],
+        },
+        tooltips: {
+          mode: 'index',
+          intersect: false,
+          displayColors: true,
+          multiKeyBackground: 'transparent',
+          xPadding: 10,
+          yPadding: 10,
+          titleMarginBottom: 10,
+          bodySpacing: 10,
+          callbacks: {
+            label: (tooltipItem, data) => {
+              const value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].y;
+              return ` ${Number(value).toLocaleString()}`;
+            },
+            labelColor: (tooltipItem, chart) => ({
+              backgroundColor: chart.data.datasets[tooltipItem.datasetIndex].backgroundColor,
+              borderColor: 'transparent',
+            }),
+          },
+        },
+        hover: {
+          mode: 'index',
+          intersect: false,
+        },
+      };
+
+      chartInstance.current.data = chartData;
+
+      chartInstance.current.options = chartOptions;
+
+      chartInstance.current.update();
+    }
+  }, [graphStats, colors]);
+
+  useEffect(() => {
+    loadChart();
+  }, [loadChart, graphStats, colors]);
+
+  if (!graphStats.length) return null;
+
+  return (
+    <div className="graph-container">
+      <canvas ref={downloadChart} id="download_chart" />
+    </div>
+  );
+};
+
+export default TrendGraph;
