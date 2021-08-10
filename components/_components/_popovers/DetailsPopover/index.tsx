@@ -37,12 +37,12 @@ const DetailsPopover = ({ packageName, children }) => {
           <div className={styles.popover__description}>{packageData.description}</div>
           <div className={styles.popover__stats}>
             {packageData.github && packageData.github.stargazers_count && (
-              <div className={styles.popover__stars}>
+              <div>
                 <i className="icon icon-star-fas" /> {abbreviateNumber(packageData.github.stargazers_count)}
               </div>
             )}
             {packageData.downloads && packageData.downloads.weekly > 0 && (
-              <div className={styles.popover__weekly_downloads}>
+              <div>
                 <i className="icon icon-arrow-alt-circle-down" /> {abbreviateNumber(packageData.downloads.weekly)}/wk
               </div>
             )}
@@ -63,9 +63,10 @@ const DetailsPopover = ({ packageName, children }) => {
   return (
     <Popover
       containerStyle={{ pointerEvents: 'none' }}
-      isOpen={isOpen}
+      isOpen={isOpen && packageData}
       positions={['bottom']}
       boundaryInset={30}
+      padding={10}
       content={popoverContent}
     >
       <span onMouseEnter={() => setIsOpen(true)} onMouseLeave={close}>
