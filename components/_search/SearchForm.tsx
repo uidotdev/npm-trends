@@ -19,6 +19,7 @@ const SearchForm = ({ onSearch }: Props) => {
   );
 
   useEffect(() => {
+    // eslint-disable-next-line
     import('autocomplete.js/dist/autocomplete.jquery.js').then(() => {
       const getAutocompleteResults = (query, cb) => {
         const suggestQuery = {

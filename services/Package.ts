@@ -75,7 +75,10 @@ class Package {
   static fetchPackageFromNpms = async (packageName: string): Promise<IPackage> => {
     const url = `https://api.npms.io/v2/package/${encodeURIComponent(encodeURIComponent(packageName))}`;
 
-    const npmsPackageData = await Fetch.getJSON(urlWithProxy(url));
+    const [npmsPackageData, registryPackageData] = await Promise.all([
+      Fetch.getJSON(urlWithProxy(url)),
+      Package.fetchRegistryPackageData(packageName),
+    ]);
 
     const repository = Package.formatRepositoryData(_get(npmsPackageData, 'collected.metadata.repository.url', null));
 
@@ -99,47 +102,59 @@ class Package {
       downloads: {
         weekly: _get(npmsPackageData, 'collected.npm.downloads[1].count', null),
       },
+      ...registryPackageData,
     };
   };
 
   static fetchPackageManually = async (packageName: string): Promise<IPackage> => {
-    const npmPackageData = await Package.fetchPackageDetails(packageName);
+    const registryPackageDataFormatted = await Package.fetchPackageDetails(packageName);
 
-    const repository = Package.formatRepositoryData(_get(npmPackageData, 'repository.url', null));
+    const github =
+      registryPackageDataFormatted.repository.type === 'github'
+        ? await Package.fetchGithubRepo(registryPackageDataFormatted.url)
+        : null;
 
-    const github = repository.type === 'github' ? await Package.fetchGithubRepo(repository.url) : null;
-
-    const weeklyDownloads = await PackageDownloads.fetchPoint(npmPackageData.name, 'last-week');
-
-    const version = _get(npmPackageData, 'dist-tags.latest');
-
-    const firstVersion = Object.keys(npmPackageData?.versions)
-      .filter((key) => !key.includes('-'))
-      .sort((aKey, bKey) => aKey.localeCompare(bKey))[0];
-
-    const dateOfFirstVersion = <string>npmPackageData?.time[firstVersion];
+    const weeklyDownloads = await PackageDownloads.fetchPoint(registryPackageDataFormatted.name, 'last-week');
 
     return {
-      id: npmPackageData.name,
-      name: npmPackageData.name,
-      description: _get(npmPackageData, 'description', null),
-      version,
-      versionDate: new Date(npmPackageData?.time[version]).toJSON(),
-      createdDate: new Date(dateOfFirstVersion).toJSON(),
-      readme: _get(npmPackageData, 'readme', ''),
-      repository,
+      ...registryPackageDataFormatted,
       github: {
         starsCount: _get(github, 'stargazers_count', null),
         forksCount: _get(github, 'collected.metadata.github.forksCount', null),
         issuesCount: _get(github, 'collected.metadata.github.issues.count', null),
         openIssuesCount: _get(github, 'open_issues_count', null),
       },
-      links: {
-        npm: `https://npmjs.com/package/${npmPackageData.name}`,
-        homepage: _get(npmPackageData, 'homepage', null),
-      },
       downloads: {
         weekly: weeklyDownloads.downloads,
+      },
+    };
+  };
+
+  static fetchRegistryPackageData = async (packageName: string): Promise<Partial<IPackage>> => {
+    const registryPackageData = await Package.fetchPackageDetails(packageName);
+
+    const repository = Package.formatRepositoryData(_get(registryPackageData, 'repository.url', null));
+
+    const version = _get(registryPackageData, 'dist-tags.latest');
+
+    const firstVersion = Object.keys(registryPackageData?.versions)
+      .filter((key) => !key.includes('-'))
+      .sort((aKey, bKey) => aKey.localeCompare(bKey))[0];
+
+    const dateOfFirstVersion = <string>registryPackageData?.time[firstVersion];
+
+    return {
+      id: registryPackageData.name,
+      name: registryPackageData.name,
+      description: _get(registryPackageData, 'description', null),
+      version,
+      versionDate: new Date(registryPackageData?.time[version]).toJSON(),
+      createdDate: new Date(dateOfFirstVersion).toJSON(),
+      readme: _get(registryPackageData, 'readme', ''),
+      repository,
+      links: {
+        npm: `https://npmjs.com/package/${registryPackageData.name}`,
+        homepage: _get(registryPackageData, 'homepage', null),
       },
     };
   };
