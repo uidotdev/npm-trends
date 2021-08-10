@@ -108,20 +108,25 @@ class Package {
 
     const version = _get(npmPackageData, 'dist-tags.latest');
 
+    const firstVersion = Object.keys(npmPackageData?.versions)
+      .filter((key) => !key.includes('-'))
+      .sort((aKey, bKey) => aKey.localeCompare(bKey))[0];
+
+    const dateOfFirstVersion = <string>npmPackageData?.time[firstVersion];
+
     return {
       id: npmPackageData.name,
       name: npmPackageData.name,
       description: _get(npmPackageData, 'description', null),
       version,
-      // TODO: Date can't be serialized for server side rendering?
       versionDate: new Date(npmPackageData?.time[version]).toJSON(),
+      createdDate: new Date(dateOfFirstVersion).toJSON(),
       repository,
       github: {
         starsCount: _get(github, 'stargazers_count', null),
         forksCount: _get(github, 'collected.metadata.github.forksCount', null),
         issuesCount: _get(github, 'collected.metadata.github.issues.count', null),
         openIssuesCount: _get(github, 'open_issues_count', null),
-        pushedAt: new Date(_get(github, 'pushed_at', null)).toJSON(),
       },
       links: {
         npm: `https://npmjs.com/package/${npmPackageData.name}`,

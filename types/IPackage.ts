@@ -13,6 +13,7 @@ export default interface IPackage {
   description: string;
   version: string;
   versionDate: string;
+  createdDate?: string;
   color?: number[];
   repository: {
     type: string;

@@ -5,6 +5,7 @@ import IPackage from 'types/IPackage';
 
 import DetailsPopover from 'components/_components/_popovers/DetailsPopover';
 import PackageLinks from 'components/_components/PackageLinks';
+import Tooltip from 'components/_components/Tooltip';
 
 import PackageStatsRow from './_components/PackageStatsRow';
 import BundlephobiaRenderer from './_components/BundlephobiaRenderer';
@@ -54,17 +55,16 @@ const columns = [
     renderer: (packet: IPackage) => packet.version || '',
   },
   {
-    heading: 'Last published',
+    heading: 'Updated',
+    tooltip:
+      'Publish date for the version tagged "latest". This may differ from the "Last publish" date seen on the NPM website because that includes all version tags (experimental, next, alpha, etc.)',
     renderer: (packet: IPackage) => (packet.versionDate ? moment().to(packet.versionDate) : ''),
   },
   {
     heading: 'Created',
+    tooltip: 'Date first version was published',
     renderer: (packet: IPackage) =>
-      packet.github?.createdAt ? (
-        new Date(packet.github.pushedAt).toLocaleString(undefined, { year: 'numeric', month: 'short' })
-      ) : (
-        <i className="icon icon-dash" />
-      ),
+      packet.createdDate ? moment().to(packet.createdDate, false) : <i className="icon icon-dash" />,
   },
   { heading: 'Size', renderer: (packet: IPackage) => <BundlephobiaRenderer packet={packet} /> },
 ];
@@ -76,7 +76,14 @@ type Props = {
 const PackageStats = ({ packets }: Props) => {
   const columnHeadings = () =>
     columns.map((column) => (
-      <th key={column.heading.replace(/\s/g, '')}>{!column.hideHeading ? column.heading : ''}</th>
+      <th key={column.heading.replace(/\s/g, '')}>
+        {!column.hideHeading && column.heading}
+        {column.tooltip && (
+          <Tooltip overlay={column.tooltip}>
+            <i className={`${styles.tooltip_icon} icon icon-question-circle`} />
+          </Tooltip>
+        )}
+      </th>
     ));
 
   const tableRows = () =>

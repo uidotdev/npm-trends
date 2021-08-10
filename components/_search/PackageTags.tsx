@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import queryString from 'query-string';
 
@@ -14,7 +14,7 @@ type Props = {
 const PackageTags = ({ packets, colors }: Props) => {
   const [relatedPackets, setRelatedPackets] = useState([]);
 
-  const packetNamesArray = packets.map((packet) => packet.name);
+  const packetNamesArray = useMemo(() => packets.map((packet) => packet.name), [packets]);
 
   useEffect(() => {
     const fetchRelatedPackets = async () => {
