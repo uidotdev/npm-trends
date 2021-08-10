@@ -4,9 +4,12 @@ import moment from 'moment';
 import IPackage from 'types/IPackage';
 
 import DetailsPopover from 'components/_components/_popovers/DetailsPopover';
+import PackageLinks from 'components/_components/PackageLinks';
 
-import PackageStatsRow from './PackageStatsRow';
-import BundlephobiaRenderer from './BundlephobiaRenderer';
+import PackageStatsRow from './_components/PackageStatsRow';
+import BundlephobiaRenderer from './_components/BundlephobiaRenderer';
+
+import styles from './PackageStats.module.scss';
 
 // array of stats to display
 // format: [name_to_display, api_source, api_attribute_name]
@@ -24,60 +27,46 @@ const columns = [
     renderer: (packet: IPackage) => (
       <div>
         <DetailsPopover packageName={packet.name}>
-          {_get(packet, 'repository.url') ? (
-            <a className="name-header" target="_blank" rel="noopener noreferrer" href={_get(packet, 'repository.url')}>
-              {' '}
-              {packet.name}{' '}
-            </a>
-          ) : (
-            <div className="name-header">{packet.name}</div>
-          )}
+          <div className="name-header">{packet.name}</div>
         </DetailsPopover>
       </div>
     ),
   },
   {
-    heading: 'Name',
+    heading: 'Links',
     hideHeading: true,
     renderer: (packet: IPackage) => (
-      <div>
-        <DetailsPopover packageName={packet.name}>
-          {_get(packet, 'repository.url') ? (
-            <a className="name-header" target="_blank" rel="noopener noreferrer" href={_get(packet, 'repository.url')}>
-              {' '}
-              {packet.name}{' '}
-            </a>
-          ) : (
-            <div className="name-header">{packet.name}</div>
-          )}
-        </DetailsPopover>
+      <div className={styles.links_container}>
+        <PackageLinks packet={packet} />
       </div>
     ),
   },
   {
-    heading: 'stars',
+    heading: 'Stars',
     renderer: (packet: IPackage) => packet.github?.starsCount?.toLocaleString() || '',
   },
   {
-    heading: 'issues',
+    heading: 'Issues',
     renderer: (packet: IPackage) => packet.github?.openIssuesCount?.toLocaleString() || '',
   },
   {
-    heading: 'version',
+    heading: 'Version',
     renderer: (packet: IPackage) => packet.version || '',
   },
   {
-    heading: 'last published',
-    renderer: (packet: IPackage) => (packet.versionDate ? moment().from(packet.versionDate) : ''),
+    heading: 'Last published',
+    renderer: (packet: IPackage) => (packet.versionDate ? moment().to(packet.versionDate) : ''),
   },
   {
-    heading: 'created',
+    heading: 'Created',
     renderer: (packet: IPackage) =>
-      packet.github?.createdAt
-        ? new Date(packet.github.pushedAt).toLocaleString(undefined, { year: 'numeric', month: 'short' })
-        : '',
+      packet.github?.createdAt ? (
+        new Date(packet.github.pushedAt).toLocaleString(undefined, { year: 'numeric', month: 'short' })
+      ) : (
+        <i className="icon icon-dash" />
+      ),
   },
-  { heading: 'size', renderer: (packet: IPackage) => <BundlephobiaRenderer packet={packet} /> },
+  { heading: 'Size', renderer: (packet: IPackage) => <BundlephobiaRenderer packet={packet} /> },
 ];
 
 type Props = {

@@ -1,0 +1,21 @@
+.link_icon__npm {
+  font-size: 1.2em;
+  &:hover {
+    color: #fb3e44;
+    text-decoration: none;
+  }
+}
+
+.link_icon__github {
+  &:hover {
+    color: #24292d;
+    text-decoration: none;
+  }
+}
+
+.link_icon__website {
+  &:hover {
+    color: #20b57a;
+    text-decoration: none;
+  }
+}

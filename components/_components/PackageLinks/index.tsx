@@ -1,5 +1,7 @@
 import IPackage from 'types/IPackage';
 
+import styles from './PackageLinks.module.scss';
+
 type Props = {
   packet: IPackage;
 };
@@ -12,17 +14,17 @@ const PackageLinks = ({ packet }: Props) => {
   return (
     <>
       {npmUrl && (
-        <a href={npmUrl} className="link-icon-npm" target="_blank" rel="noopener noreferrer">
+        <a href={npmUrl} className={styles.link_icon__npm} target="_blank" rel="noopener noreferrer">
           <i className="icon icon-npm" aria-hidden />
         </a>
       )}
       {githubUrl && (
-        <a href={githubUrl} className="link-icon-github" target="_blank" rel="noopener noreferrer">
+        <a href={githubUrl} className={styles.link_icon__github} target="_blank" rel="noopener noreferrer">
           <i className="icon icon-github" aria-hidden />
         </a>
       )}
       {homepageUrl && (
-        <a href={homepageUrl} className="link-icon-website" target="_blank" rel="noopener noreferrer">
+        <a href={homepageUrl} className={styles.link_icon__website} target="_blank" rel="noopener noreferrer">
           <i className="icon icon-link" aria-hidden />
         </a>
       )}

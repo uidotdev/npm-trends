@@ -22,28 +22,13 @@
 
 .comparison-heading--links {
   display: flex;
+  font-size: 24px;
   a {
     color: $shade-50;
-    font-size: 24px;
     display: flex;
     margin-right: 15px;
     flex-direction: column;
     justify-content: center;
-    &:hover {
-      text-decoration: none;
-    }
-    &.link-icon-npm {
-      font-size: 28px;
-      &:hover {
-        color: #fb3e44;
-      }
-    }
-    &.link-icon-github:hover {
-      color: #24292d;
-    }
-    &.link-icon-website:hover {
-      color: #20b57a;
-    }
   }
 }
 
