@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import Fetch from 'services/Fetch';
 
 type Props = {
@@ -6,10 +6,19 @@ type Props = {
 };
 
 const SearchForm = ({ onSearch }: Props) => {
+  const [autocomplete, setAutocomplete] = useState(null);
   const searchFormRef = useRef();
 
+  const handlePackageSelection = useCallback(
+    (packageName: string) => {
+      (searchFormRef.current as any).form.reset();
+      ($('.autocomplete') as any).autocomplete('val', '');
+      onSearch(packageName);
+    },
+    [onSearch],
+  );
+
   useEffect(() => {
-    // eslint-disable-next-line
     import('autocomplete.js/dist/autocomplete.jquery.js').then(() => {
       const getAutocompleteResults = (query, cb) => {
         const suggestQuery = {
@@ -29,37 +38,38 @@ const SearchForm = ({ onSearch }: Props) => {
         });
       };
 
-      ($('.autocomplete') as any)
-        .autocomplete(
-          {
-            hint: false,
-          },
-          {
-            source: getAutocompleteResults,
-            displayKey: 'text',
-            templates: {
-              suggestion(data) {
-                return `<div class='autocomplete-name'>${data.text}</div><div class='autocomplete-description'>${data.payload.description}</div>`;
-              },
+      const autocompleteInstance = ($('.autocomplete') as any).autocomplete(
+        {
+          hint: false,
+        },
+        {
+          source: getAutocompleteResults,
+          displayKey: 'text',
+          templates: {
+            suggestion(data) {
+              return `<div class='autocomplete-name'>${data.text}</div><div class='autocomplete-description'>${data.payload.description}</div>`;
             },
           },
-        )
-        .on('autocomplete:selected', (event, suggestion) => {
-          onSearch(suggestion.text);
+        },
+      );
 
-          (searchFormRef.current as any).form.reset();
-          ($('.autocomplete') as any).autocomplete('val', '');
-        });
+      setAutocomplete(autocompleteInstance);
     });
-  }, [onSearch, searchFormRef]);
+  }, []);
+
+  useEffect(() => {
+    if (autocomplete) {
+      autocomplete.off('autocomplete:selected').on('autocomplete:selected', (event, suggestion) => {
+        handlePackageSelection(suggestion.text);
+      });
+    }
+  }, [autocomplete, handlePackageSelection]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     ($('.autocomplete') as any).autocomplete('close');
     const query = (searchFormRef.current as any).value.toLowerCase();
-    (searchFormRef.current as any).form.reset();
-    ($('.autocomplete') as any).autocomplete('val', '');
-    onSearch(query);
+    handlePackageSelection(query);
   };
 
   return (

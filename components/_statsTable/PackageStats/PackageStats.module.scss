@@ -1,9 +1,9 @@
 @import 'styles/_mixins.scss';
 
 .links_container {
+  font-size: 24px;
   a {
-    font-size: 24px;
-    margin-right: 12px;
+    margin-right: 16px;
     color: $shade-50;
   }
 }

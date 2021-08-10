@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
 
@@ -20,15 +21,18 @@ const propTypes = {
 const PackageComparison = ({ packets, packetNames = [] }) => {
   const { push } = useRouter();
 
-  const updateFromSearch = (searchQuery) => {
-    let newParam = packetNamesToParam(packetNames);
+  const updateFromSearch = useCallback(
+    (searchQuery) => {
+      let newParam = packetNamesToParam(packetNames);
 
-    if (packetNames.indexOf(searchQuery) < 0) {
-      newParam = packetNamesToParam([...packetNames, searchQuery]);
-    }
+      if (packetNames.indexOf(searchQuery) < 0) {
+        newParam = packetNamesToParam([...packetNames, searchQuery]);
+      }
 
-    push(`/${newParam}`);
-  };
+      push(`/${newParam}`);
+    },
+    [packetNames, push],
+  );
 
   return (
     <div className="container">
