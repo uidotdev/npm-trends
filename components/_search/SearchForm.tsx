@@ -1,4 +1,4 @@
-import { createRef, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 import Fetch from 'services/Fetch';
 
 type Props = {
@@ -6,7 +6,7 @@ type Props = {
 };
 
 const SearchForm = ({ onSearch }: Props) => {
-  const searchFormRef = createRef();
+  const searchFormRef = useRef();
 
   useEffect(() => {
     // eslint-disable-next-line
@@ -46,6 +46,7 @@ const SearchForm = ({ onSearch }: Props) => {
         )
         .on('autocomplete:selected', (event, suggestion) => {
           onSearch(suggestion.text);
+
           (searchFormRef.current as any).form.reset();
           ($('.autocomplete') as any).autocomplete('val', '');
         });
@@ -64,7 +65,7 @@ const SearchForm = ({ onSearch }: Props) => {
   return (
     <form onSubmit={handleSubmit} name="seachForm" id="search_form" autoComplete="off">
       <input
-        ref={searchFormRef as React.LegacyRef<HTMLInputElement>}
+        ref={searchFormRef}
         id="search_form_input"
         className="autocomplete"
         type="text"
