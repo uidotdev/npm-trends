@@ -65,7 +65,7 @@ class Package {
 
   static fetchPackage = async (packageName: string): Promise<IPackage> => {
     try {
-      return Package.fetchPackageFromNpms(packageName);
+      return await Package.fetchPackageFromNpms(packageName);
     } catch (e) {
       console.error('Problem fetching npms data', e);
       return Package.fetchPackageManually(packageName);
@@ -118,10 +118,15 @@ class Package {
   static fetchPackageManually = async (packageName: string): Promise<IPackage> => {
     const registryPackageDataFormatted = await Package.fetchPackageDetails(packageName);
 
-    const github =
-      registryPackageDataFormatted.repository.type === 'github'
-        ? await Package.fetchGithubRepo(registryPackageDataFormatted.url)
+    let github = null;
+
+    try {
+      github = registryPackageDataFormatted.repository.url.includes('github')
+        ? await Package.fetchGithubRepo(registryPackageDataFormatted.repository.url)
         : null;
+    } catch (e) {
+      console.error('Problem fetching github data', e);
+    }
 
     const weeklyDownloads = await PackageDownloads.fetchPoint(registryPackageDataFormatted.name, 'last-week');
 
@@ -172,7 +177,7 @@ class Package {
 
       const githubUrl = `https://api.github.com/repos${repositoryPath}`;
 
-      return Fetch.getJSON(urlWithProxy(githubUrl));
+      return await Fetch.getJSON(urlWithProxy(githubUrl));
     } catch (e) {
       console.error('Problem fetching GitHub data', e);
       return {};
