@@ -5,10 +5,25 @@
  * Has to be added right before the final getServerSideProps function
  */
 export const hasNavigationCSR = (next) => async (ctx) => {
-  if (ctx.req.url?.startsWith('/_next')) {
-    return {
-      props: {},
-    };
+  const dataForClientSideRender = {
+    props: {},
+  };
+
+  if (ctx.req.url?.includes('/_next')) {
+    ctx.res.removeHeader('Cache-Control');
+    return dataForClientSideRender;
   }
-  return next?.(ctx);
+
+  const callback = async () => {
+    try {
+      const result = await next?.(ctx);
+
+      return result;
+    } catch {
+      ctx.res.removeHeader('Cache-Control');
+      return dataForClientSideRender;
+    }
+  };
+
+  return callback();
 };
