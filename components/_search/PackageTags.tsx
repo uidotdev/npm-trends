@@ -24,9 +24,13 @@ const PackageTags = ({ packets, colors }: Props) => {
         'search_query[]': packetNamesArray,
       });
 
-      const fetchedRelatedPackages: any = await Fetch.getJSON(`/s/related_packages?${searchQueryParams}`);
+      try {
+        const fetchedRelatedPackages: any = await Fetch.getJSON(`/s/related_packages?${searchQueryParams}`);
 
-      setRelatedPackets(fetchedRelatedPackages);
+        setRelatedPackets(fetchedRelatedPackages);
+      } catch (e) {
+        console.error('Problem fetching related packages:', e);
+      }
     };
 
     fetchRelatedPackets();

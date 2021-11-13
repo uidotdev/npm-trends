@@ -9,11 +9,15 @@ const PopularSearches = () => {
     fetchPopularSearches();
   }, []);
 
-  const fetchPopularSearches = () => {
-    Fetch.getJSON('/s/popular').then((data: any) => {
-      const fetchedSearches = data.map((searchQuery) => searchQuery.slug.split('_').join('-vs-'));
+  const fetchPopularSearches = async () => {
+    try {
+      let fetchedSearches = await Fetch.getJSON('/s/popular');
+      fetchedSearches = fetchedSearches.map((searchQuery) => searchQuery.slug.split('_').join('-vs-'));
+
       setSearches(fetchedSearches);
-    });
+    } catch (e) {
+      console.error('Problem fetching popular searches:', e);
+    }
   };
 
   const renderSearchesList = () =>

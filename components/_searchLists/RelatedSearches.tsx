@@ -21,10 +21,14 @@ const RelatedSearches = ({ packetNames }: Props) => {
         'search_query[]': packetNames,
       });
 
-      let fetchedSearches = await Fetch.getJSON(`/s/related?${searchQueryParams}`);
-      fetchedSearches = fetchedSearches.map((searchQuery) => searchQuery.slug.split('_').join('-vs-'));
+      try {
+        let fetchedSearches = await Fetch.getJSON(`/s/related?${searchQueryParams}`);
+        fetchedSearches = fetchedSearches.map((searchQuery) => searchQuery.slug.split('_').join('-vs-'));
 
-      setSearches(fetchedSearches);
+        setSearches(fetchedSearches);
+      } catch (e) {
+        console.error('Problem fetching related searches:', e);
+      }
     };
 
     fetchRelatedSearches();
