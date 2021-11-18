@@ -1,0 +1,8 @@
+{
+  "functions": {
+    "pages/**/*.js": {
+      "memory": 960,
+      "maxDuration": 10
+    }
+  }
+}

@@ -4,6 +4,7 @@ import hostedGitInfo from 'hosted-git-info';
 import { urlWithProxy } from 'utils/proxy';
 import { colors } from 'utils/colors';
 import IPackage from 'types/IPackage';
+import INpmRegistryDataFormatted from 'types/INpmRegistryDataFormatted';
 import Fetch from './Fetch';
 import PackageDownloads from './PackageDownloads';
 
@@ -77,14 +78,14 @@ class Package {
 
     const fetchRegistryData = async () => {
       try {
-        return await Package.fetchRegistryPackageData(packageName);
+        return await Package.fetchAndFormatNpmRegistryData(packageName);
       } catch (e) {
         console.error('Problem fetching NPM registry data', e);
         return {};
       }
     };
 
-    const [npmsPackageData, registryPackageData] = await Promise.all([
+    const [npmsPackageData, npmRegistryDataFormatted] = await Promise.all([
       Fetch.getJSON(urlWithProxy(url)),
       fetchRegistryData(),
     ]);
@@ -111,12 +112,12 @@ class Package {
       downloads: {
         weekly: _get(npmsPackageData, 'collected.npm.downloads[1].count', null),
       },
-      ...registryPackageData,
+      ...npmRegistryDataFormatted,
     };
   };
 
   static fetchPackageManually = async (packageName: string): Promise<IPackage> => {
-    const registryPackageDataFormatted = await Package.fetchPackageDetails(packageName);
+    const registryPackageDataFormatted = await Package.fetchAndFormatNpmRegistryData(packageName);
 
     let github = null;
 
@@ -144,8 +145,8 @@ class Package {
     };
   };
 
-  static fetchRegistryPackageData = async (packageName: string): Promise<Partial<IPackage>> => {
-    const registryPackageData = await Package.fetchPackageDetails(packageName);
+  static fetchAndFormatNpmRegistryData = async (packageName: string): Promise<INpmRegistryDataFormatted> => {
+    const registryPackageData = await Package.fetchNpmRegistryData(packageName);
 
     const repository = Package.formatRepositoryData(_get(registryPackageData, 'repository.url', null));
 
@@ -184,7 +185,7 @@ class Package {
     }
   };
 
-  static fetchPackageDetails = async (packetName: string): Promise<any> => {
+  static fetchNpmRegistryData = async (packetName: string): Promise<any> => {
     const url = `https://registry.npmjs.org/${encodeURIComponent(packetName)}`;
 
     return Fetch.getJSON(urlWithProxy(url));

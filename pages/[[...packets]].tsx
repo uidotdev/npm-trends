@@ -100,7 +100,7 @@ const getProps = async (context) => {
     };
   }
 
-  context.res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate');
+  context.res.setHeader('Cache-Control', 's-maxage=86400, stale-while-revalidate');
 
   return { props: { initialData: pageData } };
 };
