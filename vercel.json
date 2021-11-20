@@ -1,8 +1,8 @@
 {
   "functions": {
-    "pages/**/*.js": {
+    "pages/**/*.tsx": {
       "memory": 960,
-      "maxDuration": 10
+      "maxDuration": 5
     }
   }
 }
