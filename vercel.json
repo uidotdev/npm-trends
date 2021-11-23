@@ -1,7 +1,7 @@
 {
   "functions": {
     "pages/**/*.tsx": {
-      "memory": 960,
+      "memory": 768,
       "maxDuration": 5
     }
   }
