@@ -8,6 +8,10 @@ type Props = {
 const SearchForm = ({ onSearch }: Props) => {
   const [autocomplete, setAutocomplete] = useState(null);
   const searchFormRef = useRef();
+  
+  useEffect(() => {
+    ($('#search_form_input' as any).focus()
+  }, [])
 
   const handlePackageSelection = useCallback(
     (packageName: string) => {
