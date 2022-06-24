@@ -55,19 +55,19 @@ const PackageComparison = ({ packets, packetNames = [] }) => {
       <div id="extra_info">
         <p>
           If you find any bugs or have a feature request, please open an issue on{' '}
-          <a target="_blank" rel="noopener noreferrer" href="http://github.com/johnmpotter/npm-trends">
+          <a target="_blank" rel="noopener noreferrer" href="http://github.com/uidotdev/npm-trends">
             github
           </a>
           !
         </p>
         <p>
           The npm package download data comes from {"npm's "}
-          <a target="_blank" rel="noopener noreferrer" href="https://github.com/npm/download-counts">
-            download counts
+          <a target="_blank" rel="noopener noreferrer" href="https://github.com/npm/registry/blob/master/docs/download-counts.md">
+            download counts api
           </a>{' '}
-          api and package details come from{' '}
-          <a target="_blank" rel="noopener noreferrer" href="https://api-docs.npms.io/">
-            npms.io
+          and package details come from the{' '}
+          <a target="_blank" rel="noopener noreferrer" href="https://github.com/npm/registry/blob/master/docs/REGISTRY-API.md">
+            registry api
           </a>
           .
         </p>

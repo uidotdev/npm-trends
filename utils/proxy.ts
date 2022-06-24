@@ -4,7 +4,6 @@ const PROXY_URL = process.env.NEXT_PUBLIC_PROXY_URL;
 const GITHUB_REPOS_API_ENDPOINT = process.env.NEXT_PUBLIC_GITHUB_REPOS_API_ENDPOINT;
 const NPM_DOWNLOADS_API_ENDPOINT = process.env.NEXT_PUBLIC_NPM_DOWNLOADS_API_ENDPOINT;
 const NPM_REGISTRY_API_ENDPOINT = process.env.NEXT_PUBLIC_NPM_REGISTRY_API_ENDPOINT;
-const NPMS_PACKAGE_API_ENDPOINT = process.env.NEXT_PUBLIC_NPMS_PACKAGE_API_ENDPOINT;
 
 export const urlWithProxy = (url) => {
     if (PROXY_URL) {
@@ -35,12 +34,4 @@ export const npmRegistryURL = (path) => {
         return `${NPM_REGISTRY_API_ENDPOINT}/${path}`;
     }
     return urlWithProxy(`https://registry.npmjs.org/${path}`);
-};
-
-// See: https://api-docs.npms.io/#api-Package
-export const npmsPackageURL = (path) => {
-    if (NPMS_PACKAGE_API_ENDPOINT) {
-        return `${NPMS_PACKAGE_API_ENDPOINT}/${path}`;
-    }
-    return urlWithProxy(`https://api.npms.io/v2/package/${path}`);
 };
