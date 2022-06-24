@@ -1,7 +1,7 @@
 import { get as _get } from 'lodash';
 import hostedGitInfo from 'hosted-git-info';
 
-import { urlWithProxy } from 'utils/proxy';
+import { githubReposURL, npmRegistryURL, npmsPackageURL } from 'utils/proxy';
 import { colors } from 'utils/colors';
 import IPackage from 'types/IPackage';
 import INpmRegistryDataFormatted from 'types/INpmRegistryDataFormatted';
@@ -74,7 +74,7 @@ class Package {
   };
 
   static fetchPackageFromNpms = async (packageName: string): Promise<IPackage> => {
-    const url = `https://api.npms.io/v2/package/${encodeURIComponent(encodeURIComponent(packageName))}`;
+    const url = npmsPackageURL(encodeURIComponent(packageName));
 
     const fetchRegistryData = async () => {
       try {
@@ -86,7 +86,7 @@ class Package {
     };
 
     const [npmsPackageData, npmRegistryDataFormatted] = await Promise.all([
-      Fetch.getJSON(urlWithProxy(url)),
+      Fetch.getJSON(url),
       fetchRegistryData(),
     ]);
 
@@ -175,10 +175,7 @@ class Package {
   static fetchGithubRepo = async (url: string) => {
     try {
       const repositoryPath = url.split('.com')[1].replace('.git', '');
-
-      const githubUrl = `https://api.github.com/repos${repositoryPath}`;
-
-      return await Fetch.getJSON(urlWithProxy(githubUrl));
+      return await Fetch.getJSON(githubReposURL(repositoryPath));
     } catch (e) {
       console.error('Problem fetching GitHub data', e);
       return {};
@@ -186,9 +183,8 @@ class Package {
   };
 
   static fetchNpmRegistryData = async (packetName: string): Promise<any> => {
-    const url = `https://registry.npmjs.org/${encodeURIComponent(packetName)}`;
-
-    return Fetch.getJSON(urlWithProxy(url));
+    const url = npmRegistryURL(encodeURIComponent(packetName));
+    return Fetch.getJSON(url);
   };
 }
 

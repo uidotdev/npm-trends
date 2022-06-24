@@ -1,7 +1,7 @@
 import moment from 'moment';
 
+import { npmDownloadsURL } from 'utils/proxy';
 import Fetch from './Fetch';
-import { urlWithProxy } from 'utils/proxy';
 
 class PackageDownloads {
   static fetchDownloads = async (packageName, startDate, endDate) => {
@@ -41,13 +41,13 @@ class PackageDownloads {
   };
 
   static fetchFromApi = async (packageName, period): Promise<any> => {
-    const url = `https://api.npmjs.org/downloads/range/${period}/${packageName}`;
-    return Fetch.getJSON(urlWithProxy(url));
+    const url = npmDownloadsURL(`range/${period}/${packageName}`);
+    return Fetch.getJSON(url);
   };
 
   static fetchPoint = async (packageName, period = 'last-month'): Promise<any> => {
-    const url = `https://api.npmjs.org/downloads/point/${period}/${packageName}`;
-    return Fetch.getJSON(urlWithProxy(url));
+    const url = npmDownloadsURL(`point/${period}/${packageName}`);
+    return Fetch.getJSON(url);
   };
 }
 
