@@ -1,5 +1,5 @@
 import { useEffect, useCallback, useRef } from 'react';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import Chart from 'chart.js';
 
 import { groupDownloadsByPeriod } from 'utils/groupDates';
@@ -54,9 +54,9 @@ const TrendGraph = ({ graphStats, colors }: Props) => {
         chartData.datasets.push(dataset);
       }, this);
 
-      const firstDateForChartMoment = moment(graphStats[0].downloads[0].day);
+      const firstDateForChartdayjs = dayjs(graphStats[0].downloads[0].day);
 
-      const monthsToNow = moment().diff(firstDateForChartMoment, 'months');
+      const monthsToNow = dayjs().diff(firstDateForChartdayjs, 'months');
 
       let xAxisDispalyUnit = 'week';
 

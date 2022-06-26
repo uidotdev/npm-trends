@@ -1,12 +1,12 @@
 import { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 import PackageDownloads from 'services/PackageDownloads';
 
 import TrendGraph from './TrendGraph';
 
-const momentToStartDate = (momentDate) => momentDate.startOf('week').format('YYYY-MM-DD');
+const djsToStartDate = (djs) => djs.startOf('week').format('YYYY-MM-DD');
 
 const propTypes = {
   packets: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -15,7 +15,7 @@ const propTypes = {
 
 const TrendGraphBox = ({ packets, colors }) => {
   const [graphStats, setGraphStats] = useState([]);
-  const [startDate, setStartDate] = useState(momentToStartDate(moment().subtract(12, 'months')));
+  const [startDate, setStartDate] = useState(djsToStartDate(dayjs().subtract(12, 'months')));
 
   const getStats = useCallback(async () => {
     if (packets.length < 0) {
@@ -25,7 +25,7 @@ const TrendGraphBox = ({ packets, colors }) => {
     const packetNames = packets.map((packet) => packet.name);
 
     // Only show last full week
-    const endDate = moment().subtract(1, 'week').endOf('week').format('YYYY-MM-DD');
+    const endDate = dayjs().subtract(1, 'week').endOf('week').format('YYYY-MM-DD');
 
     const fetchGraphStatsPromiseArray = packetNames.map((packetName) =>
       PackageDownloads.fetchDownloads(packetName, startDate, endDate),
@@ -60,13 +60,13 @@ const TrendGraphBox = ({ packets, colors }) => {
   const heading = () => {
     if (graphStats.length > 0) {
       const selectOptionsData = [
-        ['1 Month', momentToStartDate(moment().subtract(1, 'month'))],
-        ['3 Months', momentToStartDate(moment().subtract(3, 'month'))],
-        ['6 Months', momentToStartDate(moment().subtract(6, 'month'))],
-        ['1 Year', momentToStartDate(moment().subtract(1, 'year'))],
-        ['2 Years', momentToStartDate(moment().subtract(2, 'year'))],
-        ['5 Years', momentToStartDate(moment().subtract(5, 'year'))],
-        ['All time', momentToStartDate(moment('2015-01-10'))],
+        ['1 Month', djsToStartDate(dayjs().subtract(1, 'month'))],
+        ['3 Months', djsToStartDate(dayjs().subtract(3, 'month'))],
+        ['6 Months', djsToStartDate(dayjs().subtract(6, 'month'))],
+        ['1 Year', djsToStartDate(dayjs().subtract(1, 'year'))],
+        ['2 Years', djsToStartDate(dayjs().subtract(2, 'year'))],
+        ['5 Years', djsToStartDate(dayjs().subtract(5, 'year'))],
+        ['All time', djsToStartDate(dayjs('2015-01-10'))],
       ];
       const selectOptions = selectOptionsData.map((option) => (
         <option key={option[1]} value={option[1]}>

@@ -1,17 +1,14 @@
-import { get as _get } from 'lodash';
-import moment from 'moment';
-
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
 import IPackage from 'types/IPackage';
-
 import DetailsPopover from 'components/_components/_popovers/DetailsPopover';
 import PackageLinks from 'components/_components/PackageLinks';
 import Tooltip from 'components/_components/Tooltip';
-
 import PackageStatsRow from './_components/PackageStatsRow';
 import BundlephobiaRenderer from './_components/BundlephobiaRenderer';
-
 import styles from './PackageStats.module.scss';
 
+dayjs.extend(relativeTime);
 // array of stats to display
 // format: [name_to_display, api_source, api_attribute_name]
 const columns = [
@@ -44,7 +41,8 @@ const columns = [
   },
   {
     heading: 'Stars',
-    renderer: (packet: IPackage) => packet.github?.starsCount?.toLocaleString() || <i aria-hidden className="icon icon-dash" />,
+    renderer: (packet: IPackage) =>
+      packet.github?.starsCount?.toLocaleString() || <i aria-hidden className="icon icon-dash" />,
   },
   {
     heading: 'Issues',
@@ -60,13 +58,13 @@ const columns = [
     tooltip:
       'Publish date for the version tagged "latest". This may differ from the "Last publish" date seen on the NPM website because that includes all version tags (experimental, next, alpha, etc.)',
     renderer: (packet: IPackage) =>
-      packet.versionDate ? moment().to(packet.versionDate) : <i aria-hidden className="icon icon-dash" />,
+      packet.versionDate ? dayjs(packet.versionDate).fromNow() : <i aria-hidden className="icon icon-dash" />,
   },
   {
     heading: 'Created',
     tooltip: 'Date first version was published',
     renderer: (packet: IPackage) =>
-      packet.createdDate ? moment().to(packet.createdDate, false) : <i aria-hidden className="icon icon-dash" />,
+      packet.createdDate ? dayjs(packet.createdDate).fromNow() : <i aria-hidden className="icon icon-dash" />,
   },
   { heading: 'Size', renderer: (packet: IPackage) => <BundlephobiaRenderer packet={packet} /> },
 ];
