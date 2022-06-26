@@ -12,7 +12,6 @@ import 'normalize.css/normalize.css';
 import 'reset-css/reset.css';
 import '../styles/index.scss';
 
-require('datejs');
 
 const propTypes = {
   Component: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),

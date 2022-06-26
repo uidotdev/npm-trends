@@ -38,12 +38,12 @@ const DetailsPopover = ({ packageName, children }) => {
           <div className={styles.popover__stats}>
             {packageData.github && packageData.github.stargazers_count && (
               <div>
-                <i className="icon icon-star-fas" /> {abbreviateNumber(packageData.github.stargazers_count)}
+                <i aria-hidden className="icon icon-star-fas" /> {abbreviateNumber(packageData.github.stargazers_count)}
               </div>
             )}
             {packageData.downloads && packageData.downloads.weekly > 0 && (
               <div>
-                <i className="icon icon-arrow-alt-circle-down" /> {abbreviateNumber(packageData.downloads.weekly)}/wk
+                <i aria-hidden className="icon icon-arrow-alt-circle-down" /> {abbreviateNumber(packageData.downloads.weekly)}/wk
               </div>
             )}
           </div>
@@ -52,13 +52,19 @@ const DetailsPopover = ({ packageName, children }) => {
     </PopoverContentContainer>
   );
 
-  if (typeof window === 'undefined') {
-    return children;
-  }
-
   const close = () => {
     setIsOpen(false);
   };
+
+  const content = (
+    <span onMouseEnter={() => setIsOpen(true)} onMouseLeave={close}>
+      {children}
+    </span>
+  );
+
+  if (typeof window === 'undefined') {
+    return content;
+  }
 
   return (
     <Popover
@@ -69,9 +75,7 @@ const DetailsPopover = ({ packageName, children }) => {
       padding={10}
       content={popoverContent}
     >
-      <span onMouseEnter={() => setIsOpen(true)} onMouseLeave={close}>
-        {children}
-      </span>
+      {content}
     </Popover>
   );
 };

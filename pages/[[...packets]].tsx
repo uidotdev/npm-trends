@@ -29,13 +29,30 @@ type Props = {
   };
 };
 
+export const getServerSideProps = hasNavigationCSR(async (context) => {
+  const { query } = context;
+  const packetNames = getPacketNamesFromQuery(query);
+  const pageData = await fetchPageData(packetNames);
+  // If error with any packages, remove errored packages from url
+  if (pageData.packets && packetNames.length !== pageData.packets.length) {
+    const packetsUrlParam = pageData.packets.map((p) => p.name).join('-vs-');
+
+    return {
+      redirect: {
+        permanent: false,
+        destination: `/${packetsUrlParam}`,
+      },
+    };
+  }
+
+  context.res.setHeader('Cache-Control', 's-maxage=86400, stale-while-revalidate');
+  return { props: { initialData: pageData } };
+});
+
 const Packets = ({ initialData }: Props) => {
   const [data, setData] = useState(initialData || { packets: [] });
-
   const { query } = useRouter();
-
   const { packets } = data;
-
   const packetNames = useMemo(() => getPacketNamesFromQuery(query), [query]);
 
   useEffect(() => {
@@ -80,31 +97,5 @@ const Packets = ({ initialData }: Props) => {
     </>
   );
 };
-
-const getProps = async (context) => {
-  const { query } = context;
-
-  const packetNames = getPacketNamesFromQuery(query);
-
-  const pageData = await fetchPageData(packetNames);
-
-  // If error with any packages, remove errored packages from url
-  if (pageData.packets && packetNames.length !== pageData.packets.length) {
-    const packetsUrlParam = pageData.packets.map((p) => p.name).join('-vs-');
-
-    return {
-      redirect: {
-        permanent: false,
-        destination: `/${packetsUrlParam}`,
-      },
-    };
-  }
-
-  context.res.setHeader('Cache-Control', 's-maxage=86400, stale-while-revalidate');
-
-  return { props: { initialData: pageData } };
-};
-
-export const getServerSideProps = hasNavigationCSR(getProps);
 
 export default Packets;

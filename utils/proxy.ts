@@ -15,7 +15,7 @@ export const urlWithProxy = (url) => {
 // See: https://docs.github.com/en/rest/repos/repos#get-a-repository
 export const githubReposURL = (path) => {
     if (GITHUB_REPOS_API_ENDPOINT) {
-        return `${GITHUB_REPOS_API_ENDPOINT}/${path}`;
+        return `${GITHUB_REPOS_API_ENDPOINT}${path}`;
     }
     return urlWithProxy(`https://api.github.com/repos/${path}`);
 };
