@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import marked from 'marked';
+import snarkdown from 'snarkdown';
 import sanitizeHtml from 'sanitize-html';
 
 import styles from './Readme.module.scss';
@@ -15,7 +15,7 @@ const Readme = ({ packets }) => {
 
   if (!packet.readme) return null;
 
-  const parsedReadme = marked(packet.readme);
+  const parsedReadme = snarkdown(packet.readme);
   const sanitizedReadme = sanitizeHtml(parsedReadme, {
     allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img']),
     allowedAttributes: {

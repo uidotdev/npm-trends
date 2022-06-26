@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@next/bundle-analyzer": "^12.1.6",
     "autocomplete.js": "^0.37.1",
     "chart.js": "2.9.4",
     "classnames": "2.2.5",
@@ -29,7 +30,8 @@
     "react-toastify": "^6.2.0",
     "reset-css": "^2.2.1",
     "sanitize-html": "^2.4.0",
-    "sass": "^1.26.10"
+    "sass": "^1.26.10",
+    "snarkdown": "^2.0.0"
   },
   "devDependencies": {
     "@types/chart.js": "^2.9.34",
