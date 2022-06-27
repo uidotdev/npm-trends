@@ -77,7 +77,7 @@ const Packets = ({ initialData }: Props) => {
   const canonical = packetNames ? getCanonical(packetNames) : undefined;
   let pageTitle = 'npm trends: Compare NPM package downloads';
   let pageDescription =
-    'Which NPM package should you use? Compare NPM package download stats over time. Spot trends, pick the winner.';
+    'Which NPM package should you use? Compare packages download stats, bundle sizes, github stars and more. Spot trends, pick the winner.';
 
   if (packetNames.length) {
     const packetsString = searchPathToDisplayString(packetNames);
