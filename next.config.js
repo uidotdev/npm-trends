@@ -4,9 +4,10 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 
 const ContentSecurityPolicy = `
   default-src 'self';
-  script-src 'self' use.fortawesome.com ;
-  style-src 'self';
-  font-src 'self';  
+  connect-src 'self' npm-trends-gateway.onrender.com;
+  script-src 'self' use.fortawesome.com;
+  style-src 'self' use.fortawesome.com google-analytics.com;
+  font-src 'self' data:;  
 `
 
 const securityHeaders = [
