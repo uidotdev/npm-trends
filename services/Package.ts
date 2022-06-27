@@ -1,7 +1,7 @@
 import { get as _get } from 'lodash';
 import hostedGitInfo from 'hosted-git-info';
 
-import { githubReposURL, npmRegistryURL, npmsPackageURL } from 'utils/proxy';
+import { githubReposURL, npmRegistryURL } from 'utils/proxy';
 import { colors } from 'utils/colors';
 import IPackage from 'types/IPackage';
 import INpmRegistryDataFormatted from 'types/INpmRegistryDataFormatted';
@@ -19,10 +19,7 @@ class Package {
         try {
           return await Package.fetchPackage(packageName);
         } catch (e) {
-          console.error(
-            'Problem fetching npms and manual data. This either because the repository does not exist, or we had an error in both of our data sources',
-            e,
-          );
+          console.error('Problem fetching package data.', e);
           return {
             hasError: true,
             name: packageName,
@@ -65,58 +62,6 @@ class Package {
   };
 
   static fetchPackage = async (packageName: string): Promise<IPackage> => {
-    try {
-      return await Package.fetchPackageFromNpms(packageName);
-    } catch (e) {
-      console.error('Problem fetching npms data', e);
-      return Package.fetchPackageManually(packageName);
-    }
-  };
-
-  static fetchPackageFromNpms = async (packageName: string): Promise<IPackage> => {
-    const url = npmsPackageURL(encodeURIComponent(packageName));
-
-    const fetchRegistryData = async () => {
-      try {
-        return await Package.fetchAndFormatNpmRegistryData(packageName);
-      } catch (e) {
-        console.error('Problem fetching NPM registry data', e);
-        return {};
-      }
-    };
-
-    const [npmsPackageData, npmRegistryDataFormatted] = await Promise.all([
-      Fetch.getJSON(url),
-      fetchRegistryData(),
-    ]);
-
-    const repository = Package.formatRepositoryData(_get(npmsPackageData, 'collected.metadata.repository.url', null));
-
-    return {
-      id: _get(npmsPackageData, 'collected.metadata.name', null),
-      name: _get(npmsPackageData, 'collected.metadata.name', null),
-      description: _get(npmsPackageData, 'collected.metadata.description', null),
-      version: _get(npmsPackageData, 'collected.metadata.version', null),
-      versionDate: new Date(_get(npmsPackageData, 'collected.metadata.date', null)).toJSON(),
-      repository,
-      github: {
-        starsCount: _get(npmsPackageData, 'collected.github.starsCount', null),
-        forksCount: _get(npmsPackageData, 'collected.github.forksCount', null),
-        issuesCount: _get(npmsPackageData, 'collected.github.issues.count', null),
-        openIssuesCount: _get(npmsPackageData, 'collected.github.issues.openCount', null),
-      },
-      links: {
-        npm: _get(npmsPackageData, 'collected.metadata.links.npm', null),
-        homepage: _get(npmsPackageData, 'collected.metadata.links.homepage', null),
-      },
-      downloads: {
-        weekly: _get(npmsPackageData, 'collected.npm.downloads[1].count', null),
-      },
-      ...npmRegistryDataFormatted,
-    };
-  };
-
-  static fetchPackageManually = async (packageName: string): Promise<IPackage> => {
     const registryPackageDataFormatted = await Package.fetchAndFormatNpmRegistryData(packageName);
 
     let github = null;
