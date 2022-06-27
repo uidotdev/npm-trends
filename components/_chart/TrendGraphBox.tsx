@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, Suspense } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import dayjs from 'dayjs';
 
@@ -7,7 +7,7 @@ import PackageDownloads from 'services/PackageDownloads';
 import dynamic from 'next/dynamic';
 
 const TrendGraph = dynamic(() => import('./TrendGraph'), {
-  suspense: true,
+  ssr: false,
 });
 
 const djsToStartDate = (djs) => djs.startOf('week').format('YYYY-MM-DD');
@@ -81,9 +81,7 @@ const TrendGraphBox = ({ packets, colors }) => {
   return (
     <div>
       {heading()}
-      <Suspense fallback={<div style={{ width: '100%', height: '900px', backgroundColor: 'rgba(0,0,0,.1)' }} />}>
-        <TrendGraph graphStats={graphStats} colors={colors} />
-      </Suspense>
+      <TrendGraph graphStats={graphStats} colors={colors} />
     </div>
   );
 };
