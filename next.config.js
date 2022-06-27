@@ -4,7 +4,7 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 
 const ContentSecurityPolicy = `
   default-src 'self';
-  connect-src 'self' npm-trends-gateway.onrender.com;
+  connect-src 'self' npm-trends-gateway.onrender.com www.google-analytics.com;
   script-src 'self' use.fortawesome.com www.google-analytics.com;
   style-src 'self' use.fortawesome.com 'unsafe-inline';
   img-src 'self' data: flat.badgen.net;
