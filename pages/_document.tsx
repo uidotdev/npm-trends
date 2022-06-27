@@ -7,7 +7,7 @@ export default class MyDocument extends Document {
     return (
       <Html lang="en">
         <Head>
-          <script src="https://use.fortawesome.com/978e158e.js" />
+          <script async src="https://use.fortawesome.com/978e158e.js" />
           <link rel="shortcut icon" href="/favicon.ico" />
         </Head>
         <body>
