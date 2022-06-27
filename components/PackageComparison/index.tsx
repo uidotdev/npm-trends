@@ -11,16 +11,17 @@ import TrendGraphBox from 'components/_chart/TrendGraphBox';
 import PackageStats from 'components/_statsTable/PackageStats';
 import PopularSearches from 'components/_searchLists/PopularSearches';
 import RelatedSearches from 'components/_searchLists/RelatedSearches';
+import EmailSignup from 'components/_templates/EmailSignup';
 import Readme from 'components/Readme';
-
 import PackageComparisonHeading from './_components/PackageComparisonHeading';
 
 const propTypes = {
   packets: PropTypes.arrayOf(PropTypes.object),
   packetNames: PropTypes.arrayOf(PropTypes.string),
+  subcount: PropTypes.number,
 };
 
-const PackageComparison = ({ packets, packetNames = [] }) => {
+const PackageComparison = ({ packets, packetNames = [], subcount }) => {
   const { push } = useRouter();
 
   const updateFromSearch = useCallback(
@@ -48,30 +49,11 @@ const PackageComparison = ({ packets, packetNames = [] }) => {
         </div>
       )}
       <div className="suggestions--container">
-        <RelatedSearches packetNames={packetNames} />
         <PopularSearches />
+        <RelatedSearches packetNames={packetNames} />
       </div>
       <Readme packets={packets} />
-      <div id="extra_info">
-        <p>
-          If you find any bugs or have a feature request, please open an issue on{' '}
-          <a target="_blank" rel="noopener noreferrer" href="http://github.com/uidotdev/npm-trends">
-            github
-          </a>
-          !
-        </p>
-        <p>
-          The npm package download data comes from {"npm's "}
-          <a target="_blank" rel="noopener noreferrer" href="https://github.com/npm/registry/blob/master/docs/download-counts.md">
-            download counts api
-          </a>{' '}
-          and package details come from the{' '}
-          <a target="_blank" rel="noopener noreferrer" href="https://github.com/npm/registry/blob/master/docs/REGISTRY-API.md">
-            registry api
-          </a>
-          .
-        </p>
-      </div>
+      <EmailSignup subcount={subcount} />
     </div>
   );
 };

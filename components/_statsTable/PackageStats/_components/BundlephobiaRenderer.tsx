@@ -14,6 +14,8 @@ const BundlephobiaRenderer = ({ packet }) => {
   return (
     <a href={sizeUrl} target="_blank" rel="noopener noreferrer">
       <img
+        width={146}
+        height={20}
         onError={() => setHideSize(true)}
         src={`https://flat.badgen.net/bundlephobia/minzip/${packet.name}`}
         alt={`Minified + gzip package size for ${packet.name} in KB`}

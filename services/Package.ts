@@ -1,4 +1,4 @@
-import { get as _get } from 'lodash';
+import _get from 'lodash/get';
 import hostedGitInfo from 'hosted-git-info';
 
 import { githubReposURL, npmRegistryURL } from 'utils/proxy';

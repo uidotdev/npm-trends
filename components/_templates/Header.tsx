@@ -5,7 +5,13 @@ const Header = () => (
     <div className="container">
       <Link href="/[[...packets]]" as="/">
         <a className="site-logo">
-          <img className="site-logo--img" alt="NPM Trends Logo" src="/images/logos/npm_trends_logo.png" />
+          <img
+            width={35}
+            height={35}
+            className="site-logo--img"
+            alt="NPM Trends Logo"
+            src="/images/logos/npm_trends_logo.png"
+          />
           <span className="site-logo--name">npm trends</span>
         </a>
       </Link>

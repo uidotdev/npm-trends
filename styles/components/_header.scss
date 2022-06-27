@@ -9,6 +9,7 @@ header {
 .site-logo {
   color: $dark;
   display: flex;
+  gap: 8px;
   &:hover {
     color: $dark;
   }

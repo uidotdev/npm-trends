@@ -27,15 +27,35 @@ type Props = {
   initialData: {
     packets: IPackage[];
   };
+  subcount: number;
 };
 
-const Packets = ({ initialData }: Props) => {
+export const getServerSideProps = hasNavigationCSR(async ({ query, res }) => {
+  const packetNames = getPacketNamesFromQuery(query);
+  const [ pageData, bytesRes] = await Promise.all([
+    fetchPageData(packetNames),
+    fetch(`https://bytes.dev/api/subcount`).then((r) => r.json())
+  ])
+  // If error with any packages, remove errored packages from url
+  if (pageData.packets && packetNames.length !== pageData.packets.length) {
+    const packetsUrlParam = pageData.packets.map((p) => p.name).join('-vs-');
+
+    return {
+      redirect: {
+        permanent: false,
+        destination: `/${packetsUrlParam}`,
+      },
+    };
+  }
+
+  res.setHeader('Cache-Control', 's-maxage=86400, stale-while-revalidate');
+  return { props: { initialData: pageData, subcount: bytesRes.subcount } };
+});
+
+const Packets = ({ initialData, subcount }: Props) => {
   const [data, setData] = useState(initialData || { packets: [] });
-
   const { query } = useRouter();
-
   const { packets } = data;
-
   const packetNames = useMemo(() => getPacketNamesFromQuery(query), [query]);
 
   useEffect(() => {
@@ -59,10 +79,9 @@ const Packets = ({ initialData }: Props) => {
   }, [packets]);
 
   const canonical = packetNames ? getCanonical(packetNames) : undefined;
-
   let pageTitle = 'npm trends: Compare NPM package downloads';
   let pageDescription =
-    'Which NPM package should you use? Compare NPM package download stats over time. Spot trends, pick the winner.';
+    'Which NPM package should you use? Compare packages download stats, bundle sizes, github stars and more. Spot trends, pick the winner.';
 
   if (packetNames.length) {
     const packetsString = searchPathToDisplayString(packetNames);
@@ -75,36 +94,10 @@ const Packets = ({ initialData }: Props) => {
     <>
       <AppHead title={pageTitle} description={pageDescription} canonical={canonical} />
       <Layout>
-        <PackageComparison packets={packets} packetNames={packetNames} />
+        <PackageComparison subcount={subcount} packets={packets} packetNames={packetNames} />
       </Layout>
     </>
   );
 };
-
-const getProps = async (context) => {
-  const { query } = context;
-
-  const packetNames = getPacketNamesFromQuery(query);
-
-  const pageData = await fetchPageData(packetNames);
-
-  // If error with any packages, remove errored packages from url
-  if (pageData.packets && packetNames.length !== pageData.packets.length) {
-    const packetsUrlParam = pageData.packets.map((p) => p.name).join('-vs-');
-
-    return {
-      redirect: {
-        permanent: false,
-        destination: `/${packetsUrlParam}`,
-      },
-    };
-  }
-
-  context.res.setHeader('Cache-Control', 's-maxage=86400, stale-while-revalidate');
-
-  return { props: { initialData: pageData } };
-};
-
-export const getServerSideProps = hasNavigationCSR(getProps);
 
 export default Packets;
