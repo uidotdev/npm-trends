@@ -2,26 +2,44 @@
 
 /****** Footer ******/
 
-.footer-content{
-	border-top: 2px solid $borderLight;
-	height: 60px;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
+#footer_menu {
+  text-align: center;
 }
 
-#footer_menu{
-	text-align: center;
+.footer-content {
+	margin-top: 24px;
+  border-top: 2px solid $borderLight;
+  padding-top: 24px;
+  padding-bottom: 24px;
+  display: grid;
+	gap: 24px;
 }
 
+.footer-col {
+	max-width: 45ch;
+}
+
+.footer-content h4 {
+	margin-top: 2rem;
+	margin-bottom: 1rem;
+}
+
+.footer-content ul {
+	display: grid; 
+	gap: .5rem;
+}
+
+.footer-content p {
+	line-height: 1.5;
+}
 
 /****** Sticky Footer ******/
 
-.site-wrapper{
-	display: flex;
+.site-wrapper {
+  display: flex;
   min-height: 100vh;
   flex-direction: column;
 }
-.content-wrapper{
-	flex: 1;
+.content-wrapper {
+  flex: 1;
 }

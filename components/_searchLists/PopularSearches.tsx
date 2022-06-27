@@ -11,7 +11,7 @@ const PopularSearches = () => {
 
   const fetchPopularSearches = async () => {
     try {
-      let fetchedSearches = await Fetch.getJSON('/s/popular');
+      let fetchedSearches = await Fetch.getJSON('/s/top_searches?n=15');
       fetchedSearches = fetchedSearches.map((searchQuery) => searchQuery.slug.split('_').join('-vs-'));
 
       setSearches(fetchedSearches);
