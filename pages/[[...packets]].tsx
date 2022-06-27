@@ -29,8 +29,7 @@ type Props = {
   };
 };
 
-export const getServerSideProps = hasNavigationCSR(async (context) => {
-  const { query } = context;
+export const getServerSideProps = hasNavigationCSR(async ({ query, res }) => {
   const packetNames = getPacketNamesFromQuery(query);
   const pageData = await fetchPageData(packetNames);
   // If error with any packages, remove errored packages from url
@@ -45,7 +44,7 @@ export const getServerSideProps = hasNavigationCSR(async (context) => {
     };
   }
 
-  context.res.setHeader('Cache-Control', 's-maxage=86400, stale-while-revalidate');
+  res.setHeader('Cache-Control', 's-maxage=86400, stale-while-revalidate');
   return { props: { initialData: pageData } };
 });
 
@@ -76,7 +75,6 @@ const Packets = ({ initialData }: Props) => {
   }, [packets]);
 
   const canonical = packetNames ? getCanonical(packetNames) : undefined;
-
   let pageTitle = 'npm trends: Compare NPM package downloads';
   let pageDescription =
     'Which NPM package should you use? Compare NPM package download stats over time. Spot trends, pick the winner.';
