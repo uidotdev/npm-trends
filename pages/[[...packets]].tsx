@@ -27,11 +27,15 @@ type Props = {
   initialData: {
     packets: IPackage[];
   };
+  subcount: number;
 };
 
 export const getServerSideProps = hasNavigationCSR(async ({ query, res }) => {
   const packetNames = getPacketNamesFromQuery(query);
-  const pageData = await fetchPageData(packetNames);
+  const [ pageData, bytesRes] = await Promise.all([
+    fetchPageData(packetNames),
+    fetch(`https://bytes.dev/api/subcount`).then((r) => r.json())
+  ])
   // If error with any packages, remove errored packages from url
   if (pageData.packets && packetNames.length !== pageData.packets.length) {
     const packetsUrlParam = pageData.packets.map((p) => p.name).join('-vs-');
@@ -45,10 +49,10 @@ export const getServerSideProps = hasNavigationCSR(async ({ query, res }) => {
   }
 
   res.setHeader('Cache-Control', 's-maxage=86400, stale-while-revalidate');
-  return { props: { initialData: pageData } };
+  return { props: { initialData: pageData, subcount: bytesRes.subcount } };
 });
 
-const Packets = ({ initialData }: Props) => {
+const Packets = ({ initialData, subcount }: Props) => {
   const [data, setData] = useState(initialData || { packets: [] });
   const { query } = useRouter();
   const { packets } = data;
@@ -90,7 +94,7 @@ const Packets = ({ initialData }: Props) => {
     <>
       <AppHead title={pageTitle} description={pageDescription} canonical={canonical} />
       <Layout>
-        <PackageComparison packets={packets} packetNames={packetNames} />
+        <PackageComparison subcount={subcount} packets={packets} packetNames={packetNames} />
       </Layout>
     </>
   );
