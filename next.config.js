@@ -7,7 +7,7 @@ const ContentSecurityPolicy = `
   connect-src 'self' bytes.dev npm-trends-gateway.onrender.com www.google-analytics.com;
   script-src 'self' use.fortawesome.com www.google-analytics.com 'unsafe-eval';
   style-src 'self' use.fortawesome.com 'unsafe-inline';
-  img-src https: data:;
+  img-src 'self' https: data:;
   font-src 'self' data:;  
 `
 
