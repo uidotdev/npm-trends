@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-import Image from 'next/image';
 
 const propTypes = {
   packet: PropTypes.object,
@@ -14,7 +13,7 @@ const BundlephobiaRenderer = ({ packet }) => {
   const sizeUrl = `https://bundlephobia.com/result?p=${packet.name}`;
   return (
     <a href={sizeUrl} target="_blank" rel="noopener noreferrer">
-      <Image
+      <img
         width={146}
         height={20}
         onError={() => setHideSize(true)}

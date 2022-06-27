@@ -1,12 +1,11 @@
 import Link from 'next/link';
-import Image from 'next/image';
 
 const Header = () => (
   <header>
     <div className="container">
       <Link href="/[[...packets]]" as="/">
         <a className="site-logo">
-          <Image
+          <img
             width={35}
             height={35}
             className="site-logo--img"
