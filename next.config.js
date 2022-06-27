@@ -3,6 +3,9 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 })
 
 module.exports = withBundleAnalyzer({
+  images: {
+    domains: ['flat.badgen.net'],
+  },
   async rewrites() {
     return {
       beforeFiles: [
