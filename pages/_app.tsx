@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Router from 'next/router';
 import $ from 'jquery';
 import { ToastContainer } from 'react-toastify';
+import PlausibleProvider from 'next-plausible';
 
 import AppHead from 'components/_templates/AppHead';
 
@@ -11,7 +12,6 @@ import { initGA, logPageView } from 'utils/googleAnalytics';
 import 'normalize.css/normalize.css';
 import 'reset-css/reset.css';
 import '../styles/index.scss';
-
 
 const propTypes = {
   Component: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
@@ -39,11 +39,18 @@ const MyApp = ({ Component, pageProps }) => {
     'Which NPM package should you use? Compare NPM package download stats over time. Spot trends, pick the winner!';
 
   return (
-    <>
+    <PlausibleProvider
+      domain="npmtrends.com"
+      scriptProps={{
+        async: true,
+        defer: true,
+        src: `https://pl-proxy.uidotdev.workers.dev/js/script.js`,
+      }}
+    >
       <ToastContainer />
       <AppHead title={pageTitle} description={pageDescription} />
       <Component {...pageProps} />
-    </>
+    </PlausibleProvider>
   );
 };
 
