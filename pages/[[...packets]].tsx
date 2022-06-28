@@ -30,12 +30,25 @@ type Props = {
   subcount: number;
 };
 
+function generateDescription(packets: IPackage[]) {
+  const str = packets
+    .map(
+      (packet) =>
+        `${packet.name} ${packet.version} which has ${packet.downloads.weekly.toLocaleString(
+          'en-US',
+        )} weekly downloads and ${packet.github.starsCount.toLocaleString('en-US')} GitHub stars`,
+    )
+    .join(' vs. ');
+
+  return `Comparing trends for ${str}.`;
+}
+
 export const getServerSideProps = hasNavigationCSR(async ({ query, res }) => {
   const packetNames = getPacketNamesFromQuery(query);
-  const [ pageData, bytesRes] = await Promise.all([
+  const [pageData, bytesRes] = await Promise.all([
     fetchPageData(packetNames),
-    fetch(`https://bytes.dev/api/subcount`).then((r) => r.json())
-  ])
+    fetch(`https://bytes.dev/api/subcount`).then((r) => r.json()),
+  ]);
   // If error with any packages, remove errored packages from url
   if (pageData.packets && packetNames.length !== pageData.packets.length) {
     const packetsUrlParam = pageData.packets.map((p) => p.name).join('-vs-');
@@ -53,7 +66,7 @@ export const getServerSideProps = hasNavigationCSR(async ({ query, res }) => {
 });
 
 const Packets = ({ initialData, subcount: intialSubcount }: Props) => {
-  const [subcount] = useState(intialSubcount)
+  const [subcount] = useState(intialSubcount);
   const [data, setData] = useState(initialData || { packets: [] });
   const { query } = useRouter();
   const { packets } = data;
@@ -88,7 +101,7 @@ const Packets = ({ initialData, subcount: intialSubcount }: Props) => {
     const packetsString = searchPathToDisplayString(packetNames);
 
     pageTitle = `${packetsString} | npm trends`;
-    pageDescription = `Compare ${packetsString} downloads, bundle size, github stars and more over time.`;
+    pageDescription = generateDescription(packets);
   }
 
   return (
