@@ -23,6 +23,9 @@ const securityHeaders = [
 ];
 
 module.exports = withBundleAnalyzer({
+  experimental: {
+    runtime: 'edge',
+  },
   images: {
     domains: ['flat.badgen.net'],
   },

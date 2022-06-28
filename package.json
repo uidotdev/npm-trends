@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@next/bundle-analyzer": "^12.1.6",
+    "@next/bundle-analyzer": "^12.2.0",
     "autocomplete.js": "^0.37.1",
     "chart.js": "2.9.4",
     "classnames": "2.2.5",
@@ -17,7 +17,7 @@
     "hosted-git-info": "^3.0.8",
     "jquery": "^3.4.1",
     "lodash": "^4.17.21",
-    "next": "^12.1.6",
+    "next": "^12.2.0",
     "next-plausible": "^3.2.0",
     "normalize.css": "^8.0.0",
     "prop-types": "^15.7.2",
