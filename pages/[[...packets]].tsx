@@ -52,7 +52,8 @@ export const getServerSideProps = hasNavigationCSR(async ({ query, res }) => {
   return { props: { initialData: pageData, subcount: bytesRes.subcount } };
 });
 
-const Packets = ({ initialData, subcount }: Props) => {
+const Packets = ({ initialData, subcount: intialSubcount }: Props) => {
+  const [subcount] = useState(intialSubcount)
   const [data, setData] = useState(initialData || { packets: [] });
   const { query } = useRouter();
   const { packets } = data;
@@ -87,7 +88,7 @@ const Packets = ({ initialData, subcount }: Props) => {
     const packetsString = searchPathToDisplayString(packetNames);
 
     pageTitle = `${packetsString} | npm trends`;
-    pageDescription = `Compare npm package download statistics over time: ${packetsString}`;
+    pageDescription = `Compare ${packetsString} downloads, bundle size, github stars and more over time.`;
   }
 
   return (
