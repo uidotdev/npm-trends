@@ -18,9 +18,16 @@ const Readme = ({ packets }) => {
   const parsedReadme = snarkdown(packet.readme);
   const sanitizedReadme = sanitizeHtml(parsedReadme, {
     allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img']),
+    disallowedTagsMode: 'discard',
     allowedAttributes: {
       a: ['href', 'name', 'target'],
       img: ['src', 'width', 'height', 'alt'],
+    },
+    allowedSchemes: sanitizeHtml.defaults.allowedSchemes.filter((scheme) => scheme !== 'http'),
+    transformTags: {
+      h1: () => ({
+        tagName: 'div',
+      }),
     },
   });
 

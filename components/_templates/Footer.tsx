@@ -6,7 +6,7 @@ const Footer = () => (
           <h3>About</h3>
           <p>
             This site was created by{' '}
-            <a target="_blank" rel="noopener noreferrer" href="http://twitter.com/johnmpotter">
+            <a target="_blank" rel="noopener noreferrer" href="https://twitter.com/johnmpotter">
               John Potter
             </a>{' '}
             and is maintained by{' '}
@@ -14,7 +14,7 @@ const Footer = () => (
               uidotdev
             </a>
             . If you find any bugs or have a feature request, please open an issue on{' '}
-            <a target="_blank" rel="noopener noreferrer" href="http://github.com/uidotdev/npm-trends">
+            <a target="_blank" rel="noopener noreferrer" href="https://github.com/uidotdev/npm-trends">
               github
             </a>
             !
