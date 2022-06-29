@@ -22,7 +22,7 @@ const RelatedSearches = ({ packetNames }: Props) => {
       });
 
       try {
-        let fetchedSearches = await Fetch.getJSON(`/s/related?${searchQueryParams}`);
+        let fetchedSearches = await Fetch.getJSON(`/s/related?${searchQueryParams}&limit=10`);
         fetchedSearches = fetchedSearches.map((searchQuery) => searchQuery.slug.split('_').join('-vs-'));
 
         setSearches(fetchedSearches);
@@ -57,7 +57,7 @@ const RelatedSearches = ({ packetNames }: Props) => {
 
   return (
     <div className="suggetions--box">
-      <h2>Related</h2>
+      <h2>Related Searches</h2>
       <ul className="suggestions-list list-unstyled">{renderSearchesList()}</ul>
     </div>
   );

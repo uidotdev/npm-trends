@@ -36,7 +36,9 @@ function generateDescription(packets: IPackage[]) {
       (packet) =>
         `${packet.name} ${packet.version} which has ${packet.downloads.weekly.toLocaleString(
           'en-US',
-        )} weekly downloads and ${packet.github.starsCount.toLocaleString('en-US')} GitHub stars`,
+        )} weekly downloads and ${
+          packet?.github?.starsCount?.toLocaleString('en-US') || 'unknown number of'
+        } GitHub stars`,
     )
     .join(' vs. ');
 
