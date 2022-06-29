@@ -45,7 +45,7 @@ module.exports = withBundleAnalyzer({
         },
         {
           source: '/sitemap.xml.gz',
-          destination: 'https://npm-trends-minio.onrender.com/sitemaps/sitemap.xml.gz',
+          destination: 'https://npm-trends-gateway.onrender.com/minio/sitemaps/sitemap.xml.gz',
         },
       ],
     };

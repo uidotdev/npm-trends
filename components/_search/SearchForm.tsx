@@ -1,4 +1,6 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
+import { Combobox, ComboboxInput, ComboboxPopover, ComboboxList, ComboboxOption } from '@reach/combobox';
+
 import Fetch from 'services/Fetch';
 
 type Props = {
@@ -6,83 +8,61 @@ type Props = {
 };
 
 const SearchForm = ({ onSearch }: Props) => {
-  const [autocomplete, setAutocomplete] = useState(null);
-  const searchFormRef = useRef();
+  const [results, setResults] = useState([]);
+  const [value, setValue] = useState('');
 
-  const handlePackageSelection = useCallback(
-    (packageName: string) => {
-      (searchFormRef.current as any).form.reset();
-      ($('.autocomplete') as any).autocomplete('val', '');
-      onSearch(packageName);
-    },
-    [onSearch],
-  );
-
-  useEffect(() => {
-    // eslint-disable-next-line
-    import('autocomplete.js/dist/autocomplete.jquery.js').then(() => {
-      const getAutocompleteResults = (query, cb) => {
-        const suggestQuery = {
-          // eslint-disable-next-line
-          autocomplete_suggest: {
-            text: query,
-            completion: {
-              field: 'suggest',
-            },
-          },
-        };
-
-        Fetch.getJSON(
-          `${process.env.NEXT_PUBLIC_ELASTICSEARCH_URL}/npm/_suggest?source=${JSON.stringify(suggestQuery)}`,
-        ).then((data: any) => {
-          cb(data.autocomplete_suggest[0].options);
-        });
-      };
-
-      const autocompleteInstance = ($('.autocomplete') as any).autocomplete(
-        {
-          hint: false,
+  const handleSearchTermChange = useCallback((e) => {
+    setValue(e.target.value);
+    const suggestQuery = {
+      // eslint-disable-next-line
+      autocomplete_suggest: {
+        text: e.target.value,
+        completion: {
+          field: 'suggest',
+          size: 10,
         },
-        {
-          source: getAutocompleteResults,
-          displayKey: 'text',
-          templates: {
-            suggestion(data) {
-              return `<div class='autocomplete-name'>${data.text}</div><div class='autocomplete-description'>${data.payload.description}</div>`;
-            },
-          },
-        },
-      );
+      },
+    };
 
-      setAutocomplete(autocompleteInstance);
+    Fetch.getJSON(
+      `${process.env.NEXT_PUBLIC_ELASTICSEARCH_URL}/npm/_suggest?source=${JSON.stringify(suggestQuery)}`,
+    ).then((data: any) => {
+      setResults(data.autocomplete_suggest[0].options);
     });
   }, []);
 
-  useEffect(() => {
-    if (autocomplete) {
-      autocomplete.off('autocomplete:selected').on('autocomplete:selected', (event, suggestion) => {
-        handlePackageSelection(suggestion.text);
-      });
-    }
-  }, [autocomplete, handlePackageSelection]);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    ($('.autocomplete') as any).autocomplete('close');
-    const query = (searchFormRef.current as any).value.toLowerCase();
-    handlePackageSelection(query);
-  };
-
   return (
-    <form onSubmit={handleSubmit} name="seachForm" id="search_form" autoComplete="off">
-      <input
-        ref={searchFormRef}
-        id="search_form_input"
-        className="autocomplete"
-        type="text"
-        placeholder="Enter an npm package..."
-      />
-    </form>
+    <>
+      <Combobox
+        id="search_form"
+        aria-label="Search for a package"
+        onSelect={(query) => {
+          onSearch(query);
+          setValue('');
+        }}
+      >
+        <ComboboxInput
+          id="search_form_input"
+          selectOnClick
+          value={value}
+          placeholder="Enter an npm package..."
+          className="autocomplete"
+          onChange={handleSearchTermChange}
+        />
+        {results.length > 0 && (
+          <ComboboxPopover className="combobox-popover">
+            <ComboboxList>
+              {results.map((result) => (
+                <ComboboxOption key={result.text} value={result.text} className="combobox-option">
+                  <span className="search-result-title">{result.text}</span>
+                  <span className="search-result-description">{result.payload.description}</span>
+                </ComboboxOption>
+              ))}
+            </ComboboxList>
+          </ComboboxPopover>
+        )}
+      </Combobox>
+    </>
   );
 };
 

@@ -25,7 +25,7 @@ const PackageTags = ({ packets, colors }: Props) => {
       });
 
       try {
-        const fetchedRelatedPackages: any = await Fetch.getJSON(`/s/related_packages?${searchQueryParams}`);
+        const fetchedRelatedPackages: any = await Fetch.getJSON(`/s/related_packages?${searchQueryParams}&limit=5`);
 
         setRelatedPackets(fetchedRelatedPackages);
       } catch (e) {

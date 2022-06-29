@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Router from 'next/router';
-import $ from 'jquery';
 import { ToastContainer } from 'react-toastify';
 import PlausibleProvider from 'next-plausible';
 
@@ -11,6 +10,7 @@ import { initGA, logPageView } from 'utils/googleAnalytics';
 
 import 'normalize.css/normalize.css';
 import 'reset-css/reset.css';
+import "@reach/combobox/styles.css";
 import '../styles/index.scss';
 
 const propTypes = {
@@ -20,9 +20,6 @@ const propTypes = {
 
 const MyApp = ({ Component, pageProps }) => {
   useEffect(() => {
-    (window as any).jQuery = $;
-    (window as any).$ = $;
-
     if (!(window as any).GA_INITIALIZED) {
       initGA();
       (window as any).GA_INITIALIZED = true;

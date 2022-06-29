@@ -11,7 +11,7 @@ const PopularSearches = () => {
 
   const fetchPopularSearches = async () => {
     try {
-      let fetchedSearches = await Fetch.getJSON('/s/top_searches?n=15');
+      let fetchedSearches = await Fetch.getJSON('/s/searches?limit=10');
       fetchedSearches = fetchedSearches.map((searchQuery) => searchQuery.slug.split('_').join('-vs-'));
 
       setSearches(fetchedSearches);
@@ -43,7 +43,7 @@ const PopularSearches = () => {
 
   return (
     <div className="suggetions--box">
-      <h2>Popular</h2>
+      <h2>Popular Searches</h2>
       <ul className="suggestions-list list-unstyled">{renderSearchesList()}</ul>
     </div>
   );
