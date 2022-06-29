@@ -19,19 +19,19 @@ const propTypes = {
   packets: PropTypes.arrayOf(PropTypes.object),
   packetNames: PropTypes.arrayOf(PropTypes.string),
   subcount: PropTypes.number,
+  popularSearches: PropTypes.arrayOf(PropTypes.string),
+  packageDownloadData: PropTypes.arrayOf(PropTypes.object),
 };
 
-const PackageComparison = ({ packets, packetNames = [], subcount }) => {
+const PackageComparison = ({ packets, packetNames = [], subcount, popularSearches, packageDownloadData }) => {
   const { push } = useRouter();
 
   const updateFromSearch = useCallback(
     (searchQuery) => {
       let newParam = packetNamesToParam(packetNames);
-
       if (packetNames.indexOf(searchQuery) < 0) {
         newParam = packetNamesToParam([...packetNames, searchQuery]);
       }
-
       push(`/${newParam}`);
     },
     [packetNames, push],
@@ -44,12 +44,12 @@ const PackageComparison = ({ packets, packetNames = [], subcount }) => {
       <PackageTags packets={packets} colors={colors} />
       {packets.length > 0 && (
         <div>
-          <TrendGraphBox packets={packets} colors={colors} />
+          <TrendGraphBox packageDownloadData={packageDownloadData} packets={packets} colors={colors} />
           <PackageStats packets={packets} />
         </div>
       )}
       <div className="suggestions--container">
-        <PopularSearches />
+        <PopularSearches popularSearches={popularSearches} />
         <RelatedSearches packetNames={packetNames} />
       </div>
       <Readme packets={packets} />

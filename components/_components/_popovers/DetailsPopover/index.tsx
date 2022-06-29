@@ -1,11 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Popover } from 'react-tiny-popover';
-
-import Package from 'services/Package';
+import { usePackage } from 'services/queries';
 import { abbreviateNumber } from 'utils/format';
+import Spinner from 'components/_components/Spinner';
 import PopoverContentContainer from '../PopoverContentContainer';
-
 import styles from './DetailsPopover.module.scss';
 
 const propTypes = {
@@ -14,31 +13,21 @@ const propTypes = {
 };
 
 const DetailsPopover = ({ packageName, children }) => {
+
   const [isOpen, setIsOpen] = useState(false);
-  const [packageData, setPackageData] = useState(null);
-
-  useEffect(() => {
-    const fetchPackage = async () => {
-      if (isOpen && !packageData) {
-        const result = await Package.fetchPackage(packageName);
-
-        setPackageData(result);
-      }
-    };
-
-    fetchPackage();
-  }, [isOpen, packageName, packageData]);
-
+  const { data: packageData, isLoading } = usePackage({packageName, isOpen});
+  
   const popoverContent = (popoverProps) => (
     <PopoverContentContainer {...popoverProps}>
+      {isLoading && (<Spinner />)}
       {packageData && (
         <div className={styles.popover}>
           <div className={styles.popover__name}>{packageData.name}</div>
           <div className={styles.popover__description}>{packageData.description}</div>
           <div className={styles.popover__stats}>
-            {packageData.github && packageData.github.stargazers_count && (
+            {packageData.github?.starsCount && (
               <div>
-                <i aria-hidden className="icon icon-star-fas" /> {abbreviateNumber(packageData.github.stargazers_count)}
+                <i aria-hidden className="icon icon-star-fas" /> {abbreviateNumber(packageData.github?.starsCount)}
               </div>
             )}
             {packageData.downloads && packageData.downloads.weekly > 0 && (
@@ -69,7 +58,7 @@ const DetailsPopover = ({ packageName, children }) => {
   return (
     <Popover
       containerStyle={{ pointerEvents: 'none' }}
-      isOpen={isOpen && packageData}
+      isOpen={isOpen}
       positions={['bottom']}
       boundaryInset={30}
       padding={10}

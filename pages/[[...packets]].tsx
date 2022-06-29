@@ -10,6 +10,9 @@ import { hasNavigationCSR } from 'utils/hasNavigationCSR';
 import AppHead from 'components/_templates/AppHead';
 import Layout from 'components/_templates/Layout';
 import PackageComparison from 'components/PackageComparison';
+import Fetch from 'services/Fetch';
+import { usePackagesData } from 'services/queries';
+import PackageDownloads from 'services/PackageDownloads';
 
 const fetchPageData = async (packets) => {
   if (!packets.length) {
@@ -17,9 +20,7 @@ const fetchPageData = async (packets) => {
   }
 
   const { validPackages } = await Package.fetchPackages(packets);
-
   const maxPacketsForSearch = 10;
-
   return { packets: validPackages.slice(0, maxPacketsForSearch) };
 };
 
@@ -28,6 +29,8 @@ type Props = {
     packets: IPackage[];
   };
   subcount: number;
+  popularSearches: string[];
+  packageDownloadData: any[];
 };
 
 function generateDescription(packets: IPackage[]) {
@@ -47,10 +50,14 @@ function generateDescription(packets: IPackage[]) {
 
 export const getServerSideProps = hasNavigationCSR(async ({ query, res }) => {
   const packetNames = getPacketNamesFromQuery(query);
-  const [pageData, bytesRes] = await Promise.all([
+
+  const [pageData, bytesRes, popularSearches, packageDownloadData] = await Promise.all([
     fetchPageData(packetNames),
     fetch(`https://bytes.dev/api/subcount`).then((r) => r.json()),
+    Fetch.getJSON('/s/searches?limit=10'),
+    Promise.all(packetNames.map((name) => PackageDownloads.fetchDownloads(name, '2021-06-27', '2022-06-25'))),
   ]);
+
   // If error with any packages, remove errored packages from url
   if (pageData.packets && packetNames.length !== pageData.packets.length) {
     const packetsUrlParam = pageData.packets.map((p) => p.name).join('-vs-');
@@ -64,26 +71,28 @@ export const getServerSideProps = hasNavigationCSR(async ({ query, res }) => {
   }
 
   res.setHeader('Cache-Control', 's-maxage=86400, stale-while-revalidate');
-  return { props: { initialData: pageData, subcount: bytesRes.subcount } };
+  return {
+    props: {
+      initialData: pageData,
+      subcount: bytesRes.subcount,
+      packageDownloadData,
+      popularSearches: popularSearches.map((searchQuery) => searchQuery.slug.split('_').join('-vs-')),
+    },
+  };
 });
 
-const Packets = ({ initialData, subcount: intialSubcount }: Props) => {
+const Packets = ({
+  initialData,
+  subcount: intialSubcount,
+  popularSearches: initialSearches,
+  packageDownloadData,
+}: Props) => {
+  const [popularSearches] = useState(initialSearches);
   const [subcount] = useState(intialSubcount);
-  const [data, setData] = useState(initialData || { packets: [] });
   const { query } = useRouter();
-  const { packets } = data;
   const packetNames = useMemo(() => getPacketNamesFromQuery(query), [query]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const pageData = await fetchPageData(packetNames);
-      setData(pageData);
-    };
-
-    if (!initialData) {
-      fetchData();
-    }
-  }, [initialData, packetNames]);
+  const { data } = usePackagesData(packetNames, initialData);
+  const { packets } = data;
 
   useEffect(() => {
     // Log search
@@ -101,7 +110,6 @@ const Packets = ({ initialData, subcount: intialSubcount }: Props) => {
 
   if (packetNames.length) {
     const packetsString = searchPathToDisplayString(packetNames);
-
     pageTitle = `${packetsString} | npm trends`;
     pageDescription = generateDescription(packets);
   }
@@ -110,7 +118,13 @@ const Packets = ({ initialData, subcount: intialSubcount }: Props) => {
     <>
       <AppHead title={pageTitle} description={pageDescription} canonical={canonical} />
       <Layout>
-        <PackageComparison subcount={subcount} packets={packets} packetNames={packetNames} />
+        <PackageComparison
+          packageDownloadData={packageDownloadData}
+          popularSearches={popularSearches}
+          subcount={subcount}
+          packets={packets}
+          packetNames={packetNames}
+        />
       </Layout>
     </>
   );

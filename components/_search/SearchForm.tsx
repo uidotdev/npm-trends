@@ -2,54 +2,46 @@ import { useState, useCallback } from 'react';
 import { Combobox, ComboboxInput, ComboboxPopover, ComboboxList, ComboboxOption } from '@reach/combobox';
 
 import Fetch from 'services/Fetch';
+import { useSearchPackages } from 'services/queries';
 
 type Props = {
   onSearch: (event: any) => any;
 };
 
 const SearchForm = ({ onSearch }: Props) => {
-  const [results, setResults] = useState([]);
   const [value, setValue] = useState('');
 
-  const handleSearchTermChange = useCallback((e) => {
-    setValue(e.target.value);
-    const suggestQuery = {
-      // eslint-disable-next-line
-      autocomplete_suggest: {
-        text: e.target.value,
-        completion: {
-          field: 'suggest',
-          size: 10,
-        },
-      },
-    };
+  const { data: results } = useSearchPackages(value);
 
-    Fetch.getJSON(
-      `${process.env.NEXT_PUBLIC_ELASTICSEARCH_URL}/npm/_suggest?source=${JSON.stringify(suggestQuery)}`,
-    ).then((data: any) => {
-      setResults(data.autocomplete_suggest[0].options);
-    });
-  }, []);
+  const handleSubmit = useCallback(
+    (e) => {
+      e.preventDefault();
+      onSearch(value);
+      setValue('');
+    },
+    [value, onSearch],
+  );
+
+  const handleSelect = useCallback(
+    (query) => {
+      onSearch(query);
+      setValue('');
+    },
+    [onSearch],
+  );
 
   return (
-    <>
-      <Combobox
-        id="search_form"
-        aria-label="Search for a package"
-        onSelect={(query) => {
-          onSearch(query);
-          setValue('');
-        }}
-      >
+    <form onSubmit={handleSubmit} className={results.length ? 'results' : ''}>
+      <Combobox openOnFocus id="search_form" aria-label="Search for a package" onSelect={handleSelect}>
         <ComboboxInput
           id="search_form_input"
           selectOnClick
           value={value}
           placeholder="Enter an npm package..."
           className="autocomplete"
-          onChange={handleSearchTermChange}
+          onChange={(e) => setValue(e.target.value)}
         />
-        {results.length > 0 && (
+        {Boolean(results?.length) && (
           <ComboboxPopover className="combobox-popover">
             <ComboboxList>
               {results.map((result) => (
@@ -62,7 +54,7 @@ const SearchForm = ({ onSearch }: Props) => {
           </ComboboxPopover>
         )}
       </Combobox>
-    </>
+    </form>
   );
 };
 

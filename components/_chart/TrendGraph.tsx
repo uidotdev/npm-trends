@@ -10,14 +10,15 @@ type Props = {
 };
 
 const TrendGraph = ({ graphStats, colors }: Props) => {
+  const stats = graphStats?.filter(Boolean);
   const chartInstance = useRef(null);
 
   const getChartData = useCallback(() => {
     const chartData = { labels: [], datasets: [] };
-    graphStats.forEach((graphStat, i) => {
+    stats.filter(Boolean).forEach((graphStat, i) => {
       const dataColor = colors[i].join(',');
-
       const groupedData = groupDownloadsByPeriod(graphStat.downloads, 'week');
+
       if (i === 0) {
         const labels = groupedData.map((periodData) => periodData.period);
         chartData.labels = labels;
@@ -46,10 +47,11 @@ const TrendGraph = ({ graphStats, colors }: Props) => {
     }, this);
 
     return chartData;
-  }, [graphStats, colors]);
+  }, [stats, colors]);
+
 
   const getChartOptions = useCallback(() => {
-    const firstDateForChartdayjs = dayjs(graphStats[0].downloads[0].day);
+    const firstDateForChartdayjs = dayjs(stats?.[0]?.downloads?.[0]?.day || '2021-06-27');
     const monthsToNow = dayjs().diff(firstDateForChartdayjs, 'months');
 
     let xAxisDispalyUnit = 'week';
@@ -62,6 +64,9 @@ const TrendGraph = ({ graphStats, colors }: Props) => {
     }
 
     const chartOptions = {
+      animation: {
+        duration: 0,
+      },
       scaleFontColor: '#000000',
       responsive: true,
       datasetFill: false,
@@ -76,7 +81,13 @@ const TrendGraph = ({ graphStats, colors }: Props) => {
           generateLabels: (chart) => {
             const { data } = chart;
             if (!data.datasets.length) {
-              return [];
+              return [
+                {
+                  text: "loading",
+                  fillStyle: "rgba(0,0,0,0.05)",
+                  strokeStyle: 'transparent',
+                }
+              ];
             }
 
             return data.datasets.map((dataset) => ({
@@ -136,7 +147,7 @@ const TrendGraph = ({ graphStats, colors }: Props) => {
     };
 
     return chartOptions;
-  }, [graphStats]);
+  }, [stats]);
 
   const updateChart = useCallback(() => {
     if (chartInstance.current) {
@@ -149,8 +160,6 @@ const TrendGraph = ({ graphStats, colors }: Props) => {
   useEffect(() => {
     updateChart();
   }, [updateChart]);
-
-  if (!graphStats.length) return null;
 
   return (
     <div className="graph-container">
