@@ -10,11 +10,12 @@ type Props = {
 };
 
 const TrendGraph = ({ graphStats, colors }: Props) => {
+  const stats = graphStats?.filter(Boolean);
   const chartInstance = useRef(null);
 
   const getChartData = useCallback(() => {
     const chartData = { labels: [], datasets: [] };
-    graphStats.forEach((graphStat, i) => {
+    stats.filter(Boolean).forEach((graphStat, i) => {
       const dataColor = colors[i].join(',');
 
       const groupedData = groupDownloadsByPeriod(graphStat.downloads, 'week');
@@ -46,10 +47,10 @@ const TrendGraph = ({ graphStats, colors }: Props) => {
     }, this);
 
     return chartData;
-  }, [graphStats, colors]);
+  }, [stats, colors]);
 
   const getChartOptions = useCallback(() => {
-    const firstDateForChartdayjs = dayjs(graphStats[0].downloads[0].day);
+    const firstDateForChartdayjs = dayjs(stats?.[0]?.downloads?.[0]?.day || '2020-01-01');
     const monthsToNow = dayjs().diff(firstDateForChartdayjs, 'months');
 
     let xAxisDispalyUnit = 'week';
@@ -62,6 +63,9 @@ const TrendGraph = ({ graphStats, colors }: Props) => {
     }
 
     const chartOptions = {
+      animation: {
+        duration: 0,
+      },
       scaleFontColor: '#000000',
       responsive: true,
       datasetFill: false,
@@ -136,7 +140,7 @@ const TrendGraph = ({ graphStats, colors }: Props) => {
     };
 
     return chartOptions;
-  }, [graphStats]);
+  }, [stats]);
 
   const updateChart = useCallback(() => {
     if (chartInstance.current) {
@@ -149,8 +153,6 @@ const TrendGraph = ({ graphStats, colors }: Props) => {
   useEffect(() => {
     updateChart();
   }, [updateChart]);
-
-  if (!graphStats.length) return null;
 
   return (
     <div className="graph-container">

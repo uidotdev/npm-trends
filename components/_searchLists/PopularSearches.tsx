@@ -1,25 +1,6 @@
-import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import Fetch from 'services/Fetch';
 
-const PopularSearches = () => {
-  const [searches, setSearches] = useState([]);
-
-  useEffect(() => {
-    fetchPopularSearches();
-  }, []);
-
-  const fetchPopularSearches = async () => {
-    try {
-      let fetchedSearches = await Fetch.getJSON('/s/searches?limit=10');
-      fetchedSearches = fetchedSearches.map((searchQuery) => searchQuery.slug.split('_').join('-vs-'));
-
-      setSearches(fetchedSearches);
-    } catch (e) {
-      console.error('Problem fetching popular searches:', e);
-    }
-  };
-
+const PopularSearches = ({ popularSearches: searches }: { popularSearches: string[] }) => {
   const renderSearchesList = () =>
     searches.map((search) => {
       const href = `/${search}`;
@@ -39,7 +20,7 @@ const PopularSearches = () => {
       );
     }, this);
 
-  if (!searches.length) return null;
+  if (!searches?.length) return null;
 
   return (
     <div className="suggetions--box">

@@ -64,18 +64,14 @@ class Package {
   static fetchPackage = async (packageName: string): Promise<IPackage> => {
     const registryPackageDataFormatted = await Package.fetchAndFormatNpmRegistryData(packageName);
 
-    let github = null;
+    const fetchList = [PackageDownloads.fetchPoint(registryPackageDataFormatted.name, 'last-week')];
 
-    try {
-      github = registryPackageDataFormatted.repository.url.includes('github')
-        ? await Package.fetchGithubRepo(registryPackageDataFormatted.repository.url)
-        : null;
-    } catch (e) {
-      console.error('Problem fetching github data', e);
+    if (registryPackageDataFormatted?.repository?.url?.includes('github')) {
+      fetchList.push(Package.fetchGithubRepo(registryPackageDataFormatted.repository.url));
     }
 
-    const weeklyDownloads = await PackageDownloads.fetchPoint(registryPackageDataFormatted.name, 'last-week');
-
+    const [weeklyDownloads, github] = await Promise.all(fetchList);
+    
     return {
       ...registryPackageDataFormatted,
       github: {

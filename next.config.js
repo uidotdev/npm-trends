@@ -3,7 +3,7 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 });
 
 const ContentSecurityPolicy = `
-  default-src 'self';
+  default-src 'self' pl-proxy.uidotdev.workers.dev;
   connect-src 'self' bytes.dev npm-trends-gateway.onrender.com www.google-analytics.com pl-proxy.uidotdev.workers.dev;
   script-src 'self' use.fortawesome.com www.google-analytics.com pl-proxy.uidotdev.workers.dev 'unsafe-eval' 'unsafe-inline';
   style-src 'self' use.fortawesome.com 'unsafe-inline';
@@ -19,6 +19,10 @@ const securityHeaders = [
   {
     key: 'Content-Security-Policy',
     value: ContentSecurityPolicy.replace(/\s{2,}/g, ' ').trim()
+  },
+  {
+    key: 'Pragma',
+    value: ""
   }
 ];
 

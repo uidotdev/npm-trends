@@ -28,9 +28,10 @@ function getHeaders() {
 }
 
 class Fetch {
-  static getJSON(url) {
+  static getJSON(url, opts={}) {
     return fetch(fullUrl(url), {
       headers: getHeaders(),
+      ...opts,
     }).then(handleErrors);
   }
 

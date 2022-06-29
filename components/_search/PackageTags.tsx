@@ -1,10 +1,12 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import queryString from 'query-string';
-
 import IPackage from 'types/IPackage';
-import Fetch from 'services/Fetch';
 import DetailsPopover from 'components/_components/_popovers/DetailsPopover';
+import { useRelatedPackages } from 'services/queries';
+import Spinner from 'components/_components/Spinner';
+import { queryClient } from 'pages/_app';
+import { Router } from 'next/router';
 
 type Props = {
   packets: IPackage[];
@@ -12,29 +14,11 @@ type Props = {
 };
 
 const PackageTags = ({ packets, colors }: Props) => {
-  const [relatedPackets, setRelatedPackets] = useState([]);
-
   const packetNamesArray = useMemo(() => packets.map((packet) => packet.name), [packets]);
-
-  useEffect(() => {
-    const fetchRelatedPackets = async () => {
-      if (!packetNamesArray.length) return;
-
-      const searchQueryParams = queryString.stringify({
-        'search_query[]': packetNamesArray,
-      });
-
-      try {
-        const fetchedRelatedPackages: any = await Fetch.getJSON(`/s/related_packages?${searchQueryParams}&limit=5`);
-
-        setRelatedPackets(fetchedRelatedPackages);
-      } catch (e) {
-        console.error('Problem fetching related packages:', e);
-      }
-    };
-
-    fetchRelatedPackets();
-  }, [packetNamesArray]);
+  const searchQueryParams = queryString.stringify({
+    'search_query[]': packetNamesArray,
+  });
+  const { data: relatedPackets, isLoading } = useRelatedPackages(searchQueryParams);
 
   const newUrlAfterRemove = (packetNameToRemove) => {
     const remainingPackets = packetNamesArray.filter((packet) => packet !== packetNameToRemove);
@@ -42,6 +26,14 @@ const PackageTags = ({ packets, colors }: Props) => {
   };
 
   const newUrlAfterAdd = (packetNameToAdd) => `/${packetNamesArray.join('-vs-')}-vs-${packetNameToAdd}`;
+
+  const cancelRelatedPackages = useCallback(() => {
+    queryClient.cancelQueries(['related-packages', searchQueryParams]);
+  }, [searchQueryParams]);
+
+  useEffect(() => {
+    Router.events.on('routeChangeStart', cancelRelatedPackages);
+  }, [cancelRelatedPackages]);
 
   const renderPackageTags = () =>
     packets.map((packet, i) => {
@@ -61,24 +53,35 @@ const PackageTags = ({ packets, colors }: Props) => {
     });
 
   const renderRelatedPackages = () => {
-    if (!packets.length || !relatedPackets.length) return null;
-
-    if (packets.length >= 10) return null;
-
-    return relatedPackets.map((packet, i) => (
-      <li key={packet} className="related-package" style={{ marginLeft: i === 0 && '10px' }}>
-        <div>
-          <DetailsPopover packageName={packet}>
-            <Link href="/[[...packets]]" as={newUrlAfterAdd(packet)}>
-              <a>
-                <i className="icon icon-plus" aria-hidden />
-                <span className="related-package--name">{packet}</span>
-              </a>
-            </Link>
-          </DetailsPopover>
+    if (isLoading)
+    return (
+      <li className="related-package">
+        <div style={{ display: 'inline-flex', flexDirection: 'row', alignItems: 'center', opacity: '.5' }}>
+          <Spinner />
+          <span>Loading similar packages</span>
         </div>
       </li>
-    ));
+    );
+
+    if (!packets?.length || !relatedPackets?.length) return null;
+
+    return relatedPackets.map((packet, i) => {
+      if (i >= 10) return null;
+      return (
+        <li key={packet} className="related-package" style={{ marginLeft: i === 0 && '10px' }}>
+          <div>
+            <DetailsPopover packageName={packet}>
+              <Link href="/[[...packets]]" as={newUrlAfterAdd(packet)}>
+                <a>
+                  <i className="icon icon-plus" aria-hidden />
+                  <span className="related-package--name">{packet}</span>
+                </a>
+              </Link>
+            </DetailsPopover>
+          </div>
+        </li>
+      );
+    });
   };
 
   return (

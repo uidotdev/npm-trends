@@ -1,5 +1,9 @@
 @import 'styles/_mixins';
 
+
+.comparison-heading--container {
+  min-height: 75px;
+}
 .comparison-heading--heading {
   margin-bottom: 0;
   line-height: 1.3;

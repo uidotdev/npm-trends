@@ -24,7 +24,7 @@
   }
 }
 
-#search_form_input:not([value=""]) {
+#search_form_input:focus:not([value=""]) {
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
 }

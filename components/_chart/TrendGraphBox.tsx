@@ -1,14 +1,8 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import dayjs from 'dayjs';
-
-import PackageDownloads from 'services/PackageDownloads';
-
-import dynamic from 'next/dynamic';
-
-const TrendGraph = dynamic(() => import('./TrendGraph'), {
-  ssr: false,
-});
+import { usePackageDownloads } from 'services/queries';
+import TrendGraph from './TrendGraph';
 
 const djsToStartDate = (djs) => djs.startOf('week').format('YYYY-MM-DD');
 
@@ -18,38 +12,18 @@ const propTypes = {
 };
 
 const TrendGraphBox = ({ packets, colors }) => {
-  const [graphStats, setGraphStats] = useState([]);
   const [startDate, setStartDate] = useState(djsToStartDate(dayjs().subtract(12, 'months')));
+  const endDate = dayjs().subtract(1, 'week').endOf('week').format('YYYY-MM-DD');
 
-  const getStats = useCallback(async () => {
-    if (packets.length < 0) {
-      setGraphStats([]);
-    }
+  const { data: graphStats } = usePackageDownloads(packets, startDate, endDate);
 
-    const packetNames = packets.map((packet) => packet.name);
-
-    // Only show last full week
-    const endDate = dayjs().subtract(1, 'week').endOf('week').format('YYYY-MM-DD');
-
-    const fetchGraphStatsPromiseArray = packetNames.map((packetName) =>
-      PackageDownloads.fetchDownloads(packetName, startDate, endDate),
-    );
-
-    const fetchedGraphStats = await Promise.all(fetchGraphStatsPromiseArray);
-
-    setGraphStats(fetchedGraphStats);
-  }, [packets, startDate]);
-
-  useEffect(() => {
-    getStats();
-  }, [getStats, packets, startDate]);
 
   const handlePeriodChange = (e) => {
     setStartDate(e.target.value);
   };
 
   const heading = () => {
-    if (graphStats.length > 0) {
+    if (graphStats?.length > 0) {
       const selectOptionsData = [
         ['1 Month', djsToStartDate(dayjs().subtract(1, 'month'))],
         ['3 Months', djsToStartDate(dayjs().subtract(3, 'month'))],
