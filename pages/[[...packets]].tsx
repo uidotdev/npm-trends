@@ -12,6 +12,7 @@ import Layout from 'components/_templates/Layout';
 import PackageComparison from 'components/PackageComparison';
 import Fetch from 'services/Fetch';
 import { usePackagesData } from 'services/queries';
+import PackageDownloads from 'services/PackageDownloads';
 
 const fetchPageData = async (packets) => {
   if (!packets.length) {
@@ -29,6 +30,7 @@ type Props = {
   };
   subcount: number;
   popularSearches: string[];
+  packageDownloadData: any[];
 };
 
 function generateDescription(packets: IPackage[]) {
@@ -49,10 +51,11 @@ function generateDescription(packets: IPackage[]) {
 export const getServerSideProps = hasNavigationCSR(async ({ query, res }) => {
   const packetNames = getPacketNamesFromQuery(query);
 
-  const [pageData, bytesRes, popularSearches] = await Promise.all([
+  const [pageData, bytesRes, popularSearches, packageDownloadData] = await Promise.all([
     fetchPageData(packetNames),
     fetch(`https://bytes.dev/api/subcount`).then((r) => r.json()),
     Fetch.getJSON('/s/searches?limit=10'),
+    Promise.all(packetNames.map((name) => PackageDownloads.fetchDownloads(name, '2021-06-27', '2022-06-25'))),
   ]);
 
   // If error with any packages, remove errored packages from url
@@ -72,12 +75,18 @@ export const getServerSideProps = hasNavigationCSR(async ({ query, res }) => {
     props: {
       initialData: pageData,
       subcount: bytesRes.subcount,
+      packageDownloadData,
       popularSearches: popularSearches.map((searchQuery) => searchQuery.slug.split('_').join('-vs-')),
     },
   };
 });
 
-const Packets = ({ initialData, subcount: intialSubcount, popularSearches: initialSearches }: Props) => {
+const Packets = ({
+  initialData,
+  subcount: intialSubcount,
+  popularSearches: initialSearches,
+  packageDownloadData,
+}: Props) => {
   const [popularSearches] = useState(initialSearches);
   const [subcount] = useState(intialSubcount);
   const { query } = useRouter();
@@ -110,6 +119,7 @@ const Packets = ({ initialData, subcount: intialSubcount, popularSearches: initi
       <AppHead title={pageTitle} description={pageDescription} canonical={canonical} />
       <Layout>
         <PackageComparison
+          packageDownloadData={packageDownloadData}
           popularSearches={popularSearches}
           subcount={subcount}
           packets={packets}

@@ -17,8 +17,8 @@ const TrendGraph = ({ graphStats, colors }: Props) => {
     const chartData = { labels: [], datasets: [] };
     stats.filter(Boolean).forEach((graphStat, i) => {
       const dataColor = colors[i].join(',');
-
       const groupedData = groupDownloadsByPeriod(graphStat.downloads, 'week');
+
       if (i === 0) {
         const labels = groupedData.map((periodData) => periodData.period);
         chartData.labels = labels;
@@ -49,8 +49,9 @@ const TrendGraph = ({ graphStats, colors }: Props) => {
     return chartData;
   }, [stats, colors]);
 
+
   const getChartOptions = useCallback(() => {
-    const firstDateForChartdayjs = dayjs(stats?.[0]?.downloads?.[0]?.day || '2020-01-01');
+    const firstDateForChartdayjs = dayjs(stats?.[0]?.downloads?.[0]?.day || '2021-06-27');
     const monthsToNow = dayjs().diff(firstDateForChartdayjs, 'months');
 
     let xAxisDispalyUnit = 'week';
@@ -80,7 +81,13 @@ const TrendGraph = ({ graphStats, colors }: Props) => {
           generateLabels: (chart) => {
             const { data } = chart;
             if (!data.datasets.length) {
-              return [];
+              return [
+                {
+                  text: "loading",
+                  fillStyle: "rgba(0,0,0,0.05)",
+                  strokeStyle: 'transparent',
+                }
+              ];
             }
 
             return data.datasets.map((dataset) => ({

@@ -20,9 +20,10 @@ const propTypes = {
   packetNames: PropTypes.arrayOf(PropTypes.string),
   subcount: PropTypes.number,
   popularSearches: PropTypes.arrayOf(PropTypes.string),
+  packageDownloadData: PropTypes.arrayOf(PropTypes.object),
 };
 
-const PackageComparison = ({ packets, packetNames = [], subcount, popularSearches }) => {
+const PackageComparison = ({ packets, packetNames = [], subcount, popularSearches, packageDownloadData }) => {
   const { push } = useRouter();
 
   const updateFromSearch = useCallback(
@@ -43,7 +44,7 @@ const PackageComparison = ({ packets, packetNames = [], subcount, popularSearche
       <PackageTags packets={packets} colors={colors} />
       {packets.length > 0 && (
         <div>
-          <TrendGraphBox packets={packets} colors={colors} />
+          <TrendGraphBox packageDownloadData={packageDownloadData} packets={packets} colors={colors} />
           <PackageStats packets={packets} />
         </div>
       )}
@@ -58,6 +59,5 @@ const PackageComparison = ({ packets, packetNames = [], subcount, popularSearche
 };
 
 PackageComparison.propTypes = propTypes;
-
 
 export default PackageComparison;

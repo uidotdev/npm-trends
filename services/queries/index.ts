@@ -81,12 +81,12 @@ export function useSearchPackages(searchQuery: string) {
   );
 }
 
-export function usePackageDownloads(packets: IPackage[], startDate: string, endDate: string) {
+export function usePackageDownloads(packets: IPackage[], startDate: string, endDate: string, initialData = []) {
   return useQuery(
     ['package-downloads', { startDate, endDate, packets }],
     () => Promise.all(packets.map(({ name }) => PackageDownloads.fetchDownloads(name, startDate, endDate))),
     {
-      initialData: [],
+      initialData,
       keepPreviousData: true,
     },
   );
