@@ -1,4 +1,3 @@
-/* eslint-disable prefer-destructuring */
 // Why no destructuring? See: https://github.com/vercel/next.js/issues/19420
 const GITHUB_REPOS_API_ENDPOINT = process.env.NEXT_PUBLIC_GITHUB_REPOS_API_ENDPOINT;
 const NPM_DOWNLOADS_API_ENDPOINT = process.env.NEXT_PUBLIC_NPM_DOWNLOADS_API_ENDPOINT;

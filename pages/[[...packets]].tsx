@@ -48,7 +48,7 @@ function generateDescription(packets: IPackage[]) {
 }
 
 export const getServerSideProps = hasNavigationCSR(async ({ query, res }) => {
-  const label = query.packets?.join ? query.packets.join(',') : 'request';
+  const label = query.packets?.join ? query.packets.join(',') : Date.now().toString();
   console.log(`Starting request for ${label}`);
   console.time(label);
   const packetNames = getPacketNamesFromQuery(query);
@@ -61,6 +61,7 @@ export const getServerSideProps = hasNavigationCSR(async ({ query, res }) => {
 
   // If error with any packages, remove errored packages from url
   if (pageData.packets && packetNames.length !== pageData.packets.length) {
+    console.timeEnd(label);
     const packetsUrlParam = pageData.packets.map((p) => p.name).join('-vs-');
 
     return {

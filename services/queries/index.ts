@@ -57,7 +57,6 @@ export function useSearchPackages(searchQuery: string) {
     ['search-packages', searchQuery],
     async () => {
       const suggestQuery = {
-        // eslint-disable-next-line
         autocomplete_suggest: {
           text: searchQuery,
           completion: {
