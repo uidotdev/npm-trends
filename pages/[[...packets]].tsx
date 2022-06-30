@@ -28,7 +28,6 @@ type Props = {
   initialData: {
     packets: IPackage[];
   };
-  subcount: number;
   popularSearches: string[];
   packageDownloadData: any[];
 };
@@ -51,9 +50,8 @@ function generateDescription(packets: IPackage[]) {
 export const getServerSideProps = hasNavigationCSR(async ({ query, res }) => {
   const packetNames = getPacketNamesFromQuery(query);
 
-  const [pageData, bytesRes, popularSearches, packageDownloadData] = await Promise.all([
+  const [pageData, popularSearches, packageDownloadData] = await Promise.all([
     fetchPageData(packetNames),
-    fetch(`https://bytes.dev/api/subcount`).then((r) => r.json()),
     Fetch.getJSON('/s/searches?limit=10'),
     Promise.all(packetNames.map((name) => PackageDownloads.fetchDownloads(name, '2021-06-27', '2022-06-25'))),
   ]);
@@ -74,7 +72,6 @@ export const getServerSideProps = hasNavigationCSR(async ({ query, res }) => {
   return {
     props: {
       initialData: pageData,
-      subcount: bytesRes.subcount,
       packageDownloadData,
       popularSearches: popularSearches.map((searchQuery) => searchQuery.slug.split('_').join('-vs-')),
     },
@@ -83,12 +80,10 @@ export const getServerSideProps = hasNavigationCSR(async ({ query, res }) => {
 
 const Packets = ({
   initialData,
-  subcount: intialSubcount,
   popularSearches: initialSearches,
   packageDownloadData,
 }: Props) => {
   const [popularSearches] = useState(initialSearches);
-  const [subcount] = useState(intialSubcount);
   const { query } = useRouter();
   const packetNames = useMemo(() => getPacketNamesFromQuery(query), [query]);
   const { data } = usePackagesData(packetNames, initialData);
@@ -121,7 +116,6 @@ const Packets = ({
         <PackageComparison
           packageDownloadData={packageDownloadData}
           popularSearches={popularSearches}
-          subcount={subcount}
           packets={packets}
           packetNames={packetNames}
         />
