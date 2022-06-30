@@ -9,39 +9,18 @@ import Fetch from './Fetch';
 import PackageDownloads from './PackageDownloads';
 
 class Package {
-  static fetchPackages = async (
-    packetNames: string[],
-  ): Promise<{ validPackages: IPackage[]; invalidPackages: string[] }> => {
+  static fetchPackages = async (packetNames: string[]): Promise<{ validPackages: IPackage[] }> => {
     // packageNames format: ['react', '@angular-core']
-
-    const fetchedPackages: (IPackage | { hasError: boolean; name: string })[] = await Promise.all(
-      packetNames.map(async (packageName) => {
-        try {
-          return await Package.fetchPackage(packageName);
-        } catch (e) {
-          console.error('Problem fetching package data.', e);
-          return {
-            hasError: true,
-            name: packageName,
-          };
-        }
-      }),
-    );
-
-    const isValidPackage = (p) => !p.hasError && p.name;
-
-    const validPackages: IPackage[] = fetchedPackages
-      .filter((p): p is IPackage => isValidPackage(p))
-      .map((p, i) => ({
-        ...p,
-        color: colors[i],
-      }));
-
-    const invalidPackages = fetchedPackages.filter((p) => !isValidPackage(p)).map((p) => p.name);
+    const pkgs = await Promise.allSettled(packetNames.map((name) => Package.fetchPackage(name)));
+    const validPackages = pkgs.reduce((acc, pkg, i) => {
+      if (pkg.status === 'fulfilled') {
+        acc.push({ ...pkg.value, color: colors[i] });
+      }
+      return acc;
+    }, []);
 
     return {
       validPackages,
-      invalidPackages,
     };
   };
 
@@ -62,18 +41,20 @@ class Package {
   };
 
   static fetchPackage = async (packageName: string): Promise<IPackage> => {
-    const registryPackageDataFormatted = await Package.fetchAndFormatNpmRegistryData(packageName);
 
-    const fetchList = [PackageDownloads.fetchPoint(registryPackageDataFormatted.name, 'last-week')];
+    const [weeklyDownloads, registry] = await Promise.all([
+      PackageDownloads.fetchPoint(packageName, 'last-week'),
+      Package.fetchAndFormatNpmRegistryData(packageName),
+    ]);
 
-    if (registryPackageDataFormatted?.repository?.url?.includes('github')) {
-      fetchList.push(Package.fetchGithubRepo(registryPackageDataFormatted.repository.url));
+    let github = {};
+    
+    if (registry?.repository?.url?.includes('github')) {
+      github = await Package.fetchGithubRepo(registry.repository.url);
     }
 
-    const [weeklyDownloads, github] = await Promise.all(fetchList);
-    
     return {
-      ...registryPackageDataFormatted,
+      ...registry,
       github: {
         starsCount: _get(github, 'stargazers_count', null),
         forksCount: _get(github, 'collected.metadata.github.forksCount', null),
