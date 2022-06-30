@@ -16,7 +16,7 @@
     "dayjs": "^1.11.3",
     "hosted-git-info": "^3.0.8",
     "lodash": "^4.17.21",
-    "next": "^12.1.6",
+    "next": "^12.2.0",
     "next-plausible": "^3.2.0",
     "normalize.css": "^8.0.0",
     "prop-types": "^15.7.2",
