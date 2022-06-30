@@ -43,10 +43,19 @@ const EmailSignup = () => {
           </div>
         ) : (
           <>
-            <h3>Sick of boring JavaScript newsletters?
-              <img className="bytes-logo-small" height="40" width="40" alt="Bytes newsletter logo" src='https://react-query.tanstack.com/images/bytes-logo.png' />
+            <h3>
+              Sick of boring JavaScript newsletters?
+              <img
+                className="bytes-logo-small"
+                height="40"
+                width="40"
+                alt="Bytes newsletter logo"
+                src="https://react-query.tanstack.com/images/bytes-logo.png"
+              />
             </h3>
-            <p><a href="https://bytes.dev">Bytes</a> is a JavaScript newsletter you'll actually enjoy reading.</p>
+            <p>
+              <a href="https://bytes.dev">Bytes</a> is a JavaScript newsletter you&apos;ll actually enjoy reading.
+            </p>
             <p>Delivered every Monday, for free.</p>
             <br />
 
