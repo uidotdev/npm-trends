@@ -5,7 +5,7 @@
 
 .email-signup .control {
   font-size: 14px;
-  display: flex; 
+  display: flex;
 }
 
 .email-signup-input {
@@ -33,4 +33,13 @@
 .email-signup-subtext {
   font-size: 12px;
   letter-spacing: normal;
+}
+
+.bytes-logo-small {
+  max-width: 100%;
+  height: auto;
+  position: relative;
+  top: 15px;
+  left: 10px;
+
 }

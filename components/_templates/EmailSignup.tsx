@@ -11,7 +11,7 @@ function sendBytesOptIn({ email, source }) {
   }).then((res) => res.json());
 }
 
-const EmailSignup = ({ subcount = 105000 }: { subcount?: number }) => {
+const EmailSignup = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [subscribed, setSubscribed] = useState(false);
   const [email, setEmail] = useState('');
@@ -20,7 +20,7 @@ const EmailSignup = ({ subcount = 105000 }: { subcount?: number }) => {
     event.preventDefault();
     if (!email) return;
     setIsLoading(true);
-    sendBytesOptIn({ email, source: 'useHooks' }).then((res) => {
+    sendBytesOptIn({ email, source: 'npmtrends' }).then((res) => {
       if (res.error) {
         setEmail('');
         setIsLoading(false);
@@ -43,8 +43,20 @@ const EmailSignup = ({ subcount = 105000 }: { subcount?: number }) => {
           </div>
         ) : (
           <>
-            <h3>Sick of boring newsletters?</h3>
-            <p>Bytes is a weekly dose of JavaScript, delivered every Monday.</p>
+            <h3>
+              Sick of boring JavaScript newsletters?
+              <img
+                className="bytes-logo-small"
+                height="40"
+                width="40"
+                alt="Bytes newsletter logo"
+                src="https://react-query.tanstack.com/images/bytes-logo.png"
+              />
+            </h3>
+            <p>
+              <a href="https://bytes.dev">Bytes</a> is a JavaScript newsletter you&apos;ll actually enjoy reading.
+            </p>
+            <p>Delivered every Monday, for free.</p>
             <br />
 
             <form onSubmit={subscribe}>
@@ -52,7 +64,7 @@ const EmailSignup = ({ subcount = 105000 }: { subcount?: number }) => {
                 <input
                   type="email"
                   className="email-signup-input"
-                  placeholder="Your Email"
+                  placeholder="tyler@leftpad.com"
                   onChange={(event) => {
                     setEmail(event.target.value);
                   }}
@@ -63,9 +75,7 @@ const EmailSignup = ({ subcount = 105000 }: { subcount?: number }) => {
               </div>
             </form>
             <p className="email-signup-subtext">
-              Loved by{' '}
-              <a href="https://twitter.com/uidotdev/timelines/1428028877129936899">{subcount.toLocaleString()}</a>{' '}
-              developers.
+              <a href="https://twitter.com/uidotdev/timelines/1428028877129936899">Loved by over 100,000 developers</a>
             </p>
           </>
         )}

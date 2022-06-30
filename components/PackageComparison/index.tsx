@@ -18,12 +18,11 @@ import PackageComparisonHeading from './_components/PackageComparisonHeading';
 const propTypes = {
   packets: PropTypes.arrayOf(PropTypes.object),
   packetNames: PropTypes.arrayOf(PropTypes.string),
-  subcount: PropTypes.number,
   popularSearches: PropTypes.arrayOf(PropTypes.string),
   packageDownloadData: PropTypes.arrayOf(PropTypes.object),
 };
 
-const PackageComparison = ({ packets, packetNames = [], subcount, popularSearches, packageDownloadData }) => {
+const PackageComparison = ({ packets, packetNames = [], popularSearches, packageDownloadData }) => {
   const { push } = useRouter();
 
   const updateFromSearch = useCallback(
@@ -53,7 +52,7 @@ const PackageComparison = ({ packets, packetNames = [], subcount, popularSearche
         <RelatedSearches packetNames={packetNames} />
       </div>
       <Readme packets={packets} />
-      <EmailSignup subcount={subcount} />
+      <EmailSignup />
     </div>
   );
 };
