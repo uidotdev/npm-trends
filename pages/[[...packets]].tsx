@@ -48,6 +48,9 @@ function generateDescription(packets: IPackage[]) {
 }
 
 export const getServerSideProps = hasNavigationCSR(async ({ query, res }) => {
+  const label = query.packets?.join ? query.packets.join(',') : 'request';
+  console.log(`Starting request for ${label}`);
+  console.time(label);
   const packetNames = getPacketNamesFromQuery(query);
 
   const [pageData, popularSearches, packageDownloadData] = await Promise.all([
@@ -68,6 +71,7 @@ export const getServerSideProps = hasNavigationCSR(async ({ query, res }) => {
     };
   }
 
+  console.timeEnd(label);
   res.setHeader('Cache-Control', 's-maxage=86400, stale-while-revalidate');
   return {
     props: {
@@ -78,11 +82,7 @@ export const getServerSideProps = hasNavigationCSR(async ({ query, res }) => {
   };
 });
 
-const Packets = ({
-  initialData,
-  popularSearches: initialSearches,
-  packageDownloadData,
-}: Props) => {
+const Packets = ({ initialData, popularSearches: initialSearches, packageDownloadData }: Props) => {
   const [popularSearches] = useState(initialSearches);
   const { query } = useRouter();
   const packetNames = useMemo(() => getPacketNamesFromQuery(query), [query]);

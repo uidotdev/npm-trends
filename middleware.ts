@@ -7,6 +7,7 @@ export function middleware(request: NextRequest) {
     const newPath = `/${pathname.substring(1).split('-vs-').sort().join('-vs-')}`;
     if (newPath !== pathname) {
       const url = new URL(origin + newPath);
+      console.log(`Redirecting to ${url.href}`);
       return NextResponse.redirect(url, 301);
     }
     return NextResponse.next();
