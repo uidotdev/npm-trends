@@ -41,21 +41,15 @@ class Package {
   };
 
   static fetchPackage = async (packageName: string): Promise<IPackage> => {
-
     const [weeklyDownloads, registry] = await Promise.all([
       PackageDownloads.fetchPoint(packageName, 'last-week'),
       Package.fetchAndFormatNpmRegistryData(packageName),
     ]);
 
     let github = {};
-    
+
     if (registry?.repository?.url?.includes('github')) {
-      try {
-        github = await Package.fetchGithubRepo(registry.repository.url);
-      } catch(e) {
-        // we probably got rate limited
-        console.log(e.message);
-      }
+      github = await Package.fetchGithubRepo(registry.repository.url);
     }
 
     return {
@@ -103,8 +97,11 @@ class Package {
     try {
       const repositoryPath = url.split('.com')[1].replace('.git', '');
       return await Fetch.getJSON(githubReposURL(repositoryPath));
-    } catch (e) {
-      console.error('Problem fetching GitHub data', e);
+    } catch (res) {
+      if (typeof window === 'undefined') {
+        const { message } = await res.json();
+        console.error('Problem fetching GitHub data', message);
+      }
       return {};
     }
   };
