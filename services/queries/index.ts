@@ -8,9 +8,8 @@ export function useRelatedPackages(searchQueryParams: string) {
   return useQuery(
     ['related-packages', searchQueryParams],
     async ({ signal }) => {
-      // const data = await Fetch.getJSON(`/s/related_packages?${searchQueryParams}&limit=5`, { signal });
-      // return data;
-      return []
+      const data = await Fetch.getJSON(`/s/related_packages?${searchQueryParams}&limit=5`, { signal });
+      return data;
     },
     {
       enabled: Boolean(searchQueryParams),
