@@ -17,7 +17,6 @@ export const hasNavigationCSR = (next) => async (ctx) => {
   const callback = async () => {
     try {
       const result = await next?.(ctx);
-
       return result;
     } catch {
       ctx.res.removeHeader('Cache-Control');

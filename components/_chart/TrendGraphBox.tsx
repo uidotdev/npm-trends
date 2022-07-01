@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 import { usePackageDownloads } from 'services/queries';
 import TrendGraph from './TrendGraph';
 
-const djsToStartDate = (djs) => djs.startOf('week').format('YYYY-MM-DD');
+export const djsToStartDate = (djs) => djs.startOf('week').format('YYYY-MM-DD');
 
 const propTypes = {
   packets: PropTypes.arrayOf(PropTypes.object).isRequired,

@@ -18,7 +18,7 @@ export const getPacketNamesFromQuery = (query) => {
   return param.length ? param.split('-vs-') : [];
 };
 
-export const packetNamesToParam = (packetNames) => packetNames.join('-vs-');
+export const packetNamesToParam = (packetNames) => packetNames.sort().join('-vs-');
 
 // 'react-vs-angular' -> 'react vs angular'
 export const searchPathToDisplayString = (packetNames) => packetNames.join(' vs ');

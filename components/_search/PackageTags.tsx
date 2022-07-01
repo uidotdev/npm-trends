@@ -25,7 +25,7 @@ const PackageTags = ({ packets, colors }: Props) => {
     return `/${remainingPackets.join('-vs-')}`;
   };
 
-  const newUrlAfterAdd = (packetNameToAdd) => `/${packetNamesArray.join('-vs-')}-vs-${packetNameToAdd}`;
+  const newUrlAfterAdd = (packetNameToAdd) => `/${packetNamesArray.concat(packetNameToAdd).sort().join('-vs-')}`;
 
   const cancelRelatedPackages = useCallback(() => {
     queryClient.cancelQueries(['related-packages', searchQueryParams]);
@@ -54,14 +54,14 @@ const PackageTags = ({ packets, colors }: Props) => {
 
   const renderRelatedPackages = () => {
     if (isLoading)
-    return (
-      <li className="related-package">
-        <div style={{ display: 'inline-flex', flexDirection: 'row', alignItems: 'center', opacity: '.5' }}>
-          <Spinner />
-          <span>Loading similar packages</span>
-        </div>
-      </li>
-    );
+      return (
+        <li className="related-package">
+          <div style={{ display: 'inline-flex', flexDirection: 'row', alignItems: 'center', opacity: '.5' }}>
+            <Spinner />
+            <span>Loading similar packages</span>
+          </div>
+        </li>
+      );
 
     if (!packets?.length || !relatedPackets?.length) return null;
 
