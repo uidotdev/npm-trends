@@ -50,7 +50,12 @@ class Package {
     let github = {};
     
     if (registry?.repository?.url?.includes('github')) {
-      github = await Package.fetchGithubRepo(registry.repository.url);
+      try {
+        github = await Package.fetchGithubRepo(registry.repository.url);
+      } catch(e) {
+        // we probably got rate limited
+        console.log(e.message);
+      }
     }
 
     return {
