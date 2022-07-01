@@ -54,7 +54,7 @@ export const getServerSideProps = hasNavigationCSR(async ({ query, res, req }) =
   if(req.url !== getCanonical(packetNames)) {
     return {
       redirect: {
-        permanent: false,
+        permanent: true,
         destination: getCanonical(packetNames),
       },
     };
