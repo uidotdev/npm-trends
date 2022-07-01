@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/router';
+import dayjs from 'dayjs';
 
 import IPackage from 'types/IPackage';
 import API from 'services/API';
@@ -13,6 +14,7 @@ import PackageComparison from 'components/PackageComparison';
 import Fetch from 'services/Fetch';
 import { usePackagesData } from 'services/queries';
 import PackageDownloads from 'services/PackageDownloads';
+import { djsToStartDate } from 'components/_chart/TrendGraphBox';
 
 const fetchPageData = async (packets) => {
   if (!packets.length) {
@@ -47,21 +49,28 @@ function generateDescription(packets: IPackage[]) {
   return `Comparing trends for ${str}.`;
 }
 
-export const getServerSideProps = hasNavigationCSR(async ({ query, res }) => {
-  const label = query.packets?.join ? query.packets.join(',') : Date.now().toString();
-  console.log(`Starting request for ${label}`);
-  console.time(label);
+export const getServerSideProps = hasNavigationCSR(async ({ query, res, req }) => {
   const packetNames = getPacketNamesFromQuery(query);
+  if(req.url !== getCanonical(packetNames)) {
+    return {
+      redirect: {
+        permanent: true,
+        destination: getCanonical(packetNames),
+      },
+    };
+  }
+
+  const startDate = djsToStartDate(dayjs().subtract(12, 'months'));
+  const endDate = dayjs().subtract(1, 'week').endOf('week').format('YYYY-MM-DD');
 
   const [pageData, popularSearches, packageDownloadData] = await Promise.all([
     fetchPageData(packetNames),
     Fetch.getJSON('/s/searches?limit=10'),
-    Promise.all(packetNames.map((name) => PackageDownloads.fetchDownloads(name, '2021-06-27', '2022-06-25'))),
+    Promise.all(packetNames.map((name) => PackageDownloads.fetchDownloads(name, startDate, endDate))),
   ]);
 
   // If error with any packages, remove errored packages from url
   if (pageData.packets && packetNames.length !== pageData.packets.length) {
-    console.timeEnd(label);
     const packetsUrlParam = pageData.packets.map((p) => p.name).join('-vs-');
 
     return {
@@ -72,7 +81,6 @@ export const getServerSideProps = hasNavigationCSR(async ({ query, res }) => {
     };
   }
 
-  console.timeEnd(label);
   res.setHeader('Cache-Control', 's-maxage=86400, stale-while-revalidate');
   return {
     props: {
