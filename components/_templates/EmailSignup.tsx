@@ -50,7 +50,7 @@ const EmailSignup = () => {
                 height="40"
                 width="40"
                 alt="Bytes newsletter logo"
-                src="https://react-query.tanstack.com/images/bytes-logo.png"
+                src="/images/bytes-logo.png"
               />
             </h3>
             <p>
