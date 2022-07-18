@@ -5,26 +5,27 @@ const propTypes = {
   packet: PropTypes.object,
 };
 
-const BundlephobiaRenderer = ({ packet }) => {
+const PackagephobiaRenderer = ({ packet }) => {
   const [hideSize, setHideSize] = useState(false);
 
   if (hideSize) return null;
 
-  const sizeUrl = `https://bundlephobia.com/result?p=${packet.name}`;
+  const sizeUrl = `https://packagephobia.com/result?p=${packet.name}`;
+  const badgeUrl = `https://packagephobia.com/badge?p=${packet.name}`;
   return (
     <a href={sizeUrl} target="_blank" rel="noopener noreferrer">
       <img
         width={146}
         height={20}
         onError={() => setHideSize(true)}
-        src={`https://flat.badgen.net/bundlephobia/minzip/${packet.name}`}
-        alt={`Minified + gzip package size for ${packet.name} in KB`}
+        src={badgeUrl}
+        alt={`Install size for ${packet.name}, including dependencies`}
         className="badge--in-table"
       />
     </a>
   );
 };
 
-BundlephobiaRenderer.propTypes = propTypes;
+PackagephobiaRenderer.propTypes = propTypes;
 
-export default BundlephobiaRenderer;
+export default PackagephobiaRenderer;

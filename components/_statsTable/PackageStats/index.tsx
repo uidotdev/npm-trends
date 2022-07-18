@@ -5,7 +5,7 @@ import DetailsPopover from 'components/_components/_popovers/DetailsPopover';
 import PackageLinks from 'components/_components/PackageLinks';
 import Tooltip from 'components/_components/Tooltip';
 import PackageStatsRow from './_components/PackageStatsRow';
-import BundlephobiaRenderer from './_components/BundlephobiaRenderer';
+import PackagephobiaRenderer from './_components/PackagephobiaRenderer';
 import styles from './PackageStats.module.scss';
 
 dayjs.extend(relativeTime);
@@ -66,7 +66,7 @@ const columns = [
     renderer: (packet: IPackage) =>
       packet.createdDate ? dayjs(packet.createdDate).fromNow() : <i aria-hidden className="icon icon-dash" />,
   },
-  { heading: 'Size', renderer: (packet: IPackage) => <BundlephobiaRenderer packet={packet} /> },
+  { heading: 'Size', renderer: (packet: IPackage) => <PackagephobiaRenderer packet={packet} /> },
 ];
 
 type Props = {
