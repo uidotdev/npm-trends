@@ -102,7 +102,7 @@ const Packets = ({ initialData, popularSearches: initialSearches, packageDownloa
     // Log search
     if (packets.length) {
       const packetsArray = packets.map((p) => p.name);
-      window.requestIdleCallback(() => {
+      requestIdleCallback(() => {
         API.logSearch(packetsArray, "view")
       });
     }
