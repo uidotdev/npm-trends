@@ -51,7 +51,7 @@ function generateDescription(packets: IPackage[]) {
 
 export const getServerSideProps = hasNavigationCSR(async ({ query, res, req }) => {
   const packetNames = getPacketNamesFromQuery(query);
-  if(req.url !== getCanonical(packetNames)) {
+  if (req.url !== getCanonical(packetNames)) {
     return {
       redirect: {
         permanent: true,
@@ -102,7 +102,6 @@ const Packets = ({ initialData, popularSearches: initialSearches, packageDownloa
     // Log search
     if (packets.length) {
       const packetsArray = packets.map((p) => p.name);
-
       API.logSearch(packetsArray, 'view');
     }
   }, [packets]);

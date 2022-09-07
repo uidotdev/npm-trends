@@ -46,20 +46,16 @@ class Package {
       Package.fetchAndFormatNpmRegistryData(packageName),
     ]);
 
-    let github = {};
+    let github = {} as any;
 
     if (registry?.repository?.url?.includes('github')) {
       github = await Package.fetchGithubRepo(registry.repository.url);
     }
 
+
     return {
       ...registry,
-      github: {
-        starsCount: _get(github, 'stargazers_count', null),
-        forksCount: _get(github, 'collected.metadata.github.forksCount', null),
-        issuesCount: _get(github, 'collected.metadata.github.issues.count', null),
-        openIssuesCount: _get(github, 'open_issues_count', null),
-      },
+      github,
       downloads: {
         weekly: weeklyDownloads.downloads,
       },
