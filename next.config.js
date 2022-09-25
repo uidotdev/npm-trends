@@ -4,12 +4,12 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 
 const ContentSecurityPolicy = `
   default-src 'self' pl-proxy.uidotdev.workers.dev npm-trends-proxy.uidotdev.workers.dev;
-  connect-src 'self' bytes.dev npm-trends-proxy.uidotdev.workers.dev npm-trends-gateway.onrender.com www.google-analytics.com pl-proxy.uidotdev.workers.dev;
-  script-src 'self' use.fortawesome.com www.google-analytics.com npm-trends-proxy.uidotdev.workers.dev pl-proxy.uidotdev.workers.dev 'unsafe-eval' 'unsafe-inline';
+  connect-src 'self' bytes.dev npm-trends-proxy.uidotdev.workers.dev npm-trends-gateway.onrender.com connect.facebook.net pl-proxy.uidotdev.workers.dev;
+  script-src 'self' use.fortawesome.com connect.facebook.net npm-trends-proxy.uidotdev.workers.dev pl-proxy.uidotdev.workers.dev 'unsafe-eval' 'unsafe-inline';
   style-src 'self' use.fortawesome.com 'unsafe-inline';
   img-src 'self' https: data:;
   font-src 'self' data:;  
-`
+`;
 
 const securityHeaders = [
   {
@@ -18,12 +18,12 @@ const securityHeaders = [
   },
   {
     key: 'Content-Security-Policy',
-    value: ContentSecurityPolicy.replace(/\s{2,}/g, ' ').trim()
+    value: ContentSecurityPolicy.replace(/\s{2,}/g, ' ').trim(),
   },
   {
     key: 'Pragma',
-    value: ""
-  }
+    value: '',
+  },
 ];
 
 module.exports = withBundleAnalyzer({
