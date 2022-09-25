@@ -1,13 +1,12 @@
 import { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import Router from 'next/router';
+import { useRouter } from 'next/router';
 import { ToastContainer } from 'react-toastify';
 import PlausibleProvider from 'next-plausible';
 import { QueryClientProvider, QueryClient } from 'react-query';
-
+import Script from 'next/script';
 import AppHead from 'components/_templates/AppHead';
-
-import { initGA, logPageView } from 'utils/googleAnalytics';
+import { pageview, FB_PIXEL_ID } from '../utils/pixel';
 
 import 'normalize.css/normalize.css';
 import 'reset-css/reset.css';
@@ -28,17 +27,19 @@ export const queryClient = new QueryClient({
 });
 
 const MyApp = ({ Component, pageProps }) => {
-  useEffect(() => {
-    if (!(window as any).GA_INITIALIZED) {
-      initGA();
-      (window as any).GA_INITIALIZED = true;
-    }
-    logPageView();
+  const router = useRouter();
 
-    Router.events.on('routeChangeComplete', () => {
-      logPageView();
-    });
-  }, []);
+  useEffect(() => {
+    pageview();
+
+    const handleRouteChange = () => {
+      pageview();
+    };
+
+    router.events.on('routeChangeComplete', handleRouteChange);
+
+    return () => router.events.off('routeChangeComplete', handleRouteChange);
+  }, [router.events]);
 
   const pageTitle = 'NPM Trends: Compare NPM package downloads';
   const pageDescription =
@@ -56,6 +57,23 @@ const MyApp = ({ Component, pageProps }) => {
       <QueryClientProvider client={queryClient}>
         <ToastContainer />
         <AppHead title={pageTitle} description={pageDescription} />
+        <Script
+          id="fb-pixel"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+            !function(f,b,e,v,n,t,s)
+            {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+            n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+            if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+            n.queue=[];t=b.createElement(e);t.async=!0;
+            t.src=v;s=b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t,s)}(window, document,'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
+            fbq('init', ${FB_PIXEL_ID});
+          `,
+          }}
+        />
         <Component {...pageProps} />
       </QueryClientProvider>
     </PlausibleProvider>
