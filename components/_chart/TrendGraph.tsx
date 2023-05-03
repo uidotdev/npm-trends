@@ -11,17 +11,28 @@ type Props = {
 };
 
 const usePreviousValue = value => {
-    const ref = useRef();
-    useEffect(() => {
-      ref.current = value;
-    });
-    return ref.current;
-  };
+  const ref = useRef();
+  useEffect(() => {
+    ref.current = value;
+  });
+  return ref.current;
+};
+
+const datasetConsts = {
+  pointRadius: 4,
+  pointHoverRadius: 4,
+  pointBorderWidth: 1,
+  pointBackgroundColor: 'transparent',
+  pointBorderColor: 'transparent',
+  pointHoverBorderColor: '#ffffff',
+  fill: false,
+};
 
 const TrendGraph = ({ graphStats, dataType, colors }: Props) => {
   const stats = graphStats?.filter(Boolean);
   const chartInstance = useRef(null);
   const prevDataType = usePreviousValue(dataType);
+  const isDownloadView = dataType == "Downloads";
 
   if (prevDataType != dataType && chartInstance.current) {
     const chartType = (function () {
@@ -35,58 +46,68 @@ const TrendGraph = ({ graphStats, dataType, colors }: Props) => {
     const ctx = chartInstance.current.ctx;
     const data = chartInstance.current.data;
     
+    // to change the graph type in Chart.js, we must recreate the graph
+    // simply changing the chartInstance.type property does not re-render
     chartInstance.current.destroy();
     chartInstance.current = new Chart(ctx, {
-        type: chartType,
-        data:data
-      });
+      type: chartType,
+      data: data
+    });
   }
 
-  const getChartData = useCallback(() => {
+  const getDownloadsChartData = useCallback(() => {
     const chartData = { labels: [], datasets: [] };
-    const typeLabels = Object.keys(stats).map(key => stats[key].package);
-
     stats.filter(Boolean).forEach((graphStat, i) => {
       const dataColor = colors[i].join(',');
-      const downloads = graphStat.downloads;
       const groupedData = groupDownloadsByPeriod(graphStat.downloads, 'week');
-      const avgRateOfChange = (downloads[downloads.length-1].downloads - downloads[0].downloads)/downloads.length;
 
       if (i === 0) {
-        chartData.labels =
-          dataType == "Downloads"
-          ? groupedData.map((periodData) => periodData.period)
-          : typeLabels;
+        const labels = groupedData.map((periodData) => periodData.period);
+        chartData.labels = labels;
       }
 
-      const data = 
-        dataType == "Downloads"
-        ? groupedData.map((periodData) => ({
-            x: periodData.period,
-            y: periodData.downloads
-        }))
-        : [{
-            x: graphStat.package,
-            y: avgRateOfChange
-        }];
-
-      const dataset = {
+      const data = groupedData.map((periodData) => ({
+        x: periodData.period,
+        y: periodData.downloads,
+      }));
+      const downloadsDataset = {
         label: graphStat.package,
         backgroundColor: `rgba(${dataColor},1)`,
         borderColor: `rgba(${dataColor},1)`,
-        pointRadius: 4,
-        pointHoverRadius: 4,
-        pointBorderWidth: 1,
-        pointBackgroundColor: 'transparent',
-        pointBorderColor: 'transparent',
         pointHoverBackgroundColor: `rgba(${dataColor},1)`,
-        pointHoverBorderColor: '#ffffff',
-        fill: false,
         data,
       };
+      const dataset = Object.assign({}, datasetConsts, downloadsDataset);
+
       chartData.datasets.push(dataset);
     }, this);
 
+    return chartData;
+  }, [stats, colors]);
+
+  const getAvgRateOfChangeChartData = useCallback(() => {
+    const chartData = { labels: [], datasets: [] };
+    const typeLabels = Object.keys(stats).map(key => stats[key].package);
+    let totalData = []
+    chartData.labels = typeLabels
+    
+    stats.filter(Boolean).forEach((graphStat, i) => {
+      const downloads = graphStat.downloads;
+      const avgRateOfChange = (downloads[downloads.length-1].downloads - downloads[0].downloads)/downloads.length;
+      totalData.push({y: avgRateOfChange});
+    }, this);
+    
+    const backgroundColors = colors.map(color  => `rgba(${color.join(',')},1)`).slice(0, totalData.length);
+    const avgRateOfChangeDataset = {
+      labels: typeLabels,
+      backgroundColor: backgroundColors, 
+      borderColor:backgroundColors,
+      pointHoverBackgroundColor: backgroundColors,
+      data: totalData,
+    };
+    const dataset = Object.assign({}, datasetConsts, avgRateOfChangeDataset);
+    
+    chartData.datasets.push(dataset);
     return chartData;
   }, [stats, colors]);
 
@@ -130,12 +151,22 @@ const TrendGraph = ({ graphStats, dataType, colors }: Props) => {
                 }
               ];
             }
-            
-            return data.datasets.map((dataset) => ({
-              text: dataset.label,
-              fillStyle: dataset.borderColor,
-              strokeStyle: 'transparent',
-            }));
+            // if this is the download view, there are multiple datasets, each with one label
+            // if this is the avg rate of change view, there is a single dataset with the lists of labels
+            return isDownloadView
+            ? data.datasets.map((dataset) => ({
+                text: dataset.label,
+                fillStyle: dataset.borderColor,
+                strokeStyle: 'transparent',
+              }))
+            : (function () {
+                const dataset = data.datasets[0];
+                return dataset.labels.map((label, idx) => ({
+                  text: label,
+                  fillStyle: dataset.borderColor[idx],
+                  strokeStyle: 'transparent',
+                }));
+              })();
           },
         },
       },
@@ -150,20 +181,19 @@ const TrendGraph = ({ graphStats, dataType, colors }: Props) => {
         ],
         xAxes: [
           {
-            type: dataType == "Downloads" ? 'time' : 'category',
-            align: 'center',
+            type: isDownloadView ? 'time' : 'category',
             time: {
               unit: xAxisDispalyUnit,
               tooltipFormat: 'll',
               displayFormats: {
                 quarter: 'MMM YYYY',
               },
-            },
+            }
           },
         ],
       },
       tooltips: {
-        mode: 'index',
+        mode: isDownloadView ? 'index' : 'nearest',
         intersect: false,
         displayColors: true,
         multiKeyBackground: 'transparent',
@@ -176,10 +206,16 @@ const TrendGraph = ({ graphStats, dataType, colors }: Props) => {
             const value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].y;
             return ` ${Number(value).toLocaleString()}`;
           },
-          labelColor: (tooltipItem, chart) => ({
-            backgroundColor: chart.data.datasets[tooltipItem.datasetIndex].backgroundColor,
-            borderColor: 'transparent',
-          }),
+          labelColor: (tooltipItem, chart) => {
+            // if this is the download view, there are multiple datasets, each with one background color
+            // if this is the avg rate of change view, there is a single dataset with the list of background colors
+            const backgroundColorInfo = chart.data.datasets[tooltipItem.datasetIndex].backgroundColor;
+            const backgroundColor = isDownloadView ? backgroundColorInfo : backgroundColorInfo[tooltipItem.index];
+            return {
+              backgroundColor: backgroundColor,
+              borderColor: 'transparent',
+            }
+          },
         },
       },
       hover: {
@@ -189,15 +225,15 @@ const TrendGraph = ({ graphStats, dataType, colors }: Props) => {
     };
 
     return chartOptions;
-  }, [stats]);
+  }, [stats, isDownloadView]);
 
   const updateChart = useCallback(() => {
     if (chartInstance.current) {
-      chartInstance.current.data = getChartData();
+      chartInstance.current.data = isDownloadView ? getDownloadsChartData() : getAvgRateOfChangeChartData();
       chartInstance.current.options = getChartOptions();
       chartInstance.current.update();
     }
-  }, [getChartData, getChartOptions]);
+  }, [getDownloadsChartData, getAvgRateOfChangeChartData, getChartOptions, isDownloadView]);
 
   useEffect(() => {
     updateChart();
@@ -209,7 +245,7 @@ const TrendGraph = ({ graphStats, dataType, colors }: Props) => {
         ref={(el) => {
           if (!chartInstance.current) {
             const ctx = el.getContext('2d');
-            chartInstance.current = new Chart(ctx, { type: dataType == "Downloads" ? "line" : "bar" });
+            chartInstance.current = new Chart(ctx, { type: isDownloadView ? "line" : "bar" });
           }
         }}
         id="download_chart"
