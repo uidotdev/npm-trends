@@ -6,28 +6,69 @@ import { groupDownloadsByPeriod } from 'utils/groupDates';
 
 type Props = {
   graphStats: any[];
+  dataType: string;
   colors: number[][];
 };
 
-const TrendGraph = ({ graphStats, colors }: Props) => {
+const usePreviousValue = value => {
+    const ref = useRef();
+    useEffect(() => {
+      ref.current = value;
+    });
+    return ref.current;
+  };
+
+const TrendGraph = ({ graphStats, dataType, colors }: Props) => {
   const stats = graphStats?.filter(Boolean);
   const chartInstance = useRef(null);
+  const prevDataType = usePreviousValue(dataType);
+
+  if (prevDataType != dataType && chartInstance.current) {
+    const chartType = (function () {
+      switch(dataType) { 
+        case "Downloads": 
+          return "line"
+        case "Avg Grown Rate": 
+          return "bar"
+      } 
+    })();   
+    const ctx = chartInstance.current.ctx;
+    const data = chartInstance.current.data;
+    
+    chartInstance.current.destroy();
+    chartInstance.current = new Chart(ctx, {
+        type: chartType,
+        data:data
+      });
+  }
 
   const getChartData = useCallback(() => {
     const chartData = { labels: [], datasets: [] };
+    const typeLabels = Object.keys(stats).map(key => stats[key].package);
+
     stats.filter(Boolean).forEach((graphStat, i) => {
       const dataColor = colors[i].join(',');
+      const downloads = graphStat.downloads;
       const groupedData = groupDownloadsByPeriod(graphStat.downloads, 'week');
+      const avgRateOfChange = (downloads[downloads.length-1].downloads - downloads[0].downloads)/downloads.length;
 
       if (i === 0) {
-        const labels = groupedData.map((periodData) => periodData.period);
-        chartData.labels = labels;
+        chartData.labels =
+          dataType == "Downloads"
+          ? groupedData.map((periodData) => periodData.period)
+          : typeLabels;
       }
 
-      const data = groupedData.map((periodData) => ({
-        x: periodData.period,
-        y: periodData.downloads,
-      }));
+      const data = 
+        dataType == "Downloads"
+        ? groupedData.map((periodData) => ({
+            x: periodData.period,
+            y: periodData.downloads
+        }))
+        : [{
+            x: graphStat.package,
+            y: avgRateOfChange
+        }];
 
       const dataset = {
         label: graphStat.package,
@@ -89,7 +130,7 @@ const TrendGraph = ({ graphStats, colors }: Props) => {
                 }
               ];
             }
-
+            
             return data.datasets.map((dataset) => ({
               text: dataset.label,
               fillStyle: dataset.borderColor,
@@ -109,7 +150,8 @@ const TrendGraph = ({ graphStats, colors }: Props) => {
         ],
         xAxes: [
           {
-            type: 'time',
+            type: dataType == "Downloads" ? 'time' : 'category',
+            align: 'center',
             time: {
               unit: xAxisDispalyUnit,
               tooltipFormat: 'll',
@@ -167,7 +209,7 @@ const TrendGraph = ({ graphStats, colors }: Props) => {
         ref={(el) => {
           if (!chartInstance.current) {
             const ctx = el.getContext('2d');
-            chartInstance.current = new Chart(ctx, { type: 'line' });
+            chartInstance.current = new Chart(ctx, { type: dataType == "Downloads" ? "line" : "bar" });
           }
         }}
         id="download_chart"
