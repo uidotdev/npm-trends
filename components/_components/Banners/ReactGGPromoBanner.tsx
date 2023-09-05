@@ -133,18 +133,18 @@ export default function ReactGGPromoBanner() {
           <footer>
             <p>
               Get up to <strong>25% off</strong>
-              <sup>1</sup> our <a href="https://react.gg">react.gg course</a>, if you buy before this giant clock goes to zero <sup>2,3</sup>.
+              our <a href="https://react.gg">react.gg course</a>, if you buy before this giant clock goes to zero.
             </p>
             <div className={styles.group}>
               <a className={styles.button} href="https://react.gg#register">
                 Get the course
               </a>
             </div>
-            <ol className={styles['footnotes']}>
+            {/* <ol className={styles['footnotes']}>
               <li>Literally the cheapest this course will ever be</li>
               <li>Is this how you support NPM Trends? Yes</li>
               <li>Are you guilt tripping me? Obviously yes</li>
-            </ol>
+            </ol> */}
           </footer>
         </div>
       </section>
