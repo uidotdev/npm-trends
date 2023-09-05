@@ -23,6 +23,11 @@ const Footer = () => (
           <h3>More</h3>
           <ul className="list-unstyled">
             <li>
+              <a target="_blank" rel="noopener noreferrer" href="https://react.gg">
+                React.gg
+              </a>
+            </li>
+            <li>
               <a target="_blank" rel="noopener noreferrer" href="https://ui.dev">
                 Learn JavaScript
               </a>
