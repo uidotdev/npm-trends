@@ -54,23 +54,33 @@ function timeUntilTargetPST(targetYear, targetMonth, targetDay) {
   const seconds = delta % 60;
 
   return {
-    days: String(days).padStart(2, '0'),
-    hours: String(hours).padStart(2, '0'),
-    minutes: String(minutes).padStart(2, '0'),
-    seconds: String(seconds).padStart(2, '0'),
-    hasExpired: currentUTC > targetUTC,
+    days: {
+      value: String(days).padStart(2, '0'),
+      label: days === 1 ? 'day' : 'days',
+    },
+    hours: {
+      value: String(hours).padStart(2, '0'),
+      label: hours === 1 ? 'hour' : 'hours',
+    },
+    minutes: {
+      value: String(minutes).padStart(2, '0'),
+      label: minutes === 1 ? 'minute' : 'minutes',
+    },
+    seconds: {
+      value: String(seconds).padStart(2, '0'),
+      label: seconds === 1 ? 'second' : 'seconds',
+    },
+    hasExpired: targetUTC < currentUTC,
   };
 }
 
 export default function ReactGGPromoBanner() {
-  const [days, setDays] = useState('--');
-  const [hours, setHours] = useState('--');
-  const [minutes, setMinutes] = useState('--');
-  const [seconds, setSeconds] = useState('--');
+  const [days, setDays] = useState({ value: '--', label: 'days' });
+  const [hours, setHours] = useState({ value: '--', label: 'hours' });
+  const [minutes, setMinutes] = useState({ value: '--', label: 'minutes' });
+  const [seconds, setSeconds] = useState({ value: '--', label: 'seconds' });
   const [isClient, setIsClient] = useState(false);
   const [showBanner, setShowBanner] = useLocalStorage('showBanner', true);
-
-  const hideBanner = !isClient && !showBanner;
 
   useEffect(() => {
     setIsClient(true);
@@ -114,20 +124,20 @@ export default function ReactGGPromoBanner() {
           </header>
           <div className={styles.countdown}>
             <div className={[styles.number, styles.day].join(' ')}>
-              <span className={styles['time']}>{days}</span>
-              <span className={styles['unit']}>days</span>
+              <span className={styles['time']}>{days.value}</span>
+              <span className={styles['unit']}>{days.label}</span>
             </div>
             <div className={[styles.number, styles.hour].join(' ')}>
-              <span className={styles['time']}>{hours}</span>
-              <span className={styles['unit']}>hours</span>
+              <span className={styles['time']}>{hours.value}</span>
+              <span className={styles['unit']}>{hours.label}</span>
             </div>
             <div className={[styles.number, styles.minute].join(' ')}>
-              <span className={styles['time']}>{minutes}</span>
-              <span className={styles['unit']}>minutes</span>
+              <span className={styles['time']}>{minutes.value}</span>
+              <span className={styles['unit']}>{minutes.label}</span>
             </div>
             <div className={[styles.number, styles.second].join(' ')}>
-              <span className={styles['time']}>{seconds}</span>
-              <span className={styles['unit']}>seconds</span>
+              <span className={styles['time']}>{seconds.value}</span>
+              <span className={styles['unit']}>{seconds.label}</span>
             </div>
           </div>
           <footer>
