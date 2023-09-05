@@ -37,6 +37,8 @@
 
 .banner :global(footer) {
   text-align: center;
+  max-width: 60ch;
+  margin: 0 auto;
 }
 
 .banner :global(small) {
