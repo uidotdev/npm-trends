@@ -142,19 +142,13 @@ export default function ReactGGPromoBanner() {
           </div>
           <footer>
             <p>
-              Get up to <strong>25% off</strong>
-              our <a href="https://react.gg">react.gg course</a>, if you buy before this giant clock goes to zero.
+              Want to learn React? Check out react.gg – it's our take on a modern, interactive React course built by developers who have been using and teaching React since 2014.
             </p>
             <div className={styles.group}>
               <a className={styles.button} href="https://react.gg#register">
-                Get the course
+                Learn More and Get 25% Off
               </a>
             </div>
-            {/* <ol className={styles['footnotes']}>
-              <li>Literally the cheapest this course will ever be</li>
-              <li>Is this how you support NPM Trends? Yes</li>
-              <li>Are you guilt tripping me? Obviously yes</li>
-            </ol> */}
           </footer>
         </div>
       </section>
