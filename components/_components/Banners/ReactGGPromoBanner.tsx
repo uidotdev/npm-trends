@@ -87,7 +87,7 @@ export default function ReactGGPromoBanner() {
     let countdownInterval = setInterval(updateCountdown, 1000);
 
     function updateCountdown() {
-      const { days, hours, minutes, seconds, hasExpired } = timeUntilTargetPST(2023, 9, 12);
+      const { days, hours, minutes, seconds, hasExpired } = timeUntilTargetPST(2023, 9, 13);
 
       if (hasExpired) {
         // Countdown has ended, clear the interval and set all values to 0
