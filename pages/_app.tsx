@@ -12,7 +12,6 @@ import 'normalize.css/normalize.css';
 import 'reset-css/reset.css';
 import '@reach/combobox/styles.css';
 import '../styles/index.scss';
-import ReactGGPromoBanner from 'components/_components/Banners/ReactGGPromoBanner';
 
 const propTypes = {
   Component: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
@@ -87,7 +86,6 @@ const MyApp = ({ Component, pageProps }) => {
             `,
           }}
         />
-        <ReactGGPromoBanner />
         <Component {...pageProps} />
       </QueryClientProvider>
     </PlausibleProvider>
