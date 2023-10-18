@@ -23,28 +23,23 @@ const Footer = () => (
           <h3>More</h3>
           <ul className="list-unstyled">
             <li>
-              <a target="_blank" rel="noopener noreferrer" href="https://react.gg">
-                React.gg
-              </a>
-            </li>
-            <li>
               <a target="_blank" rel="noopener noreferrer" href="https://ui.dev">
-                Learn JavaScript
+                ui.dev
               </a>
             </li>
             <li>
-              <a target="_blank" rel="noopener noreferrer" href="https://ui.dev/react-query">
-                Learn React Query
+              <a target="_blank" rel="noopener noreferrer" href="https://react.gg">
+                Learn React with react.gg
               </a>
             </li>
             <li>
-              <a target="_blank" rel="noopener noreferrer" href="https://ui.dev/react-router-tutorial">
-                React Router Tutorial
+              <a target="_blank" rel="noopener noreferrer" href="https://query.gg">
+                query.gg
               </a>
             </li>
             <li>
-              <a target="_blank" rel="noopener noreferrer" href="https://useHooks.com">
-                React Hook Recipes
+              <a target="_blank" rel="noopener noreferrer" href="https://usehooks.com">
+                useHooks
               </a>
             </li>
             <li>
