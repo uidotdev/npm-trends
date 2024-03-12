@@ -7,9 +7,10 @@ import { groupDownloadsByPeriod } from 'utils/groupDates';
 type Props = {
   graphStats: any[];
   colors: number[][];
+  relativeGrowth: boolean;
 };
 
-const TrendGraph = ({ graphStats, colors }: Props) => {
+const TrendGraph = ({ graphStats, colors, relativeGrowth }: Props) => {
   const stats = graphStats?.filter(Boolean);
   const chartInstance = useRef(null);
 
@@ -17,7 +18,7 @@ const TrendGraph = ({ graphStats, colors }: Props) => {
     const chartData = { labels: [], datasets: [] };
     stats.filter(Boolean).forEach((graphStat, i) => {
       const dataColor = colors[i].join(',');
-      const groupedData = groupDownloadsByPeriod(graphStat.downloads, 'week');
+      const groupedData = groupDownloadsByPeriod(graphStat.downloads, 'week', relativeGrowth);
 
       if (i === 0) {
         const labels = groupedData.map((periodData) => periodData.period);
@@ -103,7 +104,7 @@ const TrendGraph = ({ graphStats, colors }: Props) => {
           {
             ticks: {
               beginAtZero: true,
-              callback: (value) => Number(value).toLocaleString(),
+              callback: (value) => `${Number(value).toLocaleString()}${relativeGrowth ? ' %' : ''}`,
             },
           },
         ],

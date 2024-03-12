@@ -6,6 +6,9 @@ import TrendGraph from './TrendGraph';
 
 export const djsToStartDate = (djs) => djs.startOf('week').format('YYYY-MM-DD');
 
+const Categories = ['Downloads', 'Relative Growth'] as const;
+type Category = typeof Categories[number];
+
 const propTypes = {
   packets: PropTypes.arrayOf(PropTypes.object).isRequired,
   colors: PropTypes.arrayOf(PropTypes.array).isRequired,
@@ -14,6 +17,7 @@ const propTypes = {
 
 const TrendGraphBox = ({ packets, colors, packageDownloadData }) => {
   const [startDate, setStartDate] = useState(djsToStartDate(dayjs().subtract(12, 'months')));
+  const [category, setCategory] = useState<Category>('Downloads');
   const endDate = dayjs().subtract(1, 'week').endOf('week').format('YYYY-MM-DD');
 
   const { data: graphStats } = usePackageDownloads(packets, startDate, endDate, packageDownloadData);
@@ -22,8 +26,12 @@ const TrendGraphBox = ({ packets, colors, packageDownloadData }) => {
     setStartDate(e.target.value);
   };
 
+  const handleCategoryChange = (e) => {
+    setCategory(e.target.value);
+  };
+
   const heading = () => {
-    const selectOptionsData = [
+    const selectPeriodOptionsData = [
       ['1 Month', djsToStartDate(dayjs().subtract(1, 'month'))],
       ['3 Months', djsToStartDate(dayjs().subtract(3, 'month'))],
       ['6 Months', djsToStartDate(dayjs().subtract(6, 'month'))],
@@ -32,17 +40,29 @@ const TrendGraphBox = ({ packets, colors, packageDownloadData }) => {
       ['5 Years', djsToStartDate(dayjs().subtract(5, 'year'))],
       ['All time', djsToStartDate(dayjs('2015-01-10'))],
     ];
-    const selectOptions = selectOptionsData.map((option) => (
+    const selectPeriodOptions = selectPeriodOptionsData.map((option) => (
       <option key={option[1]} value={option[1]}>
         {option[0]}
       </option>
     ));
+
+    const selectCategoryOptions = Categories.map((option) => (
+      <option key={option} value={option}>
+        {option}
+      </option>
+    ));
+
     return (
       <h2 className="chart-heading">
-        Downloads <span className="text--light">in past</span>
+        <span className="select-container">
+          <select className="chart-heading-select" value={category} onChange={handleCategoryChange}>
+            {selectCategoryOptions}
+          </select>
+        </span>
+        <span className="text--light"> in past</span>
         <span className="select-container">
           <select className="chart-heading-select" value={startDate} onChange={handlePeriodChange}>
-            {selectOptions}
+            {selectPeriodOptions}
           </select>
         </span>
       </h2>
@@ -52,7 +72,7 @@ const TrendGraphBox = ({ packets, colors, packageDownloadData }) => {
   return (
     <div>
       {heading()}
-      <TrendGraph graphStats={graphStats} colors={colors} />
+      <TrendGraph graphStats={graphStats} colors={colors} relativeGrowth={category === 'Relative Growth'} />
     </div>
   );
 };
