@@ -6,7 +6,7 @@ import TrendGraph from './TrendGraph';
 
 export const djsToStartDate = (djs) => djs.startOf('week').format('YYYY-MM-DD');
 
-const Categories = ['Downloads', 'Relative Growth'] as const;
+const Categories = ['Downloads', 'Growth'] as const;
 type Category = typeof Categories[number];
 
 const propTypes = {
@@ -72,7 +72,7 @@ const TrendGraphBox = ({ packets, colors, packageDownloadData }) => {
   return (
     <div>
       {heading()}
-      <TrendGraph graphStats={graphStats} colors={colors} relativeGrowth={category === 'Relative Growth'} />
+      <TrendGraph graphStats={graphStats} colors={colors} growth={category === 'Growth'} />
     </div>
   );
 };
