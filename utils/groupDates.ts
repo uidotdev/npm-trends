@@ -4,19 +4,31 @@ import dayjs from 'dayjs';
 // dates: [{"day":"2012-10-22","downloads":279},
 //         {"day":"2012-10-23","downloads":2042}]
 // period: 'week'
-export const groupDownloadsByPeriod = (dates, period: 'week' | 'month' | 'year' = 'week') => {
-  const downloadsGroupedByPeriod = {};
+export const groupDownloadsByPeriod = (dates, period: 'week' | 'month' | 'year' = 'week', growth: boolean = false) => {
+  const downloadsGroupedByPeriodRecord: Record<string, number> = {};
 
   dates.forEach((date) => {
     const startOfPeriodDate = dayjs(date.day).startOf(period).format('YYYY-MM-DD');
 
-    downloadsGroupedByPeriod[startOfPeriodDate] = downloadsGroupedByPeriod[startOfPeriodDate]
-      ? downloadsGroupedByPeriod[startOfPeriodDate] + date.downloads
+    downloadsGroupedByPeriodRecord[startOfPeriodDate] = downloadsGroupedByPeriodRecord[startOfPeriodDate]
+      ? downloadsGroupedByPeriodRecord[startOfPeriodDate] + date.downloads
       : date.downloads;
   });
 
-  return Object.entries(downloadsGroupedByPeriod).map(([key, value]) => ({
+  const downloadsGroupedByPeriod = Object.entries(downloadsGroupedByPeriodRecord).map(([key, value]) => ({
     period: dayjs(key).toDate(),
     downloads: value,
   }));
+
+  if (growth) {
+    const initialDownloads = downloadsGroupedByPeriod[0].downloads;
+    const maxDownloads = Math.max(...downloadsGroupedByPeriod.map(({ downloads }) => downloads));
+
+    return downloadsGroupedByPeriod.map(({ period, downloads }) => ({
+      period,
+      downloads: ((downloads - initialDownloads) * 100) / maxDownloads,
+    }));
+  }
+
+  return downloadsGroupedByPeriod;
 };
