@@ -83,7 +83,8 @@ export function useSearchPackages(searchQuery: string) {
 export function usePackageDownloads(packets: IPackage[], startDate: string, endDate: string, initialData = []) {
   return useQuery(
     ['package-downloads', { startDate, endDate, packets }],
-    () => Promise.all(packets.map(({ name }) => PackageDownloads.fetchDownloads(name, startDate, endDate))),
+    () =>
+      Promise.all(packets.map(({ name, color }) => PackageDownloads.fetchDownloads(name, color, startDate, endDate))),
     {
       initialData,
       keepPreviousData: true,

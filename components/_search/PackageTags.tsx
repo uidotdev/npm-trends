@@ -10,10 +10,9 @@ import { Router } from 'next/router';
 
 type Props = {
   packets: IPackage[];
-  colors: number[][];
 };
 
-const PackageTags = ({ packets, colors }: Props) => {
+const PackageTags = ({ packets }: Props) => {
   const packetNamesArray = useMemo(() => packets.map((packet) => packet.name), [packets]);
   const searchQueryParams = queryString.stringify({
     'search_query[]': packetNamesArray,
@@ -37,7 +36,7 @@ const PackageTags = ({ packets, colors }: Props) => {
 
   const renderPackageTags = () =>
     packets.map((packet, i) => {
-      const border = `2px solid rgb(${colors[i].join(',')})`;
+      const border = `2px solid rgb(${packet.color.join(',')})`;
       return (
         <li key={packet.id} className="package-search-tag" style={{ border }}>
           <DetailsPopover packageName={packet.name}>

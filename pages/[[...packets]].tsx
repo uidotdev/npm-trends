@@ -7,6 +7,7 @@ import API from 'services/API';
 import Package from 'services/Package';
 import { getPacketNamesFromQuery, searchPathToDisplayString, getCanonical } from 'utils/url';
 import { hasNavigationCSR } from 'utils/hasNavigationCSR';
+import { getColors } from 'utils/colors';
 
 import AppHead from 'components/_templates/AppHead';
 import Layout from 'components/_templates/Layout';
@@ -63,10 +64,11 @@ export const getServerSideProps = hasNavigationCSR(async ({ query, res, req }) =
   const startDate = djsToStartDate(dayjs().subtract(12, 'months'));
   const endDate = dayjs().subtract(1, 'week').endOf('week').format('YYYY-MM-DD');
 
+  const colors = getColors(packetNames);
   const [pageData, popularSearches, packageDownloadData] = await Promise.all([
     fetchPageData(packetNames),
     Fetch.getJSON('/s/searches?limit=10'),
-    Promise.all(packetNames.map((name) => PackageDownloads.fetchDownloads(name, startDate, endDate))),
+    Promise.all(packetNames.map((name) => PackageDownloads.fetchDownloads(name, colors[name], startDate, endDate))),
   ]);
 
   // If error with any packages, remove errored packages from url

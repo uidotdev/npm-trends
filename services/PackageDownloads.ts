@@ -3,10 +3,10 @@ import duration from 'dayjs/plugin/duration';
 import { npmDownloadsURL } from 'utils/proxy';
 import Fetch from './Fetch';
 
-dayjs.extend(duration)
+dayjs.extend(duration);
 
 class PackageDownloads {
-  static fetchDownloads = async (packageName, startDate, endDate) => {
+  static fetchDownloads = async (packageName, packageColor, startDate, endDate) => {
     const startDjs = dayjs(startDate);
     const endDjs = dayjs(endDate);
 
@@ -38,6 +38,7 @@ class PackageDownloads {
 
     return {
       package: packageName,
+      color: packageColor,
       downloads: fetchedDownloads.reduce((acc, val) => acc.concat(val.downloads), []),
     };
   };

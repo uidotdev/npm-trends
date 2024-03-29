@@ -2,7 +2,7 @@ import _get from 'lodash/get';
 import hostedGitInfo from 'hosted-git-info';
 
 import { githubReposURL, npmRegistryURL } from 'utils/proxy';
-import { colors } from 'utils/colors';
+import { getColors } from 'utils/colors';
 import IPackage from 'types/IPackage';
 import INpmRegistryDataFormatted from 'types/INpmRegistryDataFormatted';
 import Fetch from './Fetch';
@@ -12,9 +12,10 @@ class Package {
   static fetchPackages = async (packetNames: string[]): Promise<{ validPackages: IPackage[] }> => {
     // packageNames format: ['react', '@angular-core']
     const pkgs = await Promise.allSettled(packetNames.map((name) => Package.fetchPackage(name)));
+    const colors = getColors(packetNames);
     const validPackages = pkgs.reduce((acc, pkg, i) => {
       if (pkg.status === 'fulfilled') {
-        acc.push({ ...pkg.value, color: colors[i] });
+        acc.push({ ...pkg.value, color: colors[pkg.value.name] });
       }
       return acc;
     }, []);
@@ -51,7 +52,6 @@ class Package {
     if (registry?.repository?.url?.includes('github')) {
       github = await Package.fetchGithubRepo(registry.repository.url);
     }
-
 
     return {
       ...registry,

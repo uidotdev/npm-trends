@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import dayjs from 'dayjs';
 import { usePackageDownloads } from 'services/queries';
@@ -8,11 +8,10 @@ export const djsToStartDate = (djs) => djs.startOf('week').format('YYYY-MM-DD');
 
 const propTypes = {
   packets: PropTypes.arrayOf(PropTypes.object).isRequired,
-  colors: PropTypes.arrayOf(PropTypes.array).isRequired,
   packageDownloadData: PropTypes.arrayOf(PropTypes.object),
 };
 
-const TrendGraphBox = ({ packets, colors, packageDownloadData }) => {
+const TrendGraphBox = ({ packets, packageDownloadData }) => {
   const [startDate, setStartDate] = useState(djsToStartDate(dayjs().subtract(12, 'months')));
   const endDate = dayjs().subtract(1, 'week').endOf('week').format('YYYY-MM-DD');
 
@@ -52,7 +51,7 @@ const TrendGraphBox = ({ packets, colors, packageDownloadData }) => {
   return (
     <div>
       {heading()}
-      <TrendGraph graphStats={graphStats} colors={colors} />
+      <TrendGraph graphStats={graphStats} />
     </div>
   );
 };
