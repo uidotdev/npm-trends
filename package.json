@@ -14,6 +14,7 @@
     "@types/requestidlecallback": "^0.3.4",
     "chart.js": "2.9.4",
     "classnames": "2.2.5",
+    "compare-versions": "^6.1.0",
     "dayjs": "^1.11.3",
     "hosted-git-info": "^3.0.8",
     "lodash": "^4.17.21",
