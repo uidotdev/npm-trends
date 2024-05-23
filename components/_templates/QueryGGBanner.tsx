@@ -1,7 +1,7 @@
 const QueryGGBanner = () => (
   <aside className="query-container container">
     <div className="query-banner">
-      <a href="https://query.gg" className="query-header">
+      <a href="https://query.gg?s=usehooks" className="query-header">
         <img
           src={"/images/querygg/corner-top-left.svg"}
           alt="sun"
@@ -41,7 +41,7 @@ const QueryGGBanner = () => (
               <p className="countdown-label">minutes</p>
             </div>
           </div>
-          <a href="https://query.gg" className="query-button">Join now</a>
+          <a href="https://query.gg?s=usehooks" className="query-button">Join now</a>
         </div>
         <img
           src={"/images/querygg/corner-fish-bottom-right.svg"}
