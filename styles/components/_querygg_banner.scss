@@ -124,7 +124,8 @@
 
 .countdown-days,
 .countdown-hours,
-.countdown-minutes {
+.countdown-minutes,
+.countdown-seconds {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   column-gap: 0.25rem;

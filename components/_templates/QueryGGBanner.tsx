@@ -1,3 +1,5 @@
+import CountdownTimer from "components/_components/CountdownTimer";
+
 const QueryGGBanner = () => (
   <aside className="query-container container">
     <div className="query-banner">
@@ -22,25 +24,7 @@ const QueryGGBanner = () => (
       <div className="query-cta">
         <div className="query-cta-container">
           <h2>Launch sale happening now</h2>
-          <div className="countdown">
-            <div className="countdown-days">
-              <span className="countdown-number">0</span>
-              <span className="countdown-number">3</span>
-              <p className="countdown-label">days</p>
-            </div>
-            <span className="countdown-colon">:</span>
-            <div className="countdown-hours">
-              <span className="countdown-number">2</span>
-              <span className="countdown-number">1</span>
-              <p className="countdown-label">hours</p>
-            </div>
-            <span className="countdown-colon">:</span>
-            <div className="countdown-minutes">
-              <span className="countdown-number">1</span>
-              <span className="countdown-number">4</span>
-              <p className="countdown-label">minutes</p>
-            </div>
-          </div>
+          <CountdownTimer targetDate="2024-06-05" />
           <a href="https://query.gg?s=usehooks" className="query-button">Join now</a>
         </div>
         <img
