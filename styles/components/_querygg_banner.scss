@@ -41,7 +41,7 @@
     grid-template-columns: 100px 1fr 100px;
   }
   @media (min-width: 1024px) { 
-    width: 58.333333%;
+    width: 55%;
     grid-template-columns: 110px 1fr;
   }
   @media (min-width: 1280px) { 
@@ -89,7 +89,7 @@
   color: var(--brand-beige);
   z-index: 10;
   @media (min-width: 1024px) { 
-    width: 41.666667%;
+    width: 45%;
     padding-bottom: 0;
     grid-template-columns: 1fr 90px;
     border-width: 4px;
@@ -134,7 +134,7 @@
 
 .countdown-number {
   height: 2.3rem;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 5 / 7;
   display: grid;
   place-content: center;
   background-color: rgba(245,240,214,.1);
