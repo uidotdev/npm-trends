@@ -51,7 +51,7 @@
 
 .query-headline {
   width: 83.333333%;
-  max-width: 350px;
+  max-width: 400px;
   margin-top: -1px;
   justify-self: center;
 }
@@ -108,10 +108,26 @@
   text-transform: uppercase;
 
   h2 {
-    margin: 0 0 1rem;
-    font-size: 1rem;
-    font-weight: 600;
     color: var(--brand-beige);
+    margin-top: 0;
+    margin-bottom: 0.5rem; 
+    font-size: 1.25rem;
+    line-height: 1.75rem; 
+    font-weight: 600; 
+    @media (min-width: 1024px) { 
+      font-size: 1.5rem;
+      line-height: 2rem;
+    }
+    @media (min-width: 1280px) { 
+      font-size: 1.875rem;
+      line-height: 2.25rem; 
+    }
+  }
+
+  p {
+    margin-top: 0;
+    margin-bottom: 1.2rem; 
+    text-transform: none; 
   }
 }
 
@@ -146,6 +162,10 @@
   display: grid;
   place-content: center;
   height: 2rem;
+}
+
+.countdown p {
+  margin-bottom: 0;
 }
 
 .countdown-label {

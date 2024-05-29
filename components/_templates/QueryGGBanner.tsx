@@ -23,7 +23,8 @@ const QueryGGBanner = () => (
       <div className="query-spacer"></div>
       <div className="query-cta">
         <div className="query-cta-container">
-          <h2>Launch sale happening now</h2>
+          <h2>Launch week sale</h2>
+          <p>Up to 30% off through June 5th</p>
           <CountdownTimer targetDate="2024-06-05" />
           <a href="https://query.gg?s=usehooks" className="query-button">Join now</a>
         </div>
