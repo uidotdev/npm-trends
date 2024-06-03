@@ -25,7 +25,7 @@ const QueryGGBanner = () => (
         <div className="query-cta-container">
           <h2>Launch week sale</h2>
           <p>Up to 30% off through June 5th</p>
-          <CountdownTimer targetDate="2024-06-05" />
+          <CountdownTimer targetDate="2024-06-06" />
           <a href="https://query.gg?s=usehooks" className="query-button">Join now</a>
         </div>
         <img
