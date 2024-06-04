@@ -56,7 +56,12 @@
   justify-self: center;
 }
 
+.corner-sun {
+  width: 100%;
+}
+
 .corner-moon {
+  width: 100%;
   @media (min-width: 1024px) {
     display: none;
   }
@@ -192,6 +197,7 @@
 }
 
 .corner-fish {
+  width: 100%;
   display: none;
   align-self: flex-end;
   @media (min-width: 1024px) { 
