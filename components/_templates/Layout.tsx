@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 
-import QueryGGBanner from './QueryGGBanner';
 import Header from './Header';
 import Footer from './Footer';
 
@@ -10,7 +9,6 @@ const propTypes = {
 
 const Layout = ({ children }) => (
   <div className="site-wrapper">
-    <QueryGGBanner />
     <Header />
     <div className="content-wrapper">{children}</div>
     <Footer />
