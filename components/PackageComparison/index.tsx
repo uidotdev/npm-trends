@@ -2,7 +2,6 @@ import { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
 
-import { colors } from 'utils/colors';
 import { packetNamesToParam } from 'utils/url';
 
 import SearchForm from 'components/_search/SearchForm';
@@ -40,10 +39,10 @@ const PackageComparison = ({ packets, packetNames = [], popularSearches, package
     <div className="container">
       <PackageComparisonHeading packetNames={packetNames} packets={packets} />
       <SearchForm onSearch={updateFromSearch} />
-      <PackageTags packets={packets} colors={colors} />
+      <PackageTags packets={packets} />
       {packets.length > 0 && (
         <div>
-          <TrendGraphBox packageDownloadData={packageDownloadData} packets={packets} colors={colors} />
+          <TrendGraphBox packageDownloadData={packageDownloadData} packets={packets} />
           <PackageStats packets={packets} />
         </div>
       )}
